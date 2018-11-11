@@ -1,0 +1,32 @@
+const mongoose = require("mongoose");
+const Schema = mongoose.Schema;
+
+// Create Scheme
+const TeacherSchema = new Schema({
+  name: {
+    type: String,
+    index: { unique: true }
+  },
+  username: {
+    type: String,
+    lowercase: true
+  },
+  access: Number,
+  faculty: String
+});
+
+// Create New Teacher
+TeacherSchema.statics.NewTeacher = function(teacher, callback) {
+  return this.findOneAndUpdate(
+    { name: teacher },
+    { $set: { name: teacher } },
+    { upsert: true, new: true },
+    callback
+  );
+};
+
+// Create model
+const Teacher = mongoose.model("Teacher", TeacherSchema);
+
+// Export to use in other files
+module.exports = Teacher;

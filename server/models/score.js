@@ -16,18 +16,44 @@ const ScoreSchema = new Schema(
   }
 );
 
-ScoreSchema.statics.findScoresLowerThan = function(score, cb) {
+// Find scores less than
+ScoreSchema.statics.findScoresLessThan = function(score, cb) {
+  return this.find({ average: { $lt: score } }, cb);
+};
+
+// Find scores less than or equal to
+ScoreSchema.statics.findScoresLessThanOrEqualTo = function(score, cb) {
   return this.find({ average: { $lte: score } }, cb);
 };
 
+// Find scores greater than
 ScoreSchema.statics.findScoresGreaterThan = function(score, cb) {
+  return this.find({ average: { $gt: score } }, cb);
+};
+
+// Find scores greater than or equal to
+ScoreSchema.statics.findScoresGreaterThanOrEqualTo = function(score, cb) {
   return this.find({ average: { $gte: score } }, cb);
 };
 
-ScoreSchema.statics.GetStudentPeriodAverage = function(student, cb) {
+// Get student's long-term average
+ScoreSchema.statics.GetStudentLongTermAverage = function(student, cb) {
   return ScoreSchema.aggregate([
     {
       $match: { studentId: student },
+      $group: {
+        _id: student,
+        average: { $avg: "$score" }
+      }
+    }
+  ]).exec(cb);
+};
+
+// Get student's average for the specified period
+ScoreSchema.statics.GetStudentPeriodAverage = function(student, period, cb) {
+  return ScoreSchema.aggregate([
+    {
+      $match: { studentId: student, periodId: period },
       $group: {
         _id: student,
         average: { $avg: "$score" }

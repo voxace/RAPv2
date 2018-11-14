@@ -14,6 +14,7 @@ const router = new Router();
 // Get Scores / Student (for student, grouped by period)
 // Get Scores / Class (for a particular class code)
 // Get Scores / Teacher (for teacher, grouped by class, active period only)
+router.get("/scores/teacher", controller.GetScoresByTeacher);
 
 // GET WHOLE SCHOOL AVERAGES
 // Get Average / Whole (whole school, whole time period)
@@ -34,10 +35,5 @@ const router = new Router();
 // Get Average / Above Four / Period (specified period)
 // Get Average / Below Three (this period)
 // Get Average / Below Three / Period (specified period)
-
-router.post("/score", controller.post);
-router.get("/score", controller.get);
-router.put("/score", controller.put);
-router.delete("/score", controller.delete);
 
 module.exports = router.routes();

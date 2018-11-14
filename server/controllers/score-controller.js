@@ -4,19 +4,15 @@ const Score = require("./../models/score");
 const Teacher = require("./../models/teacher");
 
 module.exports = {
-  async post(ctx) {
-    ctx.body = "Scores POST";
-  },
-
-  async get(ctx) {
-    ctx.body = "Scores GET";
-  },
-
-  async put(ctx) {
-    ctx.body = "Scores PUT";
-  },
-
-  async delete(ctx) {
-    ctx.body = "Scores DELETE";
+  async GetScoresByTeacher(ctx) {
+    console.log("Get scores by teacher");
+    await Score.GetScoresByTeacher("5be7f030a5de53e0d4d97d23")
+      .then(scores => {
+        ctx.body = JSON.stringify(scores);
+      })
+      .catch(err => {
+        console.log(err);
+        throw new Error(err);
+      });
   }
 };

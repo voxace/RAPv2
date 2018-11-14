@@ -1,11 +1,13 @@
 const config = require("./config");
 const Koa = require("koa");
+const cors = require("@koa/cors");
 const routes = require("./routes");
 const logger = require("koa-logger");
 var bodyParser = require("koa-body");
 const mongoose = require("mongoose");
 
 const app = new Koa();
+app.use(cors());
 
 //Set up body parsing middleware
 app.use(

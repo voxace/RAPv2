@@ -16,6 +16,24 @@ const ScoreSchema = new Schema(
   }
 );
 
+// TODO: populate fields with names etc
+// Get scores for specified period by Teacher
+ScoreSchema.statics.GetScoresByTeacher = function(teacher, cb) {
+  return this.aggregate([
+    {
+      $match: { teacherId: new mongoose.Types.ObjectId(teacher) }
+    },
+    {
+      $group: {
+        _id: "$subjectCode",
+        scores: {
+          $push: "$$ROOT"
+        }
+      }
+    }
+  ]).exec(cb);
+};
+
 // Find scores less than
 ScoreSchema.statics.findScoresLessThan = function(score, cb) {
   return this.find({ average: { $lt: score } }, cb);

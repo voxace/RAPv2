@@ -12,7 +12,7 @@ module.exports = {
   async ImportFromEdval(ctx) {
     let csvFilePath = ctx.request.files["Upload"].path;
     let jsonArrayObj = await csv().fromFile(csvFilePath);
-    Utilities.ProcessStudents(jsonArrayObj, activePeriod, ctx);
+    Utilities.ProcessStudents(jsonArrayObj, ctx);
     Utilities.DeleteFile(csvFilePath);
   },
 

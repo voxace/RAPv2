@@ -9,7 +9,7 @@ const ScoreSchema = new Schema(
     subject: String,
     subjectCode: String,
     studentGrade: Number,
-    score: Number
+    score: { type: Number, default: 0 }
   },
   {
     timestamps: true
@@ -40,10 +40,23 @@ ScoreSchema.statics.GetScoresByTeacher = function(teacher, cb) {
         }
       }
     },
+    {
+      $project: {
+        name: { $concat: ["$name.first", " ", "$name.last"] },
+        studentId: "$studentId",
+        score: "$score",
+        subjectCode: "$subjectCode"
+      }
+    },
     // Remove separate student field
     {
       $project: {
         student: 0
+      }
+    },
+    {
+      $sort: {
+        name: 1
       }
     },
     // Group scores by subject
@@ -53,6 +66,11 @@ ScoreSchema.statics.GetScoresByTeacher = function(teacher, cb) {
         scores: {
           $push: "$$ROOT"
         }
+      }
+    },
+    {
+      $project: {
+        scores: { subjectCode: 0 }
       }
     }
   ]).exec(cb);
@@ -112,6 +130,7 @@ ScoreSchema.statics.NewScore = function(
   subject,
   code,
   grade,
+  score,
   callback
 ) {
   return this.findOneAndUpdate(
@@ -130,7 +149,8 @@ ScoreSchema.statics.NewScore = function(
         periodId: period,
         subject: subject,
         subjectCode: code,
-        studentGrade: grade
+        studentGrade: grade,
+        score: score
       }
     },
     { upsert: true, new: true },

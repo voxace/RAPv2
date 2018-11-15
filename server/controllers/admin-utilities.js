@@ -70,14 +70,14 @@ async function ProcessSingleRow(student, callback, periodDbId) {
     Student.NewStudent(firstname, surname)
       .then(stu => {
         studentDbId = stu._id;
-        //console.log(stu.fullName + " : " + studentDbId);
+        console.log(stu.fullName + " : " + studentDbId);
 
         // Create Teachers
         let teacherDbId;
         Teacher.NewTeacher(teacher)
           .then(tch => {
             teacherDbId = tch._id;
-            //console.log(tch.name + " : " + teacherDbId);
+            console.log(tch.name + " : " + teacherDbId);
 
             // Create Scores
             Score.NewScore(
@@ -86,10 +86,18 @@ async function ProcessSingleRow(student, callback, periodDbId) {
               periodDbId,
               subject,
               code,
-              grade
+              grade,
+              0
             )
               .then(score => {
-                // console.log("Score created: " + stu.fullName + ", " + tch.name + ", " + code);
+                console.log(
+                  "Score created: " +
+                    stu.fullName +
+                    ", " +
+                    tch.name +
+                    ", " +
+                    code
+                );
               })
               .catch(err => {
                 if (err) {
@@ -114,7 +122,7 @@ async function ProcessSingleRow(student, callback, periodDbId) {
 }
 
 // Processes the CSV file from Edval
-async function ProcessStudents(jsonArrayObj, activePeriod, ctx) {
+async function ProcessStudents(jsonArrayObj, ctx) {
   await Period.findOne({ active: true }, function(error, activePeriod) {
     console.log("Processing Students...");
     let periodDbId = activePeriod._id;

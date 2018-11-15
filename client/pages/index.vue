@@ -33,11 +33,24 @@
           :value="'tab' + index">
           <v-card flat>
             <v-card-text>
-              <p
-                v-for="student in tab.scores"
-                :key="student._id">
-                {{ student.name.first + " " + student.name.last }}
-              </p>
+              <v-data-table
+                :headers="headers"
+                :items="tab.scores"
+                class="elevation-8"
+                hide-actions
+              >
+                <template
+                  slot="items"
+                  slot-scope="props">
+                  <tr>
+                    <td :id="props.item.studentId">{{ props.item.name }}</td>
+                    <td class="text-xs-right">
+                      <score
+                        :data="props.item"/>
+                    </td>
+                  </tr>
+                </template>
+              </v-data-table>
             </v-card-text>
           </v-card>
         </v-tab-item>
@@ -48,10 +61,32 @@
 </template>
 
 <script>
+import Score from '@/components/Score'
+
 export default {
+  components: {
+    Score
+  },
   data() {
     return {
-      tabModel: 'tab0'
+      tabModel: 'tab0',
+      headers: [
+        {
+          text: 'Name',
+          value: 'name',
+          align: 'left',
+          sortable: false,
+          class: 'table-heading'
+        },
+        {
+          text: 'Score',
+          value: 'score',
+          align: 'center',
+          sortable: false,
+          width: '100px',
+          class: 'table-heading'
+        }
+      ]
     }
   },
   computed: {
@@ -66,3 +101,9 @@ export default {
   }
 }
 </script>
+
+<style>
+.table-heading {
+  font-size: 16px !important;
+}
+</style>

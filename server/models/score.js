@@ -16,13 +16,37 @@ const ScoreSchema = new Schema(
   }
 );
 
-// TODO: populate fields with names etc
 // Get scores for specified period by Teacher
 ScoreSchema.statics.GetScoresByTeacher = function(teacher, cb) {
   return this.aggregate([
+    // Match only scores for specified teacher
     {
       $match: { teacherId: new mongoose.Types.ObjectId(teacher) }
     },
+    // Join score table to students table
+    {
+      $lookup: {
+        from: "students",
+        localField: "studentId",
+        foreignField: "_id",
+        as: "student"
+      }
+    },
+    // Merge student field data back into score
+    {
+      $replaceRoot: {
+        newRoot: {
+          $mergeObjects: [{ $arrayElemAt: ["$student", 0] }, "$$ROOT"]
+        }
+      }
+    },
+    // Remove separate student field
+    {
+      $project: {
+        student: 0
+      }
+    },
+    // Group scores by subject
     {
       $group: {
         _id: "$subjectCode",

@@ -36,8 +36,8 @@
               <p
                 v-for="student in tab.scores"
                 :key="student._id">
-                {{ student }}
-              </p>             
+                {{ student.name.first + " " + student.name.last }}
+              </p>
             </v-card-text>
           </v-card>
         </v-tab-item>

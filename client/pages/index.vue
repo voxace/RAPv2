@@ -74,7 +74,7 @@
                     <td :id="props.item.studentId">{{ props.item.name }}</td>
                     <td class="text-xs-right">
                       <score
-                        :data="props.item"/>
+                        :scoredata="props.item" />
                     </td>
                   </tr>
                 </template>
@@ -114,12 +114,13 @@ export default {
           width: '100px',
           class: 'table-heading'
         }
-      ]
+      ],
+      Scores: {}
     }
   },
   computed: {
     scores() {
-      return this.$store.state.scores
+      return this.Scores
     },
     loading() {
       return this.$store.state.loading
@@ -127,7 +128,12 @@ export default {
   },
   created() {
     if (process.browser) {
-      this.$store.dispatch('getScores')
+      this.GetScoresByTeacher()
+    }
+  },
+  methods: {
+    async GetScoresByTeacher() {
+      this.Scores = await this.$axios.$get('/scores/teacher')
     }
   }
 }

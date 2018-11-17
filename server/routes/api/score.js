@@ -6,6 +6,7 @@ const router = new Router();
 // Create Score / Student / Teacher / Class (when adding student to a class)
 // Get Score / Student / Teacher / Class (when looking up a single score for a student/class combo)
 // Update Score / ID (when giving the student a score)
+router.patch("/score/id", controller.SetScore);
 // Update Score / Student / Teacher / Class (when giving the student a score)
 // Delete Score / Student / Teacher / Class (when removing student from a class)
 // Delete Score / ID (when removing student from a class)

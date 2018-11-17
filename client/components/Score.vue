@@ -11,7 +11,9 @@
         <v-btn
           slot="activator"
           flat
-          icon>
+          icon
+          type="button"
+          @click="setScore(1)">
           1
         </v-btn>
         Unsatisfactory Performance
@@ -24,7 +26,8 @@
         <v-btn
           slot="activator"
           flat
-          icon>
+          icon
+          @click="setScore(2)">
           2
         </v-btn>
         Of Concern
@@ -37,7 +40,8 @@
         <v-btn
           slot="activator"
           flat
-          icon>
+          icon
+          @click="setScore(3)">
           3
         </v-btn>
         Good
@@ -50,7 +54,8 @@
         <v-btn
           slot="activator"
           flat
-          icon>
+          icon
+          @click="setScore(4)">
           4
         </v-btn>
         Excellent
@@ -63,7 +68,8 @@
         <v-btn
           slot="activator"
           flat
-          icon>
+          icon
+          @click="setScore(5)">
           5
         </v-btn>
         Outstanding
@@ -75,15 +81,29 @@
 
 <script>
 export default {
+  props: {
+    scoredata: {
+      type: Object,
+      default: function() {
+        return { score: 0 }
+      }
+    }
+  },
   data() {
-    return {}
+    return {
+      toggle_exclusive: 0
+    }
+  },
+  created() {
+    this.toggle_exclusive = this.scoredata.score - 1
   },
   methods: {
-    setScore(score) {
-      // set score here
-    },
-    getScore() {
-      // get score here
+    async setScore(score) {
+      let result = await this.$axios.$patch('/score/id', {
+        id: this.scoredata._id,
+        score: score
+      })
+      this.toggle_exclusive = result.score - 1
     }
   }
 }

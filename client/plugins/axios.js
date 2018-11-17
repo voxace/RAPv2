@@ -1,6 +1,8 @@
 export default function({ store, $axios, redirect }) {
   $axios.onRequest(config => {
-    store.commit('setLoading', true)
+    if (config.method != 'patch') {
+      store.commit('setLoading', true)
+    }
     console.log('Making request to ' + config.url) // eslint-disable-line no-console
   })
 

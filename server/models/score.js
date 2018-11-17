@@ -122,6 +122,24 @@ ScoreSchema.statics.GetStudentPeriodAverage = function(student, period, cb) {
   ]).exec(cb);
 };
 
+// Set Score
+ScoreSchema.statics.SetScore = function(id, score, callback) {
+  console.log("id: " + id);
+  console.log("score: " + score);
+  return this.findOneAndUpdate(
+    {
+      _id: new mongoose.Types.ObjectId(id)
+    },
+    {
+      $set: { score: score }
+    },
+    {
+      new: true
+    },
+    callback
+  );
+};
+
 // Create New Score
 ScoreSchema.statics.NewScore = function(
   student,

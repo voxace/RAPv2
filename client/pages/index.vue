@@ -125,16 +125,8 @@ export default {
       return this.$store.state.loading
     }
   },
-  watch() {
-    loading: value => {
-      if (value) {
-        this.tabModel = 'tab0'
-      }
-    }
-  },
   created() {
     if (process.browser) {
-      this.$store.dispatch('setLoading', true)
       this.$store.dispatch('getScores')
     }
   }

@@ -4,7 +4,7 @@ const createStore = () => {
   return new Vuex.Store({
     state: {
       scores: null,
-      loading: true
+      loading: false
     },
     mutations: {
       setScores(state, scores) {
@@ -17,10 +17,7 @@ const createStore = () => {
     actions: {
       async getScores({ commit }) {
         let scores = await this.$axios.$get('/scores/teacher')
-        setTimeout(function() {
-          commit('setScores', scores)
-          commit('setLoading', false)
-        }, 500)
+        commit('setScores', scores)
       }
     },
     getters: {

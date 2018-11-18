@@ -20,7 +20,11 @@ app.use(
 
 // Connect to mongodb
 mongoose.Promise = global.Promise;
-mongoose.connect(config.mongo.connection);
+mongoose.connect(
+  config.mongo.connection,
+  { useNewUrlParser: true }
+);
+mongoose.set("useCreateIndex", true);
 mongoose.connection
   .once("open", function() {
     console.log("Mongodb Connection made");

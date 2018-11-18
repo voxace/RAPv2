@@ -99,6 +99,9 @@ export default {
   },
   methods: {
     async setScore(score) {
+      if (score == this.toggle_exclusive + 1) {
+        score = 0
+      }
       let result = await this.$axios.$patch('/score/id', {
         id: this.scoredata._id,
         score: score

@@ -12,7 +12,6 @@
           v-if="!scores"
           slot="extension"
           color="yellow darken-1"
-          class="mt-3"
           centered
           slider-color="indigo">
           <v-tab>
@@ -147,11 +146,30 @@ export default {
   width: 70px;
   height: 70px;
   padding: 0px;
-
   position: absolute;
   top: 50%;
   left: 50%;
-
   margin: -35px 0 0 -35px;
+}
+
+.v-tabs__container {
+  height: 48px;
+}
+
+@media only screen and (min-device-width: 875px) and (max-device-width: 959px) {
+  .v-tabs__container {
+    height: 32px;
+  }
+}
+
+@media only screen and (max-device-width: 875px) {
+  .v-tabs__container {
+    height: 40px;
+  }
+}
+@media only screen and (max-device-width: 875px) and (orientation: landscape) {
+  .v-tabs__container {
+    height: 32px;
+  }
 }
 </style>

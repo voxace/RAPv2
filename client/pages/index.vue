@@ -94,6 +94,7 @@ export default {
   components: {
     Score
   },
+  middleware: 'auth',
   data() {
     return {
       tabModel: 'tab0',
@@ -132,7 +133,8 @@ export default {
   },
   methods: {
     async GetScoresByTeacher() {
-      this.Scores = await this.$axios.$get('/scores/teacher')
+      let user_id = this.$store.state.auth
+      this.Scores = await this.$axios.$get('/scores/teacher/' + user_id)
     }
   }
 }
@@ -150,6 +152,16 @@ export default {
   top: 50%;
   left: 50%;
   margin: -35px 0 0 -35px;
+}
+
+.v-tabs__div {
+  background: rgba(0, 0, 0, 0);
+  transition: 0.4s ease-in-out;
+}
+
+.v-tabs__div:hover {
+  background: rgba(0, 0, 0, 0.05);
+  transition: 0.2s ease-in-out;
 }
 
 .v-tabs__container {

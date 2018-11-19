@@ -13,21 +13,13 @@
       <v-spacer />
       <v-toolbar-items class="hidden-sm-and-down">
         <v-btn
-          to="/rubric"
+          v-for="link in activeLinks"
+          :key="link.to"
+          :to="link.to"
           exact
-          flat>
-          Rubric
+          flat >
+          {{ link.text }}
         </v-btn>
-        <v-btn
-          to="/"
-          exact
-          flat>
-          Enter Scores
-        </v-btn>
-        <v-btn flat>Check Scores</v-btn>
-        <v-btn flat>Insights</v-btn>
-        <v-btn flat>Admin</v-btn>
-        <v-btn flat>Logout</v-btn>
       </v-toolbar-items>
 
       <v-toolbar-items class="hidden-md-and-up">
@@ -35,45 +27,12 @@
           <v-toolbar-side-icon slot="activator"/>
           <v-list>
             <nuxt-link
-              tag="v-list-tile"
-              to="/rubric">
+              v-for="link in activeLinks"
+              :key="link.to"
+              :to="link.to"
+              tag="v-list-tile" >
               <v-list-tile-title>
-                Rubric
-              </v-list-tile-title>
-            </nuxt-link>
-            <nuxt-link
-              tag="v-list-tile"
-              to="/">
-              <v-list-tile-title>
-                Enter Scores
-              </v-list-tile-title>
-            </nuxt-link>
-            <nuxt-link
-              tag="v-list-tile"
-              to="/check">
-              <v-list-tile-title>
-                Check Scores
-              </v-list-tile-title>
-            </nuxt-link>
-            <nuxt-link
-              tag="v-list-tile"
-              to="/insights">
-              <v-list-tile-title>
-                Insights
-              </v-list-tile-title>
-            </nuxt-link>
-            <nuxt-link
-              tag="v-list-tile"
-              to="/admin">
-              <v-list-tile-title>
-                Admin
-              </v-list-tile-title>
-            </nuxt-link>
-            <nuxt-link
-              tag="v-list-tile"
-              to="/logout">
-              <v-list-tile-title>
-                Logout
+                {{ link.text }}
               </v-list-tile-title>
             </nuxt-link>
           </v-list>
@@ -91,7 +50,27 @@
 <script>
 export default {
   data() {
-    return {}
+    return {
+      links: [
+        { to: '/', text: 'Home', auth: true },
+        { to: '/rubric', text: 'Rubric', auth: false },
+        { to: '/check', text: 'Check Scores', auth: true },
+        { to: '/insights', text: 'Insights', auth: true },
+        { to: '/admin', text: 'Admin', auth: true },
+        { to: '/logout', text: 'Logout', auth: true }
+      ]
+    }
+  },
+  computed: {
+    activeLinks: function() {
+      if (this.$store.state.auth) {
+        return this.links
+      } else {
+        return this.links.filter(function(l) {
+          return !l.auth
+        })
+      }
+    }
   }
 }
 </script>

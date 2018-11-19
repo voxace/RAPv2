@@ -15,7 +15,7 @@ router.patch("/score/id", controller.SetScore);
 // Get Scores / Student (for student, grouped by period)
 // Get Scores / Class (for a particular class code)
 // Get Scores / Teacher (for teacher, grouped by class, active period only)
-router.get("/scores/teacher", controller.GetScoresByTeacher);
+router.get("/scores/teacher/:id", controller.GetScoresByTeacher);
 
 // GET WHOLE SCHOOL AVERAGES
 // Get Average / Whole (whole school, whole time period)

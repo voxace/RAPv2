@@ -49,7 +49,7 @@ module.exports = {
         });
       })
       .catch(error => {
-        ctx.body = "Error: " + error;
+        throw new Error("Error Logging In: " + username);
       });
   }
 };

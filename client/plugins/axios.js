@@ -1,6 +1,6 @@
 export default function({ store, $axios, redirect }) {
   $axios.onRequest(config => {
-    if (config.method != 'patch') {
+    if (config.method != 'patch' && config.url != '/auth/login') {
       store.commit('setLoading', true)
     }
     console.log('Making request to ' + config.url) // eslint-disable-line no-console
@@ -8,7 +8,7 @@ export default function({ store, $axios, redirect }) {
 
   $axios.onResponse(response => {
     store.commit('setLoading', false)
-    console.log('Received response') // eslint-disable-line no-console
+    console.log('Received response: ' + response.status) // eslint-disable-line no-console
   })
 
   $axios.onError(error => {

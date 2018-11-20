@@ -24,7 +24,8 @@ function SubmitLoginForm(username, password) {
 }
 
 module.exports = {
-  // Attempts login and returns user ID
+  // Attempts login and returns auth token
+  // Auth token: { user_id, name, type, access  }
   async Login(ctx) {
     let username = ctx.request.body.username.toLowerCase();
     let password = ctx.request.body.password;
@@ -32,17 +33,27 @@ module.exports = {
       .then(async response => {
         await Teacher.findOne({ username: username }).then(async teacher => {
           if (teacher) {
-            ctx.body = teacher._id;
+            ctx.body = {
+              user_id: teacher._id,
+              name: teacher.name,
+              type: "teacher",
+              access: teacher.access
+            };
             console.log("Teacher login: " + teacher.name + ", " + new Date());
           } else {
             await Student.findOne({ username: username }).then(student => {
               if (student) {
-                ctx.body = student._id;
+                ctx.body = {
+                  user_id: student._id,
+                  name: student.fullName,
+                  type: "student",
+                  access: 0
+                };
                 console.log(
                   "Student login: " + student.fullName + ", " + new Date()
                 );
               } else {
-                ctx.body = "invalid";
+                throw new Error("Error Logging In: " + username);
               }
             });
           }

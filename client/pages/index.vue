@@ -1,32 +1,16 @@
 <template>
-  <v-layout align-center>
+  <v-layout>
     <v-flex>
-
-      <v-toolbar
-        color="yellow darken-1"
-        extended
-        fixed
-        app
-        style="z-index: 1;">
+      <h1>David Steedman</h1>
+      <p>Enter a score from 1-5 according to the <nuxt-link to="/rubric">rubric</nuxt-link>. Leave the score blank or remove the student from the class if they do not qualify for a score (e.g. left school, have not attended your class). Clicking the button a second time will also remove the score.</p>
+      <v-card class="elevation-6">
         <v-tabs
-          v-if="!scores"
-          slot="extension"
-          color="yellow darken-1"
-          centered
-          slider-color="indigo">
-          <v-tab>
-            Loading...
-          </v-tab>
-        </v-tabs>
-
-        <v-tabs
-          v-else
-          slot="extension"
           v-model="tabModel"
           color="yellow darken-1"
           class="mt-3"
           centered
           grow
+          fixed-tabs
           slider-color="indigo"
         >
           <v-tab
@@ -36,53 +20,33 @@
             {{ tab._id }}
           </v-tab>
         </v-tabs>
-      </v-toolbar>
-
-      <div
-        v-if="loading"
-        class="full-height-center">
-        <v-progress-circular
-          :size="70"
-          :width="7"
-          color="indigo"
-          indeterminate
-        />
-      </div>
-
-      <v-tabs-items
-        v-else
-        v-model="tabModel" >
-        <v-tab-item
-          v-for="(tab, index) in scores"
-          :key="tab._id"
-          :value="'tab' + index">
-          <v-card flat>
-            <v-card-text>
-              <v-data-table
-                :headers="headers"
-                :items="tab.scores"
-                :loading="loading"
-                class="elevation-6"
-                hide-actions
-              >
-
-                <template
-                  slot="items"
-                  slot-scope="props">
-                  <tr>
-                    <td :id="props.item.studentId">{{ props.item.name }}</td>
-                    <td class="text-xs-right">
-                      <score
-                        :scoredata="props.item" />
-                    </td>
-                  </tr>
-                </template>
-              </v-data-table>
-            </v-card-text>
-          </v-card>
-        </v-tab-item>
-      </v-tabs-items>
-
+        <v-tabs-items
+          v-model="tabModel" >
+          <v-tab-item
+            v-for="(tab, index) in scores"
+            :key="tab._id"
+            :value="'tab' + index">
+            <v-data-table
+              :headers="headers"
+              :items="tab.scores"
+              :loading="loading"
+              hide-actions
+            >
+              <template
+                slot="items"
+                slot-scope="props">
+                <tr>
+                  <td :id="props.item.studentId">{{ props.item.name }}</td>
+                  <td class="text-xs-right">
+                    <score
+                      :scoredata="props.item" />
+                  </td>
+                </tr>
+              </template>
+            </v-data-table>
+          </v-tab-item>
+        </v-tabs-items>
+      </v-card>
     </v-flex>
   </v-layout>
 </template>
@@ -133,7 +97,7 @@ export default {
   },
   methods: {
     async GetScoresByTeacher() {
-      let user_id = this.$store.state.auth
+      let user_id = this.$store.state.auth.user_id
       this.Scores = await this.$axios.$get('/scores/teacher/' + user_id)
     }
   }
@@ -143,15 +107,6 @@ export default {
 <style>
 .table-heading {
   font-size: 16px !important;
-}
-.full-height-center {
-  width: 70px;
-  height: 70px;
-  padding: 0px;
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  margin: -35px 0 0 -35px;
 }
 
 .v-tabs__div {

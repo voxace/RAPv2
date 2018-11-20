@@ -1,15 +1,14 @@
 <template>
   <v-app light>
     <v-toolbar
+      app
       fixed
       color="indigo"
-      dark
-      app>
+      dark>
       <nuxt-link
         to="/">
         <v-toolbar-title>Regular Assessment Program</v-toolbar-title>
       </nuxt-link>
-
       <v-spacer />
       <v-toolbar-items class="hidden-sm-and-down">
         <v-btn
@@ -21,7 +20,6 @@
           {{ link.text }}
         </v-btn>
       </v-toolbar-items>
-
       <v-toolbar-items class="hidden-md-and-up">
         <v-menu offset-y>
           <v-toolbar-side-icon slot="activator"/>
@@ -37,13 +35,29 @@
             </nuxt-link>
           </v-list>
         </v-menu>
-
       </v-toolbar-items>
-
     </v-toolbar>
+
     <v-content>
-      <nuxt />
+      <v-container
+        fluid
+        fill-height>
+        <div
+          v-show="loading"
+          class="full-height-container">
+          <div class="full-height-center">
+            <v-progress-circular
+              :size="70"
+              :width="7"
+              color="indigo"
+              indeterminate
+            />
+          </div>
+        </div>
+        <nuxt v-show="!loading"/>
+      </v-container>
     </v-content>
+
   </v-app>
 </template>
 
@@ -70,6 +84,9 @@ export default {
           return !l.auth
         })
       }
+    },
+    loading() {
+      return this.$store.state.loading
     }
   }
 }
@@ -82,7 +99,6 @@ a:hover {
   color: white;
   text-decoration: none;
 }
-
 .fade-enter-active,
 .fade-leave-active {
   transition: opacity 0.5s;
@@ -90,5 +106,29 @@ a:hover {
 .fade-enter,
 .fade-leave-to {
   opacity: 0;
+}
+.theme--light.application {
+  background: #fff;
+}
+.full-height-container {
+  position: absolute;
+  z-index: 100;
+  height: 100vh;
+  top: 8px;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  overflow: hidden;
+  background-color: white;
+  width: 100vw;
+}
+.full-height-center {
+  width: 70px;
+  height: 70px;
+  padding: 0px;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  margin: -35px 0 0 -35px;
 }
 </style>

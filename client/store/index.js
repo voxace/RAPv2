@@ -5,7 +5,8 @@ const createStore = () => {
   return new Vuex.Store({
     state: {
       loading: false,
-      auth: null
+      auth: null,
+      navDrawer: true
     },
     mutations: {
       setLoading(state, value) {
@@ -13,6 +14,12 @@ const createStore = () => {
       },
       setAuth(state, value) {
         state.auth = value
+      },
+      setNavDrawer(state, value) {
+        state.navDrawer = value
+      },
+      toggleNavDrawer(state) {
+        state.navDrawer = !state.navDrawer
       }
     },
     actions: {
@@ -35,6 +42,9 @@ const createStore = () => {
       },
       auth(state) {
         return state.auth
+      },
+      navDrawer(state) {
+        return state.navDrawer
       }
     }
   })

@@ -23,18 +23,25 @@
         <v-menu
           v-else
           :key="link.to"
+          transition="slide-y-transition"
           offset-y>
           <v-btn
             slot="activator"
+            :class="{'v-btn--active': subIsActive(link.to)}"
             flat
           >
             {{ link.text }}
+            <v-icon
+              right
+              class="arrow">
+              arrow_drop_down
+            </v-icon>
           </v-btn>
           <v-list>
             <v-list-tile
               v-for="(item, index) in link.menu"
               :key="index"
-              @click="router.push(item.to)"
+              @click="$router.push(item.to)"
             >
               <nuxt-link
                 :to="item.to"
@@ -48,7 +55,7 @@
       </template>
     </v-toolbar-items>
     <v-toolbar-items class="hidden-md-and-up">
-      <v-toolbar-side-icon slot="activator"/>
+      <v-toolbar-side-icon @click="openNavDrawer"/>
     </v-toolbar-items>
   </v-toolbar>
 </template>
@@ -60,6 +67,17 @@ export default {
       type: Array,
       required: true
     }
+  },
+  methods: {
+    openNavDrawer() {
+      this.$store.commit('setNavDrawer', true)
+    },
+    subIsActive(input) {
+      const paths = Array.isArray(input) ? input : [input]
+      return paths.some(path => {
+        return this.$route.path.indexOf(path) === 0
+      })
+    }
   }
 }
 </script>
@@ -70,5 +88,8 @@ a:visited,
 a:hover {
   color: white;
   text-decoration: none;
+}
+.arrow {
+  margin: 0 -5px 0 5px;
 }
 </style>

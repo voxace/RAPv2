@@ -1,8 +1,8 @@
 <template>
   <v-navigation-drawer
+    v-model="drawer"
     app
     temporary
-    value="true"
   >
     <v-list>
       <template v-for="link in activeLinks">
@@ -44,6 +44,16 @@ export default {
     activeLinks: {
       type: Array,
       required: true
+    }
+  },
+  computed: {
+    drawer: {
+      set(value) {
+        this.$store.commit('setNavDrawer', value)
+      },
+      get() {
+        return this.$store.state.navDrawer
+      }
     }
   }
 }

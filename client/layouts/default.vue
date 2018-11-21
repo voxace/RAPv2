@@ -31,6 +31,7 @@ export default {
         { to: '/rubric', text: 'Rubric', auth: false, type: 'link' },
         {
           text: 'Check Scores',
+          to: '/check',
           auth: true,
           type: 'menu',
           menu: [
@@ -41,36 +42,42 @@ export default {
             {
               to: '/check/class',
               text: 'By Class'
+            },
+            {
+              to: '/check/teacher',
+              text: 'By Teacher'
             }
           ]
         },
         {
           text: 'Insights',
+          to: '/insights',
           auth: true,
           type: 'menu',
           menu: [
             {
-              to: '/check/student',
-              text: 'Single Student'
+              to: '/insights/cohort-averages',
+              text: 'Cohort Averages'
             },
             {
-              to: '/check/class',
-              text: 'By Class'
+              to: '/insights/whole-school',
+              text: 'Whole School'
             }
           ]
         },
         {
           text: 'Admin',
+          to: '/admin',
           auth: true,
           type: 'menu',
           menu: [
             {
-              to: '/check/student',
-              text: 'Single Student'
+              to: '/admin/periods',
+              text: 'RAP Periods'
             },
             {
-              to: '/check/class',
-              text: 'By Class'
+              to: '/admin/generate',
+              text: 'Generate Posters'
             }
           ]
         },

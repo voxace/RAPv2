@@ -3,7 +3,7 @@
     <v-flex xs12>
       <h1>RAP Rubric</h1>
       <p>Use the rubric to guide your scoring for each student. <a href="/RAP-Rubric.pdf">Click here</a> to download a PDF to keep or print.</p>
-      <v-card class="elevation-6">
+      <v-card class="elevation-6 card-table">
         <table>
           <thead>
             <tr>
@@ -222,6 +222,7 @@ td {
   border-collapse: collapse;
   padding: 10px;
   color: #444;
+  table-layout: fixed;
 }
 thead {
   background-color: rgb(253, 216, 53);
@@ -232,6 +233,7 @@ thead {
 }
 .align-top {
   vertical-align: top;
+  width: 28%;
 }
 .rap-score {
   text-align: center;
@@ -243,5 +245,30 @@ thead {
 }
 .v-content {
   padding-top: 64px !important;
+}
+@media only screen and (max-device-width: 875px) {
+  table,
+  th,
+  td {
+    font-size: 0.5rem;
+  }
+  td:nth-of-type(1) {
+    width: 10px;
+  }
+  th:nth-of-type(1) {
+    width: 10px;
+  }
+  td:nth-of-type(2) {
+    display: none;
+  }
+  th:nth-of-type(2) {
+    display: none;
+  }
+  .card-table {
+    overflow: scroll;
+  }
+  .rap-score {
+    font-size: 0.8rem;
+  }
 }
 </style>

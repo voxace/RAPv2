@@ -60,6 +60,8 @@
 </template>
 
 <script>
+const Cookie = process.client ? require('js-cookie') : undefined
+
 export default {
   data() {
     return {
@@ -84,6 +86,7 @@ export default {
           })
           .then(response => {
             this.$store.commit('setAuth', response)
+            Cookie.set('auth', response)
             this.visible = false
             this.$router.push('/')
             this.loading = false

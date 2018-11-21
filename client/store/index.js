@@ -6,7 +6,7 @@ const createStore = () => {
     state: {
       loading: false,
       auth: null,
-      navDrawer: true
+      navDrawer: false
     },
     mutations: {
       setLoading(state, value) {

@@ -2,7 +2,7 @@
   <v-layout>
     <v-flex xs12>
       <h1>RAP Rubric</h1>
-      <p>Use the rubric to guide your scoring for each student. <a href="#">Click here</a> to download a PDF to keep or print.</p>
+      <p>Use the rubric to guide your scoring for each student. <a href="/RAP-Rubric.pdf">Click here</a> to download a PDF to keep or print.</p>
       <v-card class="elevation-6">
         <table>
           <thead>
@@ -53,7 +53,7 @@
                 </ul>
               </td>
             </tr>
-            <tr>
+            <tr class="alternate">
               <td class="rap-score">
                 <h1>4</h1>
               </td>
@@ -130,7 +130,7 @@
                 </ul>
               </td>
             </tr>
-            <tr>
+            <tr class="alternate">
               <td class="rap-score">
                 <h1>2</h1>
               </td>
@@ -224,8 +224,11 @@ td {
   color: #444;
 }
 thead {
-  background-color: #eee;
+  background-color: rgb(253, 216, 53);
   font-size: 1.2rem;
+}
+.alternate {
+  background-color: rgb(251, 251, 255);
 }
 .align-top {
   vertical-align: top;

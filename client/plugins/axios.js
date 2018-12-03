@@ -1,6 +1,10 @@
 export default function({ store, $axios, redirect }) {
   $axios.onRequest(config => {
-    if (config.method != 'patch' && config.url != '/auth/login') {
+    if (
+      config.method != 'patch' &&
+      config.url != '/auth/login' &&
+      !config.url.includes('/scores/student')
+    ) {
       store.commit('setLoading', true)
     }
     console.log('Making request to ' + config.url) // eslint-disable-line no-console

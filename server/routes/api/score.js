@@ -13,6 +13,7 @@ router.patch("/score/id", controller.SetScore);
 
 // GET SCORES
 // Get Scores / Student (for student, grouped by period)
+router.get("/scores/student/:name", controller.GetScoresByStudentName);
 // Get Scores / Class (for a particular class code)
 // Get Scores / Teacher (for teacher, grouped by class, active period only)
 router.get("/scores/teacher/:id", controller.GetScoresByTeacher);

@@ -18,15 +18,33 @@ const StudentSchema = new Schema({
   average: Number
 });
 
+// Find averages lower than
 StudentSchema.statics.findAveragesLowerThan = function(score, cb) {
   return this.find({ average: { $lte: score } }, cb);
 };
 
+// Find averages greater than
 StudentSchema.statics.findAveragesGreaterThan = function(score, cb) {
   return this.find({ average: { $gte: score } }, cb);
 };
 
-// Create New Teacher
+// Get a list of all students
+StudentSchema.statics.GetAllStudents = function(cb) {
+  return this.aggregate([
+    {
+      $project: {
+        name: { $concat: ["$name.first", " ", "$name.last"] }
+      }
+    },
+    {
+      $sort: {
+        name: 1
+      }
+    }
+  ]).exec(cb);
+};
+
+// Create New Student
 StudentSchema.statics.NewStudent = function(first, last, callback) {
   return this.findOneAndUpdate(
     { name: { first: first, last: last } },

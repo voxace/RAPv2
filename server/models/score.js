@@ -76,6 +76,65 @@ ScoreSchema.statics.GetScoresByTeacher = function(teacher, cb) {
   ]).exec(cb);
 };
 
+// Get all scores for specified Student grouped by period
+ScoreSchema.statics.GetScoresByStudentName = function(student, cb) {
+  console.log(student);
+  return this.aggregate([
+    // Match only scores for specified teacher
+    {
+      $match: { studentId: new mongoose.Types.ObjectId(student) }
+    },
+    // Join score table to students table
+    {
+      $lookup: {
+        from: "periods",
+        localField: "periodId",
+        foreignField: "_id",
+        as: "period"
+      }
+    },
+    // Join score table to students table
+    {
+      $lookup: {
+        from: "teachers",
+        localField: "teacherId",
+        foreignField: "_id",
+        as: "teacher"
+      }
+    },
+    // Merge teacher field data back into score
+    {
+      $replaceRoot: {
+        newRoot: {
+          $mergeObjects: [{ $arrayElemAt: ["$teacher", 0] }, "$$ROOT"]
+        }
+      }
+    },
+    {
+      $project: {
+        name: "$name",
+        score: "$score",
+        subject: "$subject",
+        subjectCode: "$subjectCode",
+        period: "$period"
+      }
+    },
+    {
+      $group: {
+        _id: "$period",
+        scores: {
+          $push: "$$ROOT"
+        }
+      }
+    },
+    {
+      $project: {
+        scores: { period: 0 }
+      }
+    }
+  ]).exec(cb);
+};
+
 // Find scores less than
 ScoreSchema.statics.findScoresLessThan = function(score, cb) {
   return this.find({ average: { $lt: score } }, cb);

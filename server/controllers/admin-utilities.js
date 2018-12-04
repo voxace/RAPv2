@@ -55,22 +55,37 @@ async function ProcessSingleRow(student, callback, periodDbId) {
     firstname = CapitalizeFix(firstname);
     firstname = EscapeApostrophes(firstname);
 
+    // Joins names
+    let name = firstname + " " + surname;
+
     // Import ID Numbers, set invalid numbers to 0
     let idNum = student["Student code"];
     if (parseInt(idNum) != idNum) {
       callback();
+    } else {
+      idNum = parseInt(idNum);
     }
 
+    // Other fields
     let grade = student["Year"];
     let subject = student["Subject"];
     let code = student["Course code"];
+    if (student["Class id"] != undefined) {
+      code += student["Class id"];
+    }
+
+    // Process username if it exists
+    let username = "";
+    if (student["Email"] != undefined) {
+      username = student["Email"].split("@")[0];
+    }
 
     // Create Students
     let studentDbId;
-    Student.NewStudent(firstname, surname)
+    Student.NewStudent(name, username, idNum)
       .then(stu => {
         studentDbId = stu._id;
-        console.log(stu.fullName + " : " + studentDbId);
+        console.log(stu.name + " : " + studentDbId);
 
         // Create Teachers
         let teacherDbId;
@@ -91,12 +106,7 @@ async function ProcessSingleRow(student, callback, periodDbId) {
             )
               .then(score => {
                 console.log(
-                  "Score created: " +
-                    stu.fullName +
-                    ", " +
-                    tch.name +
-                    ", " +
-                    code
+                  "Score created: " + stu.name + ", " + tch.name + ", " + code
                 );
               })
               .catch(err => {
@@ -123,10 +133,10 @@ async function ProcessSingleRow(student, callback, periodDbId) {
 
 // Processes the CSV file from Edval
 async function ProcessStudents(jsonArrayObj, ctx) {
-  await Period.findOne({ active: true }, function(error, activePeriod) {
+  await Period.findOne({ active: true }, async function(error, activePeriod) {
     console.log("Processing Students...");
     let periodDbId = activePeriod._id;
-    async.eachSeries(
+    await async.eachSeries(
       jsonArrayObj,
       function(student, callback) {
         ProcessSingleRow(student, callback, periodDbId);

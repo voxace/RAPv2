@@ -42,7 +42,7 @@ ScoreSchema.statics.GetScoresByTeacher = function(teacher, cb) {
     },
     {
       $project: {
-        name: { $concat: ["$name.first", " ", "$name.last"] },
+        name: "$name",
         studentId: "$studentId",
         score: "$score",
         subjectCode: "$subjectCode"
@@ -66,6 +66,11 @@ ScoreSchema.statics.GetScoresByTeacher = function(teacher, cb) {
         scores: {
           $push: "$$ROOT"
         }
+      }
+    },
+    {
+      $sort: {
+        _id: 1
       }
     },
     {

@@ -5,7 +5,7 @@
     <v-flex
       xs12
       mb-3>
-      <v-card>
+      <v-card class="elevation-6">
         <v-card-title class="title yellow darken-1">Student</v-card-title>
         <v-card-text>
           <v-autocomplete
@@ -36,7 +36,11 @@
       </v-card>
     </v-flex>
     <v-flex xs12>
-      <v-expansion-panel v-model="expansion">
+      <v-expansion-panel
+        v-model="expansion"
+        class="elevation-6"
+        focusable
+      >
         <v-expansion-panel-content
           v-for="(score,i) in scores"
           :key="i"
@@ -44,7 +48,6 @@
           <div
             slot="header"
             class="title"
-            @click="check"
           >
             {{ ReturnPeriod(score) }}
           </div>
@@ -54,6 +57,7 @@
                 :headers="headers"
                 :items="score.scores"
                 :loading="loading"
+                :pagination.sync="pagination"
                 hide-actions
               >
                 <template
@@ -100,32 +104,33 @@ export default {
           text: 'Teacher',
           value: 'name',
           align: 'left',
-          sortable: false,
           class: 'table-heading'
         },
         {
           text: 'Subject',
           value: 'subject',
           align: 'left',
-          sortable: false,
           class: 'table-heading'
         },
         {
           text: 'Code',
           value: 'subjectCode',
           align: 'left',
-          sortable: false,
           class: 'table-heading'
         },
         {
           text: 'Score',
           value: 'score',
           align: 'center',
-          sortable: false,
           width: '60px',
           class: 'table-heading'
         }
       ],
+      pagination: {
+        sortBy: 'score',
+        descending: true,
+        rowsPerPage: -1
+      },
       expansion: null
     }
   },
@@ -162,9 +167,6 @@ export default {
         ', Week ' +
         score._id[0].week
       )
-    },
-    check() {
-      //alert(JSON.stringify(this.expansion))
     }
   }
 }
@@ -172,6 +174,6 @@ export default {
 
 <style>
 .v-expansion-panel__header {
-  background-color: #fdd835 !important;
+  background-color: #efefef !important;
 }
 </style>

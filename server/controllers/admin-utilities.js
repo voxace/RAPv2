@@ -152,6 +152,123 @@ async function ProcessStudents(jsonArrayObj, ctx) {
   });
 }
 
+// Processes a single student from the old RAP Data (JSON)
+async function ProcessSingleStudent(student, callback) {
+  let name = student.name;
+  let idNum = student.id;
+  let username = student.username;
+
+  // Create Students
+  let studentDbId;
+  Student.NewStudent(name, username, idNum)
+    .then(stu => {
+      studentDbId = stu._id;
+      console.log(stu.name + " : " + studentDbId);
+
+      async.eachSeries(
+        student.rap,
+        function(rapPeriod, cb) {
+          ProcessSingleRapPeriod(rapPeriod, studentDbId, cb);
+        },
+        function(err) {
+          if (err) {
+            console.log("Error");
+          }
+        }
+      );
+    })
+    .catch(err => {
+      if (err) {
+        console.log(err);
+      }
+    });
+
+  callback();
+}
+
+// Processes a single RAP Period from the old RAP Data (JSON)
+async function ProcessSingleRapPeriod(rapPeriod, studentDbId, callback) {
+  let year = rapPeriod.year;
+  let term = rapPeriod.term;
+  let week = rapPeriod.week;
+  let grade = rapPeriod.grade;
+
+  await Period.NewPeriod(year, term, week, async function(error, period) {
+    let periodDbId = period._id;
+    console.log(
+      "Processing " +
+        year +
+        ", Term " +
+        term +
+        ", Week " +
+        week +
+        " for StudentID: " +
+        studentDbId
+    );
+    await async.eachSeries(
+      rapPeriod.scores,
+      function(score, cb) {
+        ProcessSingleScore(score, studentDbId, periodDbId, grade, cb);
+      },
+      function(err) {
+        if (err) {
+          console.log("Error");
+        }
+      }
+    );
+  });
+
+  callback();
+}
+
+// Processes a single score from the old RAP Data (JSON)
+async function ProcessSingleScore(
+  score,
+  studentDbId,
+  periodDbId,
+  grade,
+  callback
+) {
+  await Teacher.NewTeacher(score.teacher, async function(error, teacher) {
+    let teacherDbId = teacher._id;
+    let subject = score.subject;
+    let code = score.code;
+    let value = score.value;
+
+    await Score.NewScore(
+      studentDbId,
+      teacherDbId,
+      periodDbId,
+      subject,
+      code,
+      grade,
+      value,
+      async function(error, newScore) {
+        console.log(newScore);
+        callback();
+      }
+    );
+  });
+}
+
+// Processes old RAP Data (JSON)
+async function ProcessOldStudents(jsonArrayObj, ctx) {
+  console.log("Processing Students...");
+  await async.eachSeries(
+    jsonArrayObj,
+    function(student, callback) {
+      ProcessSingleStudent(student, callback);
+    },
+    function(err) {
+      if (err) {
+        ctx.body = "Error";
+      } else {
+        ctx.body = "Success";
+      }
+    }
+  );
+}
+
 // Deletes the specified file
 function DeleteFile(file) {
   fs.unlink(file, err => {
@@ -169,5 +286,6 @@ module.exports = {
   EscapeApostrophes,
   ReorderName,
   ProcessStudents,
+  ProcessOldStudents,
   DeleteFile
 };

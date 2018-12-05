@@ -136,6 +136,13 @@ ScoreSchema.statics.GetScoresByStudentName = function(student, cb) {
       $project: {
         scores: { period: 0 }
       }
+    },
+    {
+      $sort: {
+        "_id.year": -1,
+        "_id.term": -1,
+        "_id.week": -1
+      }
     }
   ]).exec(cb);
 };

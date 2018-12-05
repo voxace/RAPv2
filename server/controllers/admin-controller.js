@@ -16,6 +16,14 @@ module.exports = {
     Utilities.DeleteFile(csvFilePath);
   },
 
+  // Imports old RAP Data
+  async ImportFromOldRap(ctx) {
+    let jsonFilePath = ctx.request.files["Upload"].path;
+    let jsonArrayObj = JSON.parse(fs.readFileSync(jsonFilePath, "utf8"));
+    Utilities.ProcessOldStudents(jsonArrayObj, ctx);
+    Utilities.DeleteFile(jsonFilePath);
+  },
+
   // Gets the active RAP Period
   async GetActiveRapPeriod(ctx) {
     await Period.FindActive()

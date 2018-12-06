@@ -98,7 +98,9 @@ export default {
   methods: {
     async GetScoresByTeacher() {
       let user_id = this.$store.state.auth.user_id
-      this.Scores = await this.$axios.$get('/scores/teacher/' + user_id)
+      this.Scores = await this.$axios.$get(
+        '/scores/teacher/' + user_id + '/active'
+      )
     }
   }
 }

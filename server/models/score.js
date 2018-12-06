@@ -17,11 +17,14 @@ const ScoreSchema = new Schema(
 );
 
 // Get scores for specified period by Teacher
-ScoreSchema.statics.GetScoresByTeacher = function(teacher, cb) {
+ScoreSchema.statics.GetScoresByTeacher = function(teacher, period, cb) {
   return this.aggregate([
     // Match only scores for specified teacher
     {
-      $match: { teacherId: new mongoose.Types.ObjectId(teacher) }
+      $match: {
+        teacherId: new mongoose.Types.ObjectId(teacher),
+        periodId: new mongoose.Types.ObjectId(period)
+      }
     },
     // Join score table to students table
     {
@@ -76,6 +79,55 @@ ScoreSchema.statics.GetScoresByTeacher = function(teacher, cb) {
     {
       $project: {
         scores: { subjectCode: 0 }
+      }
+    }
+  ]).exec(cb);
+};
+
+// Get scores for specified period by Teacher
+ScoreSchema.statics.GetScoresByClass = function(subjectCode, period, cb) {
+  return this.aggregate([
+    // Match only scores for specified subjectCode
+    {
+      $match: {
+        subjectCode: subjectCode,
+        periodId: new mongoose.Types.ObjectId(period)
+      }
+    },
+    // Join score table to students table
+    {
+      $lookup: {
+        from: "students",
+        localField: "studentId",
+        foreignField: "_id",
+        as: "student"
+      }
+    },
+    // Merge student field data back into score
+    {
+      $replaceRoot: {
+        newRoot: {
+          $mergeObjects: [{ $arrayElemAt: ["$student", 0] }, "$$ROOT"]
+        }
+      }
+    },
+    {
+      $project: {
+        name: "$name",
+        studentId: "$studentId",
+        score: "$score",
+        subjectCode: "$subjectCode"
+      }
+    },
+    // Remove separate student field
+    {
+      $project: {
+        student: 0
+      }
+    },
+    {
+      $sort: {
+        name: 1
       }
     }
   ]).exec(cb);

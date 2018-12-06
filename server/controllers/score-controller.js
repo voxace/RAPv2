@@ -4,9 +4,32 @@ const Score = require("./../models/score");
 const Teacher = require("./../models/teacher");
 
 module.exports = {
-  // Get Scores / Teacher (for teacher, grouped by class, active period only)
+  // Get Scores / Teacher (grouped by subject code)
   async GetScoresByTeacher(ctx) {
-    await Score.GetScoresByTeacher(ctx.params.id)
+    let period = ctx.params.period;
+    if (ctx.params.period == "active") {
+      await Period.FindActive().then(activePeriod => {
+        period = activePeriod._id;
+      });
+    }
+    await Score.GetScoresByTeacher(ctx.params.id, period)
+      .then(scores => {
+        ctx.body = JSON.stringify(scores);
+      })
+      .catch(err => {
+        console.log(err);
+        throw new Error(err);
+      });
+  },
+  // Get Scores / Class
+  async GetScoresByClass(ctx) {
+    let period = ctx.params.period;
+    if (ctx.params.period == "active") {
+      await Period.FindActive().then(activePeriod => {
+        period = activePeriod._id;
+      });
+    }
+    await Score.GetScoresByClass(ctx.params.code, period)
       .then(scores => {
         ctx.body = JSON.stringify(scores);
       })

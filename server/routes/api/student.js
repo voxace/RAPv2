@@ -12,7 +12,7 @@ const router = new Router();
 // Get student / by username
 
 // Get students / all
-router.get("/students", controller.GetAllStudents);
+router.get("/students/:period", controller.GetAllStudents);
 
 router.post("/student", controller.post);
 router.get("/student", controller.get);

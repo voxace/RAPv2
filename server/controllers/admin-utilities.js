@@ -2,6 +2,7 @@ const Student = require("./../models/student");
 const Period = require("./../models/period");
 const Score = require("./../models/score");
 const Teacher = require("./../models/teacher");
+const Subject = require("./../models/subject");
 const csv = require("csvtojson");
 const async = require("async");
 const fs = require("fs");
@@ -94,33 +95,54 @@ async function ProcessSingleRow(student, callback, periodDbId) {
             teacherDbId = tch._id;
             console.log(tch.name + " : " + teacherDbId);
 
-            // Create Scores
-            Score.NewScore(
-              studentDbId,
-              teacherDbId,
-              periodDbId,
-              subject,
-              code,
-              grade,
-              0
-            )
-              .then(score => {
-                console.log(
-                  "Score created: " + stu.name + ", " + tch.name + ", " + code
-                );
+            // Create Subjects
+            let subjectDbId;
+            Subject.NewSubject(subject, code)
+              .then(sub => {
+                subjectDbId = sub._id;
+                console.log(sub.name + " : " + subjectDbId);
+
+                // Create Scores
+                Score.NewScore(
+                  studentDbId,
+                  teacherDbId,
+                  periodDbId,
+                  subjectDbId,
+                  grade,
+                  0
+                )
+                  .then(score => {
+                    console.log(
+                      "Score created: " +
+                        stu.name +
+                        ", " +
+                        tch.name +
+                        ", " +
+                        code
+                    );
+                  })
+                  // Catch errors with Score insert
+                  .catch(err => {
+                    if (err) {
+                      console.log(err);
+                    }
+                  });
               })
+              // Catch errors with Subject insert
               .catch(err => {
                 if (err) {
                   console.log(err);
                 }
               });
           })
+          // Catch errors with Teacher insert
           .catch(err => {
             if (err) {
               console.log(err);
             }
           });
       })
+      // Catch errors with Student insert
       .catch(err => {
         if (err) {
           console.log(err);

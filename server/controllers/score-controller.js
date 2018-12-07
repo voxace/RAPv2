@@ -2,6 +2,7 @@ const Student = require("./../models/student");
 const Period = require("./../models/period");
 const Score = require("./../models/score");
 const Teacher = require("./../models/teacher");
+const Subject = require("./../models/subject");
 
 module.exports = {
   // Get Scores / Teacher (grouped by subject code)

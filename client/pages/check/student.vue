@@ -149,7 +149,7 @@ export default {
   },
   methods: {
     async GetAllStudents() {
-      this.Students = await this.$axios.$get('/students')
+      this.Students = await this.$axios.$get('/students/active')
     },
     async GetScores() {
       this.loading = true

@@ -2,6 +2,7 @@ const Student = require("./../models/student");
 const Period = require("./../models/period");
 const Score = require("./../models/score");
 const Teacher = require("./../models/teacher");
+const Subject = require("./../models/subject");
 const Utilities = require("./admin-utilities");
 const csv = require("csvtojson");
 const async = require("async");

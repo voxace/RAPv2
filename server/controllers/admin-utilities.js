@@ -182,28 +182,22 @@ async function ProcessSingleStudent(student, callback) {
 
   // Create Students
   let studentDbId;
-  Student.NewStudent(name, username, idNum)
-    .then(stu => {
-      studentDbId = stu._id;
-      console.log(stu.name + " : " + studentDbId);
+  Student.NewStudent(name, username, idNum).then(stu => {
+    studentDbId = stu._id;
+    console.log("Processed " + stu.name + " : " + studentDbId);
 
-      async.eachSeries(
-        student.rap,
-        function(rapPeriod, cb) {
-          ProcessSingleRapPeriod(rapPeriod, studentDbId, cb);
-        },
-        function(err) {
-          if (err) {
-            console.log("Error");
-          }
+    async.eachSeries(
+      student.rap,
+      function(rapPeriod, cb) {
+        ProcessSingleRapPeriod(rapPeriod, studentDbId, cb);
+      },
+      function(err) {
+        if (err) {
+          console.log("Error processing single student");
         }
-      );
-    })
-    .catch(err => {
-      if (err) {
-        console.log(err);
       }
-    });
+    );
+  });
 
   callback();
 }
@@ -234,7 +228,7 @@ async function ProcessSingleRapPeriod(rapPeriod, studentDbId, callback) {
       },
       function(err) {
         if (err) {
-          console.log("Error");
+          console.log("Error processing RAP Period");
         }
       }
     );
@@ -257,19 +251,23 @@ async function ProcessSingleScore(
     let code = score.code;
     let value = score.value;
 
-    await Score.NewScore(
-      studentDbId,
-      teacherDbId,
-      periodDbId,
-      subject,
-      code,
-      grade,
-      value,
-      async function(error, newScore) {
-        console.log(newScore);
-        callback();
-      }
-    );
+    await Subject.NewSubject(subject, code, async function(error, newSubject) {
+      let subjectDbId = newSubject._id;
+
+      await Score.NewScore(
+        studentDbId,
+        teacherDbId,
+        periodDbId,
+        subjectDbId,
+        grade,
+        value,
+        async function(error, newScore) {
+          if (error) console.log(error);
+          else console.log("Score: " + newScore._id);
+          callback();
+        }
+      );
+    });
   });
 }
 

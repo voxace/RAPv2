@@ -16,7 +16,7 @@ const ScoreSchema = new Schema(
 );
 
 ScoreSchema.index(
-  { studentId: 1, periodId: 1, subjectId: 1 },
+  { studentId: 1, periodId: 1, subjectId: 1, teacherId: 1 },
   { name: "unique_score", unique: true }
 );
 

@@ -2,7 +2,15 @@ const Teacher = require("./../models/teacher");
 const async = require("async");
 
 module.exports = {
-  async Test(ctx) {
-    ctx.body = "Teacher Test Function";
+  // Get teachers / all
+  async GetAllTeachers(ctx) {
+    await Teacher.GetAllTeachers()
+      .then(teachers => {
+        ctx.body = JSON.stringify(teachers);
+      })
+      .catch(err => {
+        console.log(err);
+        throw new Error(err);
+      });
   }
 };

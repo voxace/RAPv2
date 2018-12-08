@@ -5,15 +5,9 @@ const Teacher = require("./../models/teacher");
 const Subject = require("./../models/subject");
 
 module.exports = {
-  // Get subject / all
+  // Get subject / name / all
   async GetAllSubjects(ctx) {
-    let period = ctx.params.period;
-    if (ctx.params.period == "active") {
-      await Period.FindActive().then(activePeriod => {
-        period = activePeriod._id;
-      });
-    }
-    await Score.GetAllSubjects(period)
+    await Subject.GetAllSubjects()
       .then(students => {
         ctx.body = JSON.stringify(students);
       })
@@ -23,15 +17,9 @@ module.exports = {
       });
   },
 
-  // Get subject / all
+  // Get subject / code / all
   async GetAllSubjectCodes(ctx) {
-    let period = ctx.params.period;
-    if (ctx.params.period == "active") {
-      await Period.FindActive().then(activePeriod => {
-        period = activePeriod._id;
-      });
-    }
-    await Score.GetAllSubjectCodes(period)
+    await Subject.GetAllSubjectCodes()
       .then(students => {
         ctx.body = JSON.stringify(students);
       })

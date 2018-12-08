@@ -1,8 +1,42 @@
 <template>
-  <v-layout>
-    <v-flex>
-      <h1>{{ user }}</h1>
-      <p>Enter a score from 1-5 according to the <nuxt-link to="/rubric">rubric</nuxt-link>. Leave the score blank or remove the student from the class if they do not qualify for a score (e.g. left school, have not attended your class). Clicking the button a second time will also remove the score.</p>
+  <v-layout
+    wrap
+    align-content-start
+  >
+    <v-flex
+      xs12
+      mb-3>
+      <v-card class="elevation-6">
+        <v-card-title class="title yellow darken-1">Teacher</v-card-title>
+        <v-card-text>
+          <v-autocomplete
+            v-model="model"
+            :items="teachers"
+            :loading="loading"
+            item-text="name"
+            item-value="_id"
+            placeholder="Name"
+            color="indigo"
+            autofocus
+            clearable
+            height="36px"
+            @keyup.enter="GetScores"
+          >
+            <v-btn
+              slot="append-outer"
+              :loading="loading"
+              small
+              outline
+              color="indigo"
+              @click="GetScores"
+            >
+              SEARCH
+            </v-btn>
+          </v-autocomplete>
+        </v-card-text>
+      </v-card>
+    </v-flex>
+    <v-flex xs12>
       <v-card class="elevation-6">
         <v-tabs
           v-model="tabModel"
@@ -37,9 +71,17 @@
                 slot-scope="props">
                 <tr>
                   <td :id="props.item.studentId">{{ props.item.name }}</td>
-                  <td class="text-xs-right">
-                    <score
-                      :scoredata="props.item" />
+                  <td
+                    v-if="props.item.score != 0 && props.item.score != null"
+                    class="text-xs-center"
+                  >
+                    {{ props.item.score }}
+                  </td>
+                  <td
+                    v-else
+                    class="text-xs-center"
+                  >
+                    -
                   </td>
                 </tr>
               </template>
@@ -61,6 +103,9 @@ export default {
   middleware: 'auth',
   data() {
     return {
+      model: null,
+      loading: false,
+      Teachers: [],
       tabModel: 'tab0',
       headers: [
         {
@@ -83,26 +128,25 @@ export default {
     }
   },
   computed: {
+    teachers() {
+      return this.Teachers
+    },
     scores() {
       return this.Scores
-    },
-    loading() {
-      return this.$store.state.loading
-    },
-    user() {
-      return this.$store.state.auth.name
     }
   },
   created() {
     if (process.browser) {
-      this.GetScoresByTeacher()
+      this.GetAllTeachers()
     }
   },
   methods: {
-    async GetScoresByTeacher() {
-      let user_id = this.$store.state.auth.user_id
+    async GetAllTeachers() {
+      this.Teachers = await this.$axios.$get('/teachers')
+    },
+    async GetScores() {
       this.Scores = await this.$axios.$get(
-        '/scores/teacher/' + user_id + '/active'
+        '/scores/teacher/' + this.model + '/active'
       )
     }
   }

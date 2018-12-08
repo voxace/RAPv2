@@ -22,15 +22,9 @@ module.exports = {
         throw new Error(err);
       });
   },
-  // Get Scores / Class
-  async GetScoresByClass(ctx) {
-    let period = ctx.params.period;
-    if (ctx.params.period == "active") {
-      await Period.FindActive().then(activePeriod => {
-        period = activePeriod._id;
-      });
-    }
-    await Score.GetScoresByClass(ctx.params.code, period)
+  // Get Scores / Subject
+  async GetScoresBySubjectID(ctx) {
+    await Score.GetScoresBySubjectID(ctx.params.code)
       .then(scores => {
         ctx.body = JSON.stringify(scores);
       })

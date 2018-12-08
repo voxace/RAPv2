@@ -102,7 +102,7 @@ export default {
 }
 </script>
 
-<style scoped>
+<style>
 .fade-enter-active,
 .fade-leave-active {
   transition: opacity 0.5s;
@@ -113,5 +113,9 @@ export default {
 }
 .theme--light.application {
   background: #fff;
+}
+table.v-table tbody td,
+table.v-table tbody th {
+  height: 42px !important;
 }
 </style>

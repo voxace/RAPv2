@@ -21,6 +21,38 @@ SubjectSchema.statics.NewSubject = function(name, code, callback) {
   );
 };
 
+// Get a list of all subjects by name
+SubjectSchema.statics.GetAllSubjects = function(cb) {
+  return this.aggregate([
+    {
+      $project: {
+        name: "$name"
+      }
+    },
+    {
+      $sort: {
+        name: 1
+      }
+    }
+  ]).exec(cb);
+};
+
+// Get a list of all subjects by code
+SubjectSchema.statics.GetAllSubjectCodes = function(cb) {
+  return this.aggregate([
+    {
+      $project: {
+        code: "$code"
+      }
+    },
+    {
+      $sort: {
+        code: 1
+      }
+    }
+  ]).exec(cb);
+};
+
 const Subject = mongoose.model("Subject", SubjectSchema);
 
 module.exports = Subject;

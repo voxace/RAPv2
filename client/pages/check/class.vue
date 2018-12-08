@@ -6,13 +6,13 @@
       xs12
       mb-3>
       <v-card class="elevation-6">
-        <v-card-title class="title yellow darken-1">Student</v-card-title>
+        <v-card-title class="title yellow darken-1">Subject Code</v-card-title>
         <v-card-text>
           <v-autocomplete
             v-model="model"
-            :items="students"
+            :items="subjectCodes"
             :loading="loading"
-            item-text="name"
+            item-text="code"
             item-value="_id"
             placeholder="Name"
             color="indigo"
@@ -78,8 +78,7 @@
                   slot-scope="props">
                   <tr>
                     <td>{{ props.item.name }}</td>
-                    <td>{{ props.item.subject }}</td>
-                    <td>{{ props.item.subjectCode }}</td>
+                    <td>{{ props.item.teacher }}</td>
                     <td
                       v-if="props.item.score != 0 && props.item.score != null"
                       class="text-xs-center"
@@ -110,24 +109,18 @@ export default {
     return {
       model: null,
       loading: false,
-      Students: [],
+      SubjectCodes: [],
       Scores: [],
       headers: [
         {
-          text: 'Teacher',
+          text: 'Student',
           value: 'name',
           align: 'left',
           class: 'table-heading'
         },
         {
-          text: 'Subject',
-          value: 'subject',
-          align: 'left',
-          class: 'table-heading'
-        },
-        {
-          text: 'Code',
-          value: 'subjectCode',
+          text: 'Teacher',
+          value: 'teacher',
           align: 'left',
           class: 'table-heading'
         },
@@ -148,8 +141,8 @@ export default {
     }
   },
   computed: {
-    students() {
-      return this.Students
+    subjectCodes() {
+      return this.SubjectCodes
     },
     scores() {
       return this.Scores
@@ -157,16 +150,16 @@ export default {
   },
   created() {
     if (process.browser) {
-      this.GetAllStudents()
+      this.GetAllSubjectCodes()
     }
   },
   methods: {
-    async GetAllStudents() {
-      this.Students = await this.$axios.$get('/students/active')
+    async GetAllSubjectCodes() {
+      this.SubjectCodes = await this.$axios.$get('/subject/code/all')
     },
     async GetScores() {
       this.loading = true
-      this.Scores = await this.$axios.$get('/scores/student/' + this.model)
+      this.Scores = await this.$axios.$get('/scores/subject/' + this.model)
       setTimeout(() => {
         this.expansion = 0
         this.loading = false

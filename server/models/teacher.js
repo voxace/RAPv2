@@ -25,6 +25,22 @@ TeacherSchema.statics.NewTeacher = function(teacher, callback) {
   );
 };
 
+// Get a list of all students
+TeacherSchema.statics.GetAllTeachers = function(cb) {
+  return this.aggregate([
+    {
+      $project: {
+        name: "$name"
+      }
+    },
+    {
+      $sort: {
+        name: 1
+      }
+    }
+  ]).exec(cb);
+};
+
 // Create model
 const Teacher = mongoose.model("Teacher", TeacherSchema);
 

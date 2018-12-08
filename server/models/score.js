@@ -93,31 +93,34 @@ ScoreSchema.statics.GetScoresByTeacher = function(teacher, period, cb) {
   ]).exec(cb);
 };
 
-// Get scores for specified period by Teacher
-ScoreSchema.statics.GetScoresByClass = function(subjectCode, period, cb) {
+// Get scores for specified period by Class
+ScoreSchema.statics.GetScoresBySubjectID = function(subjectId, cb) {
   return this.aggregate([
-    // Match only scores for specified RAP Period
+    // Match only specified subject
     {
       $match: {
-        periodId: new mongoose.Types.ObjectId(period)
+        subjectId: new mongoose.Types.ObjectId(subjectId)
       }
     },
-    // Lookup subject data
+    // Join period table
     {
       $lookup: {
-        from: "subjects",
-        localField: "subjectId",
+        from: "periods",
+        localField: "periodId",
         foreignField: "_id",
-        as: "subject"
+        as: "period"
       }
     },
-    // Match only scores with same subject code
+    // Join teacher table to students table
     {
-      $match: {
-        "subject.code": subjectCode
+      $lookup: {
+        from: "teachers",
+        localField: "teacherId",
+        foreignField: "_id",
+        as: "teacher"
       }
     },
-    // Join score table to students table
+    // Lookup student data
     {
       $lookup: {
         from: "students",
@@ -126,18 +129,49 @@ ScoreSchema.statics.GetScoresByClass = function(subjectCode, period, cb) {
         as: "student"
       }
     },
-    // Keep only relevant fields
+    // Project only relevant fields
     {
       $project: {
         name: { $arrayElemAt: ["$student.name", 0] },
-        studentId: { $arrayElemAt: ["$student._id", 0] },
-        score: "$score"
+        teacher: { $arrayElemAt: ["$teacher.name", 0] },
+        score: {
+          $cond: {
+            if: { $eq: ["$score", 0] },
+            then: null,
+            else: "$score"
+          }
+        },
+        period: "$period"
       }
     },
-    // Sort by student name
+    // Sort by score
     {
       $sort: {
-        name: 1
+        score: -1
+      }
+    },
+    // Group by RAP Period
+    {
+      $group: {
+        _id: "$period",
+        average: { $avg: "$score" },
+        scores: {
+          $push: "$$ROOT"
+        }
+      }
+    },
+    // Remove RAP period from each score
+    {
+      $project: {
+        scores: { period: 0 }
+      }
+    },
+    // Sort by RAP Period
+    {
+      $sort: {
+        "_id.year": -1,
+        "_id.term": -1,
+        "_id.week": -1
       }
     }
   ]).exec(cb);
@@ -182,7 +216,13 @@ ScoreSchema.statics.GetScoresByStudentName = function(student, cb) {
     {
       $project: {
         name: { $arrayElemAt: ["$teacher.name", 0] },
-        score: "$score",
+        score: {
+          $cond: {
+            if: { $eq: ["$score", 0] },
+            then: null,
+            else: "$score"
+          }
+        },
         subject: { $arrayElemAt: ["$subject.name", 0] },
         subjectCode: { $arrayElemAt: ["$subject.code", 0] },
         period: "$period"
@@ -192,6 +232,7 @@ ScoreSchema.statics.GetScoresByStudentName = function(student, cb) {
     {
       $group: {
         _id: "$period",
+        average: { $avg: "$score" },
         scores: {
           $push: "$$ROOT"
         }
@@ -309,53 +350,6 @@ ScoreSchema.statics.NewScore = function(
     { upsert: true, new: true },
     callback
   );
-};
-
-// Get a list of all subject codes
-ScoreSchema.statics.GetAllSubjectCodes = function(period, cb) {
-  console.log(period);
-  return this.aggregate([
-    // Match only scores for specified period
-    {
-      $match: {
-        periodId: new mongoose.Types.ObjectId(period)
-      }
-    },
-    // Keep only the subjectCode field
-    {
-      project: {
-        subjectCode: "$subjectCode"
-      }
-    },
-    {
-      $sort: {
-        name: 1
-      }
-    }
-  ]).exec(cb);
-};
-
-// Get a list of all subjects
-ScoreSchema.statics.GetAllSubjects = function(period, cb) {
-  return this.aggregate([
-    // Match only scores for specified period
-    {
-      $match: {
-        periodId: new mongoose.Types.ObjectId(period)
-      }
-    },
-    // Keep only the subjectCode field
-    {
-      $project: {
-        subject: "$subject"
-      }
-    },
-    {
-      $sort: {
-        name: 1
-      }
-    }
-  ]).exec(cb);
 };
 
 const Score = mongoose.model("Score", ScoreSchema);

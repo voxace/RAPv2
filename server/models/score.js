@@ -53,8 +53,10 @@ ScoreSchema.statics.GetScoresByTeacher = function(teacher, period, cb) {
       $project: {
         name: { $arrayElemAt: ["$student.name", 0] },
         studentId: { $arrayElemAt: ["$student._id", 0] },
+        studentGrade: "$studentGrade",
         score: "$score",
-        subjectCode: { $arrayElemAt: ["$subject.code", 0] }
+        subjectCode: { $arrayElemAt: ["$subject.code", 0] },
+        subjectId: { $arrayElemAt: ["$subject._id", 0] }
       }
     },
     // Remove separate student field
@@ -72,7 +74,11 @@ ScoreSchema.statics.GetScoresByTeacher = function(teacher, period, cb) {
     //Group scores by subject
     {
       $group: {
-        _id: "$subjectCode",
+        _id: {
+          code: "$subjectCode",
+          subjectId: "$subjectId",
+          studentGrade: "$studentGrade"
+        },
         scores: {
           $push: "$$ROOT"
         }
@@ -87,7 +93,11 @@ ScoreSchema.statics.GetScoresByTeacher = function(teacher, period, cb) {
     // Remove subject code from each score
     {
       $project: {
-        scores: { subjectCode: 0 }
+        scores: {
+          subjectCode: 0,
+          studentGrade: 0,
+          subjectId: 0
+        }
       }
     }
   ]).exec(cb);

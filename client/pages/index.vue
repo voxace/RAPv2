@@ -14,18 +14,19 @@
           slider-color="indigo"
         >
           <v-tab
-            v-for="(tab, index) in scores"
-            :key="tab._id"
-            :href="'#tab' + index">
-            {{ tab._id }}
+            v-for="tab in scores"
+            :key="tab._id.code"
+            :href="'#' + tab._id.code"
+            @click="SetSubject(tab._id.subjectId)">
+            {{ tab._id.code }}
           </v-tab>
         </v-tabs>
         <v-tabs-items
           v-model="tabModel" >
           <v-tab-item
-            v-for="(tab, index) in scores"
-            :key="tab._id"
-            :value="'tab' + index">
+            v-for="tab in scores"
+            :key="tab._id.code"
+            :value="tab._id.code">
             <v-data-table
               :headers="headers"
               :items="tab.scores"
@@ -46,6 +47,56 @@
             </v-data-table>
           </v-tab-item>
         </v-tabs-items>
+        <v-layout
+          align-center
+          align-content-center
+          justify-center
+          wrap
+          class="px-2"
+        >
+          <v-flex
+            xs12
+            sm8
+            class="px-2"
+          >
+            <v-autocomplete
+              v-model="selectedStudent"
+              :items="students"
+              :loading="loading"
+              item-text="name"
+              item-value="_id"
+              placeholder="Add Missing Student"
+              color="indigo"
+              clearable
+              height="36px"
+              class="mt-2"
+              @keyup.enter="GetScores"
+            />
+          </v-flex>
+          <v-flex
+            xs6
+            sm2
+            class="px-2"
+          >
+            <v-btn
+              :disabled="selectedStudent == null"
+              block
+              color="info"
+              @click="AddStudent"
+            >Add Student</v-btn>
+          </v-flex>
+          <v-flex
+            sm2
+            xs6
+            class="px-2"
+          >
+            <v-btn
+              block
+              color="error"
+              @click="RemoveClass"
+            >Remove {{ currentClass }}</v-btn>
+          </v-flex>
+        </v-layout>
       </v-card>
     </v-flex>
   </v-layout>
@@ -61,7 +112,10 @@ export default {
   middleware: 'auth',
   data() {
     return {
-      tabModel: 'tab0',
+      tabModel: '',
+      currentClassId: '',
+      currentClassGrade: '',
+      selectedStudent: null,
       headers: [
         {
           text: 'Name',
@@ -79,7 +133,8 @@ export default {
           class: 'table-heading'
         }
       ],
-      Scores: {}
+      Scores: {},
+      Students: []
     }
   },
   computed: {
@@ -91,19 +146,56 @@ export default {
     },
     user() {
       return this.$store.state.auth.name
+    },
+    students() {
+      return this.Students
+    },
+    currentClass() {
+      return this.tabModel
     }
   },
   created() {
     if (process.browser) {
       this.GetScoresByTeacher()
+      this.GetAllStudents()
     }
   },
   methods: {
+    async GetAllStudents() {
+      this.Students = await this.$axios.$get('/students/active')
+    },
     async GetScoresByTeacher() {
+      this.Scores = null
       let user_id = this.$store.state.auth.user_id
       this.Scores = await this.$axios.$get(
         '/scores/teacher/' + user_id + '/active'
       )
+      this.tabModel = this.Scores[0]._id.code
+      this.currentClassId = this.Scores[0]._id.subjectId
+      this.currentClassGrade = this.Scores[0]._id.studentGrade
+    },
+    async AddStudent() {
+      await this.$axios
+        .$post('/score', {
+          studentId: this.selectedStudent,
+          teacherId: this.$store.state.auth.user_id,
+          periodId: 'active',
+          subjectId: this.currentClassId,
+          studentGrade: this.currentClassGrade
+        })
+        .then(() => {
+          this.GetScoresByTeacher()
+          this.selectedStudent = null
+        })
+    },
+    RemoveClass() {
+      alert(this.currentClassId)
+      // teacher id: user_id
+      // period: active
+      // class: currentClassId
+    },
+    SetSubject(id) {
+      this.currentClassId = id
     }
   }
 }

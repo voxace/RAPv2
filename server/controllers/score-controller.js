@@ -56,5 +56,34 @@ module.exports = {
         console.log(err);
         throw new Error(err);
       });
+  },
+  // New Score from all details
+  async NewScore(ctx) {
+    let studentId = ctx.request.body.studentId;
+    let teacherId = ctx.request.body.teacherId;
+    let subjectId = ctx.request.body.subjectId;
+    let studentGrade = ctx.request.body.studentGrade;
+    let periodId = ctx.params.period;
+    if (ctx.request.body.periodId == "active") {
+      await Period.FindActive().then(activePeriod => {
+        periodId = activePeriod._id;
+      });
+    }
+    await Score.NewScore(
+      studentId,
+      teacherId,
+      periodId,
+      subjectId,
+      studentGrade,
+      0
+    )
+      .then(score => {
+        console.log(JSON.stringify(score));
+        ctx.body = JSON.stringify(score);
+      })
+      .catch(err => {
+        console.log(err);
+        throw new Error(err);
+      });
   }
 };

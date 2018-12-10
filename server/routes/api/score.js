@@ -4,12 +4,13 @@ const router = new Router();
 
 // CRUD
 // Create Score / Student / Teacher / Class (when adding student to a class)
-router.post("/score", controller.NewScore);
+router.post("/score", controller.AddStudent);
 // Get Score / Student / Teacher / Class (when looking up a single score for a student/class combo)
 // Update Score / ID (when giving the student a score)
 router.patch("/score/id", controller.SetScore);
 // Update Score / Student / Teacher / Class (when giving the student a score)
 // Delete Score / Student / Teacher / Class (when removing student from a class)
+router.post("/score/remove", controller.RemoveStudent);
 // Delete Score / ID (when removing student from a class)
 
 // GET SCORES

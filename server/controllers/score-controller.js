@@ -85,5 +85,58 @@ module.exports = {
         console.log(err);
         throw new Error(err);
       });
+  },
+  // New Score from all details
+  async AddStudent(ctx) {
+    let periodId = ctx.params.period;
+    if (ctx.request.body.periodId == "active") {
+      await Period.FindActive().then(activePeriod => {
+        periodId = activePeriod._id;
+      });
+    }
+    let score = new Score({
+      studentId: ctx.request.body.studentId,
+      teacherId: ctx.request.body.teacherId,
+      subjectId: ctx.request.body.subjectId,
+      studentGrade: ctx.request.body.studentGrade,
+      periodId: periodId,
+      score: 0
+    });
+
+    await score
+      .save()
+      .then(score => {
+        console.log(JSON.stringify(score));
+        ctx.body = JSON.stringify(score);
+      })
+      .catch(err => {
+        console.log(err);
+        throw new Error(err);
+      });
+  },
+  // Remove Score
+  async RemoveStudent(ctx) {
+    let periodId = ctx.request.body.periodId;
+    if (periodId == "active") {
+      await Period.FindActive().then(activePeriod => {
+        periodId = activePeriod._id;
+      });
+    }
+    await Score.findOne({
+      studentId: ctx.request.body.studentId,
+      teacherId: ctx.request.body.teacherId,
+      subjectId: ctx.request.body.subjectId,
+      periodId: periodId
+    })
+      .remove()
+      .exec()
+      .then(score => {
+        console.log(JSON.stringify(score));
+        ctx.body = JSON.stringify(score);
+      })
+      .catch(err => {
+        console.log(err);
+        throw new Error(err);
+      });
   }
 };

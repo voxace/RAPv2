@@ -362,6 +362,39 @@ ScoreSchema.statics.NewScore = function(
   );
 };
 
+// Create New Score
+ScoreSchema.statics.AddStudent = function(
+  student,
+  teacher,
+  period,
+  subject,
+  grade,
+  score,
+  callback
+) {
+  return this.findOneAndUpdate(
+    {
+      studentId: student,
+      teacherId: teacher,
+      periodId: period,
+      subjectId: subject,
+      studentGrade: grade
+    },
+    {
+      $set: {
+        studentId: student,
+        teacherId: teacher,
+        periodId: period,
+        subjectId: subject,
+        studentGrade: grade,
+        score: score
+      }
+    },
+    { upsert: false, new: false },
+    callback
+  );
+};
+
 const Score = mongoose.model("Score", ScoreSchema);
 
 module.exports = Score;

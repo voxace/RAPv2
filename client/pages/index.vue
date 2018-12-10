@@ -14,10 +14,10 @@
           slider-color="indigo"
         >
           <v-tab
-            v-for="tab in scores"
+            v-for="(tab, index) in scores"
             :key="tab._id.code"
             :href="'#' + tab._id.code"
-            @click="SetSubject(tab._id.subjectId)">
+            @click="SetSubject(tab._id.subjectId, index)">
             {{ tab._id.code }}
           </v-tab>
         </v-tabs>
@@ -37,7 +37,23 @@
                 slot="items"
                 slot-scope="props">
                 <tr>
-                  <td :id="props.item.studentId">{{ props.item.name }}</td>
+                  <td class="remove">
+                    <v-btn
+                      fab
+                      dark
+                      class="small-button"
+                      color="error"
+                      @click="RemoveStudent(props.item)"
+                    >
+                      <v-icon
+                        dark
+                        size="16px"
+                      >
+                        remove
+                      </v-icon>
+                    </v-btn>
+                  </td>
+                  <td>{{ props.item.name }}</td>
                   <td class="text-xs-right">
                     <score
                       :scoredata="props.item" />
@@ -60,6 +76,7 @@
             class="px-2"
           >
             <v-autocomplete
+              id="autocomplete-students"
               v-model="selectedStudent"
               :items="students"
               :loading="loading"
@@ -79,7 +96,7 @@
             class="px-2"
           >
             <v-btn
-              :disabled="selectedStudent == null"
+              :disabled="AddStudentButtonEnabled"
               block
               color="info"
               @click="AddStudent"
@@ -114,9 +131,18 @@ export default {
     return {
       tabModel: '',
       currentClassId: '',
+      currentClassIndex: 0,
       currentClassGrade: '',
       selectedStudent: null,
       headers: [
+        {
+          text: '',
+          value: 'delete',
+          align: 'center',
+          width: '10px',
+          sortable: false,
+          class: 'table-heading'
+        },
         {
           text: 'Name',
           value: 'name',
@@ -148,10 +174,32 @@ export default {
       return this.$store.state.auth.name
     },
     students() {
-      return this.Students
+      let filteredStudents = []
+      for (var i = 0; i < this.Students.length; i++) {
+        let currentStudent = this.Students[i].name
+        let found = false
+        for (
+          var j = 0;
+          j < this.scores[this.currentClassIndex].scores.length;
+          j++
+        ) {
+          let duplicateStudent = this.scores[this.currentClassIndex].scores[j]
+            .name
+          if (currentStudent == duplicateStudent) {
+            found = true
+          }
+        }
+        if (!found) {
+          filteredStudents.push(this.Students[i])
+        }
+      }
+      return filteredStudents
     },
     currentClass() {
       return this.tabModel
+    },
+    AddStudentButtonEnabled() {
+      return this.selectedStudent == null
     }
   },
   created() {
@@ -165,6 +213,7 @@ export default {
       this.Students = await this.$axios.$get('/students/active')
     },
     async GetScoresByTeacher() {
+      this.$store.commit('setLoading', true)
       this.Scores = null
       let user_id = this.$store.state.auth.user_id
       this.Scores = await this.$axios.$get(
@@ -173,6 +222,7 @@ export default {
       this.tabModel = this.Scores[0]._id.code
       this.currentClassId = this.Scores[0]._id.subjectId
       this.currentClassGrade = this.Scores[0]._id.studentGrade
+      this.$store.commit('setLoading', false)
     },
     async AddStudent() {
       await this.$axios
@@ -183,9 +233,32 @@ export default {
           subjectId: this.currentClassId,
           studentGrade: this.currentClassGrade
         })
-        .then(() => {
-          this.GetScoresByTeacher()
+        .then(student => {
+          let newStudent = {
+            _id: student._id,
+            name: document.getElementById('autocomplete-students').value,
+            studentId: student.studentId,
+            score: student.score
+          }
+          this.Scores[this.currentClassIndex].scores.push(newStudent)
           this.selectedStudent = null
+        })
+    },
+    async RemoveStudent(student) {
+      await this.$axios
+        .$post('/score/remove', {
+          studentId: student.studentId,
+          teacherId: this.$store.state.auth.user_id,
+          periodId: 'active',
+          subjectId: this.currentClassId
+        })
+        .then(() => {
+          let index = this.Scores[this.currentClassIndex].scores
+            .map(function(e) {
+              return e.name
+            })
+            .indexOf(student.name)
+          this.Scores[this.currentClassIndex].scores.splice(index, 1)
         })
     },
     RemoveClass() {
@@ -194,8 +267,9 @@ export default {
       // period: active
       // class: currentClassId
     },
-    SetSubject(id) {
+    SetSubject(id, index) {
       this.currentClassId = id
+      this.currentClassIndex = index
     }
   }
 }
@@ -204,6 +278,19 @@ export default {
 <style>
 .table-heading {
   font-size: 16px !important;
+}
+
+.v-btn {
+  min-width: 0;
+}
+
+.remove {
+  padding: 0px 0px 0px 10px !important;
+}
+
+.small-button {
+  width: 22px;
+  height: 22px;
 }
 
 .v-tabs__div {

@@ -51,7 +51,7 @@
             v-for="(tab, index) in scores"
             :key="tab._id"
             :href="'#tab' + index">
-            {{ tab._id }}
+            {{ tab._id.code }}
           </v-tab>
         </v-tabs>
         <v-tabs-items

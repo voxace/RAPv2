@@ -61,7 +61,7 @@
               class="text-xs-right mr-4"
               xs4
             >
-              Average: {{ ReturnScore(score.average) }}
+              <span class="hidden-sm-and-down">Average: </span>{{ ReturnScore(score.average) }}
             </v-flex>
           </v-layout>
           <v-card>
@@ -78,7 +78,7 @@
                   slot-scope="props">
                   <tr>
                     <td>{{ props.item.name }}</td>
-                    <td>{{ props.item.subject }}</td>
+                    <td class="hidden-sm-and-down">{{ props.item.subject }}</td>
                     <td>{{ props.item.subjectCode }}</td>
                     <td
                       v-if="props.item.score != 0 && props.item.score != null"
@@ -123,7 +123,7 @@ export default {
           text: 'Subject',
           value: 'subject',
           align: 'left',
-          class: 'table-heading'
+          class: 'table-heading hidden-sm-and-down'
         },
         {
           text: 'Code',

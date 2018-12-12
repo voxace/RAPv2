@@ -124,4 +124,13 @@ button {
   margin-top: 2px !important;
   font-size: 20px !important;
 }
+
+@media only screen and (max-device-width: 875px) {
+  button {
+    height: 26px !important;
+    width: 26px !important;
+    margin-top: 2px !important;
+    font-size: 16px !important;
+  }
+}
 </style>

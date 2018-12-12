@@ -191,9 +191,13 @@ ScoreSchema.statics.GetScoresBySubjectID = function(subjectId, cb) {
 ScoreSchema.statics.GetScoresByStudentName = function(student, cb) {
   console.log(student);
   return this.aggregate([
-    // Match only scores for specified teacher
+    // Match only scores for specified student
+    // Also only match scores of 1 or above to leave out empty scores
     {
-      $match: { studentId: new mongoose.Types.ObjectId(student) }
+      $match: {
+        studentId: new mongoose.Types.ObjectId(student),
+        score: { $gte: 1 }
+      }
     },
     // Join score table to students table
     {

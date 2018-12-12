@@ -53,8 +53,8 @@
                       </v-icon>
                     </v-btn>
                   </td>
-                  <td>{{ props.item.name }}</td>
-                  <td class="text-xs-right">
+                  <td class="student">{{ props.item.name }}</td>
+                  <td class="text-xs-right score">
                     <score
                       :scoredata="props.item" />
                   </td>
@@ -71,8 +71,8 @@
           class="px-2"
         >
           <v-flex
-            xs12
-            sm8
+            sm12
+            md8
             class="px-2"
           >
             <v-autocomplete
@@ -91,8 +91,8 @@
             />
           </v-flex>
           <v-flex
-            xs6
-            sm2
+            sm6
+            md2
             class="px-2"
           >
             <v-btn
@@ -103,8 +103,8 @@
             >Add Student</v-btn>
           </v-flex>
           <v-flex
-            sm2
-            xs6
+            md2
+            sm6
             class="px-2"
           >
             <v-btn
@@ -156,7 +156,7 @@ export default {
           align: 'center',
           sortable: false,
           width: '100px',
-          class: 'table-heading'
+          class: 'table-heading mr-0'
         }
       ],
       Scores: {},
@@ -288,6 +288,10 @@ export default {
   padding: 0px 0px 0px 10px !important;
 }
 
+.score {
+  padding-right: 16px !important;
+}
+
 .small-button {
   width: 22px;
   height: 22px;
@@ -316,6 +320,15 @@ export default {
 @media only screen and (max-device-width: 875px) {
   .v-tabs__container {
     height: 40px;
+  }
+  .remove {
+    padding: 0px 0px 0px 8px !important;
+  }
+  .student {
+    padding: 4px !important;
+  }
+  .score {
+    padding-right: 6px !important;
   }
 }
 @media only screen and (max-device-width: 875px) and (orientation: landscape) {

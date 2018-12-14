@@ -36,7 +36,10 @@
         </v-card-text>
       </v-card>
     </v-flex>
-    <v-flex xs12>
+    <v-flex
+      v-if="scores"
+      xs12
+    >
       <v-card class="elevation-6">
         <v-tabs
           v-model="tabModel"
@@ -44,13 +47,15 @@
           class="mt-3"
           centered
           grow
-          fixed-tabs
+          show-arrows
           slider-color="indigo"
         >
           <v-tab
             v-for="(tab, index) in scores"
-            :key="tab._id"
-            :href="'#tab' + index">
+            :key="tab._id.code"
+            :href="'#tab' + index"
+            class="tab-heading"
+          >
             {{ tab._id.code }}
           </v-tab>
         </v-tabs>
@@ -58,7 +63,7 @@
           v-model="tabModel" >
           <v-tab-item
             v-for="(tab, index) in scores"
-            :key="tab._id"
+            :key="tab._id.code"
             :value="'tab' + index">
             <v-data-table
               :headers="headers"
@@ -124,7 +129,7 @@ export default {
           class: 'table-heading'
         }
       ],
-      Scores: {}
+      Scores: null
     }
   },
   computed: {
@@ -132,7 +137,18 @@ export default {
       return this.Teachers
     },
     scores() {
-      return this.Scores
+      if (this.Scores == null || this.Scores.length == 0) {
+        return null
+      } else {
+        return this.Scores
+      }
+    }
+  },
+  watch: {
+    model: function(value) {
+      if (value == null || value == '') {
+        this.Scores = null
+      }
     }
   },
   created() {
@@ -181,6 +197,9 @@ export default {
 @media only screen and (max-device-width: 875px) {
   .v-tabs__container {
     height: 40px;
+  }
+  .tab-heading {
+    font-size: 13px !important;
   }
 }
 @media only screen and (max-device-width: 875px) and (orientation: landscape) {

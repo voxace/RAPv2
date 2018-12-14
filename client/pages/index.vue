@@ -10,13 +10,14 @@
           class="mt-3"
           centered
           grow
-          fixed-tabs
+          show-arrows
           slider-color="indigo"
         >
           <v-tab
             v-for="(tab, index) in scores"
             :key="tab._id.code"
             :href="'#' + tab._id.code"
+            class="tab-heading"
             @click="SetSubject(tab._id.subjectId, index)">
             {{ tab._id.code }}
           </v-tab>
@@ -219,9 +220,11 @@ export default {
       this.Scores = await this.$axios.$get(
         '/scores/teacher/' + user_id + '/active'
       )
-      this.tabModel = this.Scores[0]._id.code
-      this.currentClassId = this.Scores[0]._id.subjectId
-      this.currentClassGrade = this.Scores[0]._id.studentGrade
+      if (this.Scores) {
+        this.tabModel = this.Scores[0]._id.code
+        this.currentClassId = this.Scores[0]._id.subjectId
+        this.currentClassGrade = this.Scores[0]._id.studentGrade
+      }
       this.$store.commit('setLoading', false)
     },
     async AddStudent() {
@@ -329,6 +332,9 @@ export default {
   }
   .score {
     padding-right: 6px !important;
+  }
+  .tab-heading {
+    font-size: 13px !important;
   }
 }
 @media only screen and (max-device-width: 875px) and (orientation: landscape) {

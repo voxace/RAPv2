@@ -51,14 +51,14 @@
             align-content-space-between
           >
             <v-flex
-              class="text-xs-left"
+              class="text-xs-left tab-heading"
               xs8
             >
               {{ ReturnPeriod(score) }}
             </v-flex>
             <v-spacer/>
             <v-flex
-              class="text-xs-right mr-4"
+              class="text-xs-right mr-4 tab-score"
               xs4
             >
               <span class="hidden-sm-and-down">Average: </span>{{ ReturnScore(score.average) }}
@@ -188,5 +188,13 @@ export default {
 <style>
 .v-expansion-panel__header {
   background-color: #efefef !important;
+}
+@media only screen and (max-device-width: 875px) {
+  .tab-heading {
+    font-size: 16px !important;
+  }
+  .tab-score {
+    font-size: 18px !important;
+  }
 }
 </style>

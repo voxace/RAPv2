@@ -189,7 +189,7 @@ export default {
       return this.$store.state.loading
     },
     students() {
-      if (this.scores) {
+      if (this.scores && this.scores.length > 0) {
         let filteredStudents = []
         for (var i = 0; i < this.Students.length; i++) {
           let currentStudent = this.Students[i].name
@@ -245,7 +245,7 @@ export default {
         this.Scores = await this.$axios.$get(
           '/scores/teacher/' + this.user + '/active'
         )
-        if (this.Scores) {
+        if (this.Scores && this.Scores.length > 0) {
           this.tabModel = this.Scores[0]._id.code
           this.currentClassId = this.Scores[0]._id.subjectId
           this.currentClassGrade = this.Scores[0]._id.studentGrade

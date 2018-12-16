@@ -37,6 +37,7 @@
       </v-card>
     </v-flex>
     <score-table
+      v-if="model"
       :user="model"
     />
   </v-layout>

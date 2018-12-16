@@ -36,121 +36,34 @@
         </v-card-text>
       </v-card>
     </v-flex>
-    <v-flex
-      v-if="scores"
-      xs12
-    >
-      <v-card class="elevation-6">
-        <v-tabs
-          v-model="tabModel"
-          color="yellow darken-1"
-          class="mt-3"
-          centered
-          grow
-          show-arrows
-          slider-color="indigo"
-        >
-          <v-tab
-            v-for="(tab, index) in scores"
-            :key="tab._id.code"
-            :href="'#tab' + index"
-            class="tab-heading"
-          >
-            {{ tab._id.code }}
-          </v-tab>
-        </v-tabs>
-        <v-tabs-items
-          v-model="tabModel" >
-          <v-tab-item
-            v-for="(tab, index) in scores"
-            :key="tab._id.code"
-            :value="'tab' + index">
-            <v-data-table
-              :headers="headers"
-              :items="tab.scores"
-              :loading="loading"
-              hide-actions
-            >
-              <template
-                slot="items"
-                slot-scope="props">
-                <tr>
-                  <td :id="props.item.studentId">{{ props.item.name }}</td>
-                  <td
-                    v-if="props.item.score != 0 && props.item.score != null"
-                    class="text-xs-center"
-                  >
-                    {{ props.item.score }}
-                  </td>
-                  <td
-                    v-else
-                    class="text-xs-center"
-                  >
-                    -
-                  </td>
-                </tr>
-              </template>
-            </v-data-table>
-          </v-tab-item>
-        </v-tabs-items>
-      </v-card>
-    </v-flex>
+    <score-table
+      :user="model"
+    />
   </v-layout>
 </template>
 
 <script>
 import Score from '@/components/Score'
+import ScoreTable from '@/components/ScoreTable'
 
 export default {
   components: {
-    Score
+    Score,
+    ScoreTable
   },
   middleware: 'auth',
   data() {
     return {
       model: null,
-      loading: false,
-      Teachers: [],
-      tabModel: 'tab0',
-      headers: [
-        {
-          text: 'Name',
-          value: 'name',
-          align: 'left',
-          sortable: false,
-          class: 'table-heading'
-        },
-        {
-          text: 'Score',
-          value: 'score',
-          align: 'center',
-          sortable: false,
-          width: '100px',
-          class: 'table-heading'
-        }
-      ],
-      Scores: null
+      Teachers: []
     }
   },
   computed: {
     teachers() {
       return this.Teachers
-    },
-    scores() {
-      if (this.Scores == null || this.Scores.length == 0) {
-        return null
-      } else {
-        return this.Scores
-      }
     }
   },
-  watch: {
-    model: function(value) {
-      if (value == null || value == '') {
-        this.Scores = null
-      }
-    }
-  },
+  watch: {},
   created() {
     if (process.browser) {
       this.GetAllTeachers()
@@ -160,51 +73,12 @@ export default {
     async GetAllTeachers() {
       this.Teachers = await this.$axios.$get('/teachers')
     },
-    async GetScores() {
-      this.Scores = await this.$axios.$get(
-        '/scores/teacher/' + this.model + '/active'
-      )
+    GetScores() {
+      //alert(this.model)
     }
   }
 }
 </script>
 
 <style>
-.table-heading {
-  font-size: 16px !important;
-}
-
-.v-tabs__div {
-  background: rgba(0, 0, 0, 0);
-  transition: 0.4s ease-in-out;
-}
-
-.v-tabs__div:hover {
-  background: rgba(0, 0, 0, 0.05);
-  transition: 0.2s ease-in-out;
-}
-
-.v-tabs__container {
-  height: 48px;
-}
-
-@media only screen and (min-device-width: 875px) and (max-device-width: 959px) {
-  .v-tabs__container {
-    height: 32px;
-  }
-}
-
-@media only screen and (max-device-width: 875px) {
-  .v-tabs__container {
-    height: 40px;
-  }
-  .tab-heading {
-    font-size: 13px !important;
-  }
-}
-@media only screen and (max-device-width: 875px) and (orientation: landscape) {
-  .v-tabs__container {
-    height: 32px;
-  }
-}
 </style>

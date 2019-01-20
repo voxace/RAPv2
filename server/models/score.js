@@ -399,6 +399,21 @@ ScoreSchema.statics.AddStudent = function(
   );
 };
 
+// Remove Class from Teacher
+ScoreSchema.statics.RemoveClass = function(teacher, period, subject, callback) {
+  console.log("t" + teacher);
+  console.log("p" + period);
+  console.log("s" + subject);
+  return this.deleteMany(
+    {
+      teacherId: new mongoose.Types.ObjectId(teacher),
+      periodId: new mongoose.Types.ObjectId(period),
+      subjectId: new mongoose.Types.ObjectId(subject)
+    },
+    callback
+  );
+};
+
 const Score = mongoose.model("Score", ScoreSchema);
 
 module.exports = Score;

@@ -290,11 +290,16 @@ export default {
           this.Scores[this.currentClassIndex].scores.splice(index, 1)
         })
     },
-    RemoveClass() {
-      alert(this.currentClassId)
-      // teacher id: user_id
-      // period: active
-      // class: currentClassId
+    async RemoveClass() {
+      await this.$axios
+        .$post('/subject/remove', {
+          teacherId: this.$store.state.auth.user_id,
+          periodId: 'active',
+          subjectId: this.currentClassId
+        })
+        .then(() => {
+          this.GetScoresByTeacher()
+        })
     },
     SetSubject(id, index) {
       this.currentClassId = id

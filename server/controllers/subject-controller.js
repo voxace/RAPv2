@@ -27,5 +27,28 @@ module.exports = {
         console.log(err);
         throw new Error(err);
       });
+  },
+
+  // Remove Class
+  async RemoveClass(ctx) {
+    let periodId = ctx.request.body.periodId;
+    if (periodId == "active") {
+      await Period.FindActive().then(activePeriod => {
+        periodId = activePeriod._id;
+      });
+    }
+    await Score.RemoveClass(
+      ctx.request.body.teacherId,
+      periodId,
+      ctx.request.body.subjectId
+    )
+      .then(score => {
+        console.log(JSON.stringify(score));
+        ctx.body = JSON.stringify(score);
+      })
+      .catch(err => {
+        console.log(err);
+        throw new Error(err);
+      });
   }
 };

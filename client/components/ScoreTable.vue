@@ -18,6 +18,12 @@
           @click="SetSubject(tab._id.subjectId, index)">
           {{ tab._id.code }}
         </v-tab>
+        <v-btn
+          flat
+          icon
+        >
+          <v-icon>add</v-icon>
+        </v-btn>
       </v-tabs>
       <v-tabs-items
         v-model="tabModel" >

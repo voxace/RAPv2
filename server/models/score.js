@@ -401,17 +401,45 @@ ScoreSchema.statics.AddStudent = function(
 
 // Remove Class from Teacher
 ScoreSchema.statics.RemoveClass = function(teacher, period, subject, callback) {
-  console.log("t" + teacher);
-  console.log("p" + period);
-  console.log("s" + subject);
-  return this.deleteMany(
+  let others = false;
+  this.findOne(
     {
-      teacherId: new mongoose.Types.ObjectId(teacher),
-      periodId: new mongoose.Types.ObjectId(period),
-      subjectId: new mongoose.Types.ObjectId(subject)
+      teacherId: { $ne: teacher },
+      periodId: period,
+      subjectId: subject
     },
-    callback
+    async function(err, subject) {
+      others = false;
+    }
   );
+
+  if (others == false) {
+    // If class has no other teacher, set teacher to null
+    console.log("Class teacher set to null");
+    return this.updateMany(
+      {
+        teacherId: teacher,
+        periodId: period,
+        subjectId: subject
+      },
+      {
+        teacherId: "000000000000000000000000",
+        score: 0
+      },
+      callback
+    );
+  } else {
+    // Delete class because it has another teacher
+    console.log("Class teacher deleted");
+    return this.deleteMany(
+      {
+        teacherId: teacher,
+        periodId: period,
+        subjectId: subject
+      },
+      callback
+    );
+  }
 };
 
 const Score = mongoose.model("Score", ScoreSchema);

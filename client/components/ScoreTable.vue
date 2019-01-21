@@ -18,12 +18,59 @@
           @click="SetSubject(tab._id.subjectId, index)">
           {{ tab._id.code }}
         </v-tab>
-        <v-btn
-          flat
-          icon
-        >
-          <v-icon>add</v-icon>
-        </v-btn>
+        <v-tooltip left>
+          <v-dialog
+            slot="activator"
+            v-model="dialog"
+            persistent
+            max-width="600px">
+            <v-btn
+              slot="activator"
+              flat
+              icon
+            >
+              <v-icon>add</v-icon>
+            </v-btn>
+            <v-card>
+              <v-card-title>
+                <span class="headline">Add Missing Class</span>
+              </v-card-title>
+              <v-card-text>
+                <v-container grid-list-md>
+                  <v-layout wrap>
+                    <v-flex xs12>
+                      <v-autocomplete
+                        v-model="addSubjectModel"
+                        :items="subjectCodes"
+                        label="Class"
+                        item-text="code"
+                        item-value="_id"
+                        clearable
+                      />
+                    </v-flex>
+                  </v-layout>
+                </v-container>
+              </v-card-text>
+              <v-card-actions>
+                <v-spacer/>
+                <v-btn
+                  color="blue darken-1"
+                  flat
+                  @click="dialog = false">
+                  Cancel
+                </v-btn>
+                <v-btn
+                  :disabled="!addSubjectModel"
+                  color="blue darken-1"
+                  flat
+                  @click="AddClass">
+                  Save
+                </v-btn>
+              </v-card-actions>
+            </v-card>
+          </v-dialog>
+          Add Class
+        </v-tooltip>
       </v-tabs>
       <v-tabs-items
         v-model="tabModel" >
@@ -119,6 +166,9 @@
         </v-flex>
       </v-layout>
     </v-card>
+
+
+
   </v-flex>
 </template>
 
@@ -139,6 +189,9 @@ export default {
   data() {
     return {
       tabModel: '',
+      dialog: false,
+      SubjectCodes: [],
+      addSubjectModel: null,
       currentClassId: '',
       currentClassIndex: 0,
       currentClassGrade: '',
@@ -191,6 +244,9 @@ export default {
     scores() {
       return this.Scores
     },
+    subjectCodes() {
+      return this.SubjectCodes
+    },
     loading() {
       return this.$store.state.loading
     },
@@ -238,6 +294,7 @@ export default {
     if (process.browser) {
       this.GetScoresByTeacher()
       this.GetAllStudents()
+      this.GetAllSubjectCodes()
     }
   },
   methods: {
@@ -263,7 +320,7 @@ export default {
       await this.$axios
         .$post('/score', {
           studentId: this.selectedStudent,
-          teacherId: this.$store.state.auth.user_id,
+          teacherId: this.user,
           periodId: 'active',
           subjectId: this.currentClassId,
           studentGrade: this.currentClassGrade
@@ -283,7 +340,7 @@ export default {
       await this.$axios
         .$post('/score/remove', {
           studentId: student.studentId,
-          teacherId: this.$store.state.auth.user_id,
+          teacherId: this.user,
           periodId: 'active',
           subjectId: this.currentClassId
         })
@@ -299,13 +356,29 @@ export default {
     async RemoveClass() {
       await this.$axios
         .$post('/subject/remove', {
-          teacherId: this.$store.state.auth.user_id,
+          teacherId: this.user,
           periodId: 'active',
           subjectId: this.currentClassId
         })
         .then(() => {
           this.GetScoresByTeacher()
         })
+    },
+    async AddClass() {
+      await this.$axios
+        .$post('/subject/add', {
+          teacherId: this.user,
+          periodId: 'active',
+          subjectId: this.addSubjectModel
+        })
+        .then(() => {
+          this.GetScoresByTeacher()
+          this.addSubjectModel = null
+          this.dialog = false
+        })
+    },
+    async GetAllSubjectCodes() {
+      this.SubjectCodes = await this.$axios.$get('/subject/code/all')
     },
     SetSubject(id, index) {
       this.currentClassId = id

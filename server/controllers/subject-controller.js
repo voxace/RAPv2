@@ -20,8 +20,8 @@ module.exports = {
   // Get subject / code / all
   async GetAllSubjectCodes(ctx) {
     await Subject.GetAllSubjectCodes()
-      .then(students => {
-        ctx.body = JSON.stringify(students);
+      .then(subjects => {
+        ctx.body = JSON.stringify(subjects);
       })
       .catch(err => {
         console.log(err);
@@ -42,13 +42,25 @@ module.exports = {
       periodId,
       ctx.request.body.subjectId
     )
-      .then(score => {
-        console.log(JSON.stringify(score));
-        ctx.body = JSON.stringify(score);
+      .then(() => {
+        console.log("success");
+        ctx.body = "success";
       })
       .catch(err => {
         console.log(err);
         throw new Error(err);
       });
+  },
+
+  // Add Class
+  async AddClass(ctx) {
+    let periodId = ctx.request.body.periodId;
+    if (periodId == "active") {
+      await Period.FindActive().then(activePeriod => {
+        periodId = activePeriod._id;
+      });
+    }
+    // get all students in class
+    // for each student create new score with new teacher
   }
 };

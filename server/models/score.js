@@ -103,7 +103,7 @@ ScoreSchema.statics.GetScoresByTeacher = function(teacher, period, cb) {
   ]).exec(cb);
 };
 
-// Get scores for specified period by Class
+// Get scores for specified Class
 ScoreSchema.statics.GetScoresBySubjectID = function(subjectId, cb) {
   return this.aggregate([
     // Match only specified subject
@@ -182,6 +182,71 @@ ScoreSchema.statics.GetScoresBySubjectID = function(subjectId, cb) {
         "_id.year": -1,
         "_id.term": -1,
         "_id.week": -1
+      }
+    }
+  ]).exec(cb);
+};
+
+// Get scores for specified Class and Period
+ScoreSchema.statics.GetScoresBySubjectIDandPeriodId = function(
+  subjectId,
+  periodId,
+  cb
+) {
+  return this.aggregate([
+    // Match only specified subject
+    {
+      $match: {
+        subjectId: new mongoose.Types.ObjectId(subjectId),
+        periodId: new mongoose.Types.ObjectId(periodId)
+      }
+    },
+    // Join period table
+    {
+      $lookup: {
+        from: "periods",
+        localField: "periodId",
+        foreignField: "_id",
+        as: "period"
+      }
+    },
+    // Join teacher table to students table
+    {
+      $lookup: {
+        from: "teachers",
+        localField: "teacherId",
+        foreignField: "_id",
+        as: "teacher"
+      }
+    },
+    // Lookup student data
+    {
+      $lookup: {
+        from: "students",
+        localField: "studentId",
+        foreignField: "_id",
+        as: "student"
+      }
+    },
+    // Project only relevant fields
+    {
+      $project: {
+        name: { $arrayElemAt: ["$student.name", 0] },
+        teacher: { $arrayElemAt: ["$teacher.name", 0] },
+        score: {
+          $cond: {
+            if: { $eq: ["$score", 0] },
+            then: null,
+            else: "$score"
+          }
+        },
+        period: "$period"
+      }
+    },
+    // Sort by score
+    {
+      $sort: {
+        score: -1
       }
     }
   ]).exec(cb);

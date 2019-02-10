@@ -45,12 +45,12 @@ module.exports = {
               if (student) {
                 ctx.body = {
                   user_id: student._id,
-                  name: student.fullName,
+                  name: student.name,
                   type: "student",
                   access: 0
                 };
                 console.log(
-                  "Student login: " + student.fullName + ", " + new Date()
+                  "Student login: " + student.name + ", " + new Date()
                 );
               } else {
                 throw new Error("Error Logging In: " + username);

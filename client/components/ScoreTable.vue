@@ -19,6 +19,7 @@
           {{ tab._id.code }}
         </v-tab>
         <v-tooltip left>
+          <!-- ADD CLASS DIALOG -->
           <v-dialog
             slot="activator"
             v-model="dialog"
@@ -46,6 +47,7 @@
                         item-text="code"
                         item-value="_id"
                         clearable
+                        autofocus
                       />
                     </v-flex>
                   </v-layout>

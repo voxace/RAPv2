@@ -43,8 +43,8 @@ module.exports = {
       ctx.request.body.subjectId
     )
       .then(() => {
-        console.log("success");
-        ctx.body = "success";
+        console.log("Successfully removed teacher from class");
+        ctx.body = "Successfully removed teacher from class";
       })
       .catch(err => {
         console.log(err);
@@ -64,47 +64,53 @@ module.exports = {
     }
 
     // get all students in class
-    Score.findOne({
+    await Score.findOne({
       teacherId: "000000000000000000000000",
       periodId: periodId,
       subjectId: subjectId
-    }).then(score => {
-      if (score) {
+    }).then(async result => {
+      if (result) {
         // If the class has no teacher:
-        Score.find({
+        await Score.find({
           teacherId: "000000000000000000000000",
           periodId: periodId,
           subjectId: subjectId
-        }).then(scores => {
-          scores.forEach(score => {
-            score.teacherId = teacherId;
-            score.score = 0;
-            score.save().then(savedScore => {
-              console.log(savedScore);
+        })
+          .then(async scores => {
+            await scores.forEach(async score => {
+              score.teacherId = teacherId;
+              score.score = 0;
+              await score.save();
             });
+          })
+          .then(() => {
+            console.log("Successfully added teacher to class");
+            ctx.body = "Successfully added teacher to class";
           });
-        });
       } else {
         // If the class does already have a teacher:
-        Score.find({
+        await Score.find({
           teacherId: { $ne: teacherId },
           periodId: periodId,
           subjectId: subjectId
-        }).then(scores => {
-          scores.forEach(score => {
-            let newScore = new Score({
-              studentId: score.studentId,
-              teacherId: teacherId,
-              periodId: periodId,
-              subjectId: subjectId,
-              studentGrade: score.studentGrade,
-              score: 0
+        })
+          .then(async scores => {
+            await scores.forEach(async score => {
+              let newScore = new Score({
+                studentId: score.studentId,
+                teacherId: teacherId,
+                periodId: periodId,
+                subjectId: subjectId,
+                studentGrade: score.studentGrade,
+                score: 0
+              });
+              await newScore.save();
             });
-            newScore.save().then(savedScore => {
-              console.log(savedScore);
-            });
+          })
+          .then(() => {
+            console.log("Successfully added teacher to class");
+            ctx.body = "Successfully added teacher to class";
           });
-        });
       }
     });
   }

@@ -465,16 +465,23 @@ ScoreSchema.statics.AddStudent = function(
 };
 
 // Remove Class from Teacher
-ScoreSchema.statics.RemoveClass = function(teacher, period, subject, callback) {
+ScoreSchema.statics.RemoveClass = async function(
+  teacher,
+  period,
+  subject,
+  callback
+) {
   let others = false;
-  this.findOne(
+  await this.findOne(
     {
       teacherId: { $ne: teacher },
       periodId: period,
       subjectId: subject
     },
     async function(err, subject) {
-      others = false;
+      if (subject) {
+        others = true;
+      }
     }
   );
 

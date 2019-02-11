@@ -20,19 +20,7 @@
             autofocus
             clearable
             height="36px"
-            @keyup.enter="GetScores"
-          >
-            <v-btn
-              slot="append-outer"
-              :loading="loading"
-              small
-              outline
-              color="indigo"
-              @click="GetScores"
-            >
-              SEARCH
-            </v-btn>
-          </v-autocomplete>
+          />
         </v-card-text>
       </v-card>
     </v-flex>

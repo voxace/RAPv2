@@ -41,11 +41,15 @@ export default {
             },
             {
               to: '/check/class',
-              text: 'By Class'
+              text: 'By Class Code'
             },
             {
               to: '/check/teacher',
               text: 'By Teacher'
+            },
+            {
+              to: '/check/subject',
+              text: 'By Subject'
             }
           ]
         },

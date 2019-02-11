@@ -30,8 +30,13 @@ SubjectSchema.statics.GetAllSubjects = function(cb) {
       }
     },
     {
+      $group: {
+        _id: "$name"
+      }
+    },
+    {
       $sort: {
-        name: 1
+        _id: 1
       }
     }
   ]).exec(cb);

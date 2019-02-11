@@ -6,55 +6,59 @@
       xs12
       mb-3>
       <v-card class="elevation-6">
-        <v-card-title class="title yellow darken-1">Student</v-card-title>
+        <v-card-title class="title yellow darken-1">Subject</v-card-title>
         <v-card-text>
           <v-autocomplete
             v-model="model"
-            :items="students"
-            item-text="name"
+            :items="subjects"
+            :loading="loading"
+            item-text="_id"
             item-value="_id"
             placeholder="Name"
             color="indigo"
             autofocus
             clearable
             height="36px"
+            @keyup.enter="GetScores"
           />
         </v-card-text>
       </v-card>
     </v-flex>
-    <student-table
+    <class-table
       v-if="model"
-      :student="model" />
+      :subject="model"
+    />
   </v-layout>
 </template>
 
 <script>
-import StudentTable from '@/components/check/student/StudentTable'
+import SubjectTable from '@/components/check/subject/SubjectTable'
 
 export default {
   components: {
-    StudentTable
+    SubjectTable
   },
   middleware: 'auth',
   data() {
     return {
       model: null,
-      Students: []
+      loading: false,
+      Subjects: []
     }
   },
   computed: {
-    students() {
-      return this.Students
+    subjects() {
+      return this.Subjects
     }
   },
   created() {
     if (process.browser) {
-      this.GetAllStudents()
+      this.GetAllSubjects()
     }
   },
   methods: {
-    async GetAllStudents() {
-      this.Students = await this.$axios.$get('/students/active')
+    async GetAllSubjects() {
+      this.Subjects = await this.$axios.$get('/subject/all')
     }
   }
 }

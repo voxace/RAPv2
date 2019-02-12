@@ -25,8 +25,8 @@ TeacherSchema.statics.NewTeacher = function(teacher, callback) {
   );
 };
 
-// Get a list of all students
-TeacherSchema.statics.GetAllTeachers = function(cb) {
+// Get a list of all teacher's names
+TeacherSchema.statics.GetAllTeacherNames = function(cb) {
   return this.aggregate([
     {
       $project: {
@@ -39,6 +39,11 @@ TeacherSchema.statics.GetAllTeachers = function(cb) {
       }
     }
   ]).exec(cb);
+};
+
+// Get all teacher data
+TeacherSchema.statics.GetAllTeacherData = function(cb) {
+  return this.find({}, cb);
 };
 
 // Create model

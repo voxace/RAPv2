@@ -97,6 +97,10 @@ export default {
             {
               to: '/admin/generate',
               text: 'Generate Posters'
+            },
+            {
+              to: '/admin/teachers',
+              text: 'Edit Teachers'
             }
           ]
         },

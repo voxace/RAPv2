@@ -37,7 +37,7 @@ module.exports = {
               user_id: teacher._id,
               name: teacher.name,
               type: "teacher",
-              access: teacher.access
+              access: teacher.access || 1 // Returns default access of 1 if not set
             };
             console.log("Teacher login: " + teacher.name + ", " + new Date());
           } else {

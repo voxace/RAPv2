@@ -27,9 +27,6 @@ export default {
     StudentTable
   },
   middleware: 'auth',
-  data() {
-    return {}
-  },
   computed: {
     user() {
       return this.$store.state.auth

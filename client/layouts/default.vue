@@ -27,12 +27,25 @@ export default {
   data() {
     return {
       links: [
-        { to: '/', text: 'Home', auth: true, type: 'link' },
-        { to: '/rubric', text: 'Rubric', auth: false, type: 'link' },
+        {
+          to: '/',
+          text: 'Home',
+          auth: 0,
+          loggedIn: false,
+          type: 'link'
+        },
+        {
+          to: '/rubric',
+          text: 'Rubric',
+          auth: 0,
+          loggedIn: false,
+          type: 'link'
+        },
         {
           text: 'Check Scores',
           to: '/check',
-          auth: true,
+          auth: 1,
+          loggedIn: true,
           type: 'menu',
           menu: [
             {
@@ -56,7 +69,8 @@ export default {
         {
           text: 'Insights',
           to: '/insights',
-          auth: true,
+          auth: 1,
+          loggedIn: true,
           type: 'menu',
           menu: [
             {
@@ -72,7 +86,8 @@ export default {
         {
           text: 'Admin',
           to: '/admin',
-          auth: true,
+          auth: 2,
+          loggedIn: true,
           type: 'menu',
           menu: [
             {
@@ -85,17 +100,26 @@ export default {
             }
           ]
         },
-        { to: '/logout', text: 'Logout', auth: true, type: 'link' }
+        {
+          to: '/logout',
+          text: 'Logout',
+          auth: 0,
+          loggedIn: true,
+          type: 'link'
+        }
       ]
     }
   },
   computed: {
     activeLinks: function() {
-      if (this.$store.state.auth) {
-        return this.links
+      let auth = this.$store.state.auth
+      if (auth) {
+        return this.links.filter(function(link) {
+          return auth.access >= link.auth
+        })
       } else {
-        return this.links.filter(function(l) {
-          return !l.auth
+        return this.links.filter(function(link) {
+          return !link.loggedIn
         })
       }
     },

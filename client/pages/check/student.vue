@@ -50,6 +50,7 @@ export default {
   created() {
     if (process.browser) {
       this.GetAllStudents()
+      alert(JSON.stringify(this.$store.state.auth))
     }
   },
   methods: {

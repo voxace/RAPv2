@@ -25,6 +25,23 @@ TeacherSchema.statics.NewTeacher = function(teacher, callback) {
   );
 };
 
+// Create or Update Teacher from all Data
+TeacherSchema.statics.NewTeacherFull = function(teacher, callback) {
+  return this.findOneAndUpdate(
+    { _id: teacher.teacher._id },
+    {
+      $set: {
+        name: teacher.teacher.name,
+        username: teacher.teacher.username,
+        access: teacher.teacher.access,
+        faculty: teacher.teacher.faculty
+      }
+    },
+    { upsert: true, new: true },
+    callback
+  );
+};
+
 // Get a list of all teacher's names
 TeacherSchema.statics.GetAllTeacherNames = function(cb) {
   return this.aggregate([

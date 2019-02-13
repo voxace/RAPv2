@@ -23,5 +23,16 @@ module.exports = {
         console.log(err);
         throw new Error(err);
       });
+  },
+  // Update teacher or add new teacher
+  async AddOrUpdateTeacher(ctx) {
+    await Teacher.NewTeacherFull(ctx.request.body)
+      .then(teacher => {
+        ctx.body = JSON.stringify(teacher);
+      })
+      .catch(err => {
+        console.log(err);
+        throw new Error(err);
+      });
   }
 };

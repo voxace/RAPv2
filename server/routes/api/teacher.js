@@ -6,4 +6,6 @@ router.get("/teachers/names", controller.GetAllTeacherNames);
 
 router.get("/teachers/all", controller.GetAllTeacherData);
 
+router.post("/teacher", controller.AddOrUpdateTeacher);
+
 module.exports = router.routes();

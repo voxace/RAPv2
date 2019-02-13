@@ -60,7 +60,7 @@ export default {
   },
   methods: {
     async GetAllTeachers() {
-      this.Teachers = await this.$axios.$get('/teachers')
+      this.Teachers = await this.$axios.$get('/teachers/names')
     }
   }
 }

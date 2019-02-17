@@ -34,5 +34,22 @@ module.exports = {
         console.log(err);
         throw new Error(err);
       });
+  },
+   // Remove Teacher
+   async RemoveTeacher(ctx) {
+    console.log('Teacher: ' + JSON.stringify(ctx.params.id));
+    await Teacher.findOne({
+      _id: ctx.params.id
+    })
+      .remove()
+      .exec()
+      .then(teacher => {
+        console.log(JSON.stringify(teacher));
+        ctx.body = JSON.stringify(teacher);
+      })
+      .catch(err => {
+        console.log(err);
+        throw new Error(err);
+      });
   }
 };

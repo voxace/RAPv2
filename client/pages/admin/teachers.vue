@@ -229,6 +229,7 @@ export default {
     deleteItem(item) {
       const index = this.Teachers.indexOf(item)
       this.Teachers.splice(index, 1)
+      this.$axios.$delete('/teacher/' + item._id)
     },
     close() {
       this.dialog = false

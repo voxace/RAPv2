@@ -8,4 +8,6 @@ router.get("/teachers/all", controller.GetAllTeacherData);
 
 router.post("/teacher", controller.AddOrUpdateTeacher);
 
+router.delete("/teacher/:id", controller.RemoveTeacher);
+
 module.exports = router.routes();

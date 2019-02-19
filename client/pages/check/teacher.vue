@@ -12,7 +12,6 @@
           <v-autocomplete
             v-model="model"
             :items="teachers"
-            :loading="loading"
             item-text="name"
             item-value="_id"
             placeholder="Name"

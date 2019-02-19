@@ -23,6 +23,27 @@ PeriodSchema.statics.FindActive = function() {
   return this.findOne({ active: true });
 };
 
+// Get all periods in order
+PeriodSchema.statics.GetAllPeriods = function(cb) {
+  return this.aggregate([
+    {
+      $project: {
+        year: "$year",
+        term: "$term",
+        week: "$week",
+        active: "$active"
+      }
+    },
+    {
+      $sort: {
+        year: -1,
+        term: -1,
+        week: -1
+      }
+    }
+  ]).exec(cb);
+};
+
 // Set Active Period
 PeriodSchema.statics.NewPeriod = function(year, term, week, callback) {
   return this.findOneAndUpdate(

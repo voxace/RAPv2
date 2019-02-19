@@ -97,19 +97,13 @@
                 <td>{{ props.item.username }}</td>
                 <td>{{ props.item.faculty }}</td>
                 <td>{{ GetAccessLevel(props.item.access) }}</td>
-                <td class="justify-center layout px-0">
+                <td class="justify-center layout ml-2">
                   <v-icon
                     small
                     class="mr-2"
                     @click="editItem(props.item)"
                   >
                     edit
-                  </v-icon>
-                  <v-icon
-                    small
-                    @click="deleteItem(props.item)"
-                  >
-                    delete
                   </v-icon>
                 </td>
               </tr>
@@ -179,7 +173,7 @@ export default {
           text: 'Actions',
           value: 'actions',
           align: 'center',
-          width: '60px',
+          width: '50px',
           class: 'table-heading',
           sortable: false
         }

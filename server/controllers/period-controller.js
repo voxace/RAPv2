@@ -14,6 +14,18 @@ module.exports = {
       });
   },
 
+  // Gets all RAP Periods
+  async GetAllRapPeriods(ctx) {
+    await Period.GetAllPeriods()
+      .then(periods => {
+        ctx.body = JSON.stringify(periods);
+      })
+      .catch(err => {
+        console.log(err);
+        throw new Error(err);
+      });
+  },
+
   // Sets the active RAP Period
   async SetActiveRapPeriod(ctx) {
     // Set any active periods to 'active:false' first

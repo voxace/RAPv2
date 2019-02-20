@@ -1,12 +1,14 @@
+const Admin = require("./../models/admin");
 const Period = require("./../models/period");
 const async = require("async");
 
 module.exports = {
-  // Gets the active RAP Period
-  async GetActiveRapPeriod(ctx) {
-    await Period.FindActive()
-      .then(activePeriod => {
-        ctx.body = JSON.stringify(activePeriod);
+  // Gets the current RAP Period
+  async GetCurrentRapPeriod(ctx) {
+    await Admin.GetCurrent()
+      .then(currentPeriod => {
+        console.log(currentPeriod[0]);
+        ctx.body = JSON.stringify(currentPeriod[0]);
       })
       .catch(err => {
         console.log(err);
@@ -26,19 +28,11 @@ module.exports = {
       });
   },
 
-  // Sets the active RAP Period
-  async SetActiveRapPeriod(ctx) {
-    // Set any active periods to 'active:false' first
-    await Period.SetNoneActive();
-    // Then set specified period to 'active::true'
-    await Period.SetActive(
-      ctx.request.body.year,
-      ctx.request.body.term,
-      ctx.request.body.week
-    )
-      .then(activePeriod => {
-        // Return the active period document
-        ctx.body = JSON.stringify(activePeriod);
+  // Sets the current RAP Period
+  async SetCurrentRapPeriod(ctx) {
+    await Admin.SetCurrent(ctx.request.body.id)
+      .then(currentPeriod => {
+        ctx.body = JSON.stringify(currentPeriod);
       })
       .catch(err => {
         throw new Error(err);

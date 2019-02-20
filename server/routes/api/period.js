@@ -6,10 +6,10 @@ const router = new Router();
 router.post("/period/", controller.NewRapPeriod);
 
 // Set Active RAP Period
-router.post("/period/active", controller.SetActiveRapPeriod);
+router.post("/period/current", controller.SetCurrentRapPeriod);
 
 // Gets the Current RAP Period
-router.get("/period/active", controller.GetActiveRapPeriod);
+router.get("/period/current", controller.GetCurrentRapPeriod);
 
 // Gets all RAP Periods
 router.get("/period/all", controller.GetAllRapPeriods);

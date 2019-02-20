@@ -8,4 +8,7 @@ router.post("/admin/import/edval", controller.ImportFromEdval);
 // Import JSON Data from old RAP system
 router.post("/admin/import/old", controller.ImportFromOldRap);
 
+// Initial setup for Admin Table
+router.post("/admin/setup", controller.AdminSetup);
+
 module.exports = router.routes();

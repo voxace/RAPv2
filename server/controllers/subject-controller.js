@@ -1,3 +1,4 @@
+const Admin = require("./../models/admin");
 const Student = require("./../models/student");
 const Period = require("./../models/period");
 const Score = require("./../models/score");
@@ -33,8 +34,9 @@ module.exports = {
   async RemoveClass(ctx) {
     let periodId = ctx.request.body.periodId;
     if (periodId == "active") {
-      await Period.FindActive().then(activePeriod => {
-        periodId = activePeriod._id;
+      await Admin.GetCurrent()
+      .then(currentPeriod => {
+        periodId = currentPeriod[0]._id;
       });
     }
     await Score.RemoveClass(
@@ -58,8 +60,9 @@ module.exports = {
     let teacherId = ctx.request.body.teacherId;
     let subjectId = ctx.request.body.subjectId;
     if (periodId == "active") {
-      await Period.FindActive().then(activePeriod => {
-        periodId = activePeriod._id;
+      await Admin.GetCurrent()
+      .then(currentPeriod => {
+        periodId = currentPeriod[0]._id;
       });
     }
 

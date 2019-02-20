@@ -10,7 +10,7 @@
           color="yellow darken-1"
         >
           <v-toolbar-title>RAP Periods</v-toolbar-title>
-          <v-spacer/>
+          <v-spacer />
           <v-dialog
             v-model="dialog"
             max-width="500px"
@@ -27,7 +27,6 @@
               <v-card-title>
                 <span class="headline">New Period</span>
               </v-card-title>
-
               <v-card-text>
                 <v-container grid-list-md>
                   <v-layout wrap>
@@ -91,10 +90,9 @@
                 <td>{{ props.item.week }}</td>
                 <td>
                   <v-checkbox 
-                    v-model="props.item.active" 
-                    value 
-                    disabled
+                    v-model="props.item.active"
                     class="ml-2"
+                    @click.stop.prevent="activate(props.item)"
                   />
                 </td>
               </tr>
@@ -113,6 +111,7 @@ export default {
     return {
       loading: false,
       Periods: [],
+      currentPeriod: { _id: 0 },
       years: [2020, 2019, 2018, 2017],
       terms: [1, 2, 3, 4],
       weeks: [5, 9],
@@ -175,6 +174,19 @@ export default {
     async GetPeriods() {
       this.loading = true
       this.Periods = await this.$axios.$get('/period/all/')
+      let p = this.Periods
+      this.currentPeriod = await this.$axios
+        .$get('/period/current/')
+        .then(current => {
+          p.forEach(period => {
+            if (period._id == current._id) {
+              period.active = true
+            } else {
+              period.active = false
+            }
+          })
+        })
+      this.$forceUpdate()
       this.loading = false
     },
     close() {
@@ -197,19 +209,22 @@ export default {
       })
       this.close()
     },
-    activate(id) {
-      Periods.forEach(period => {
-        if (period._id == id) {
-          period.active = true
-          this.$axios.$post('/period/active/', {
-            year: period.year,
-            term: period.term,
-            week: period.week
+    activate(value) {
+      let p = this.Periods
+      this.$axios
+        .$post('/period/current/', { id: value._id })
+        .then(() => {
+          p.forEach(period => {
+            if (period._id == value._id) {
+              period.active = true
+            } else {
+              period.active = false
+            }
           })
-        } else {
-          period.active = false
-        }
-      })
+        })
+        .then(() => {
+          this.$forceUpdate()
+        })
     }
   }
 }

@@ -1,3 +1,4 @@
+const Admin = require("./../models/admin");
 const Student = require("./../models/student");
 const Period = require("./../models/period");
 const Score = require("./../models/score");
@@ -16,13 +17,14 @@ module.exports = {
 
   // Get students / all
   async GetAllStudents(ctx) {
-    let period = ctx.params.period;
+    let periodId = ctx.params.period;
     if (ctx.params.period == "active") {
-      await Period.FindActive().then(activePeriod => {
-        period = activePeriod._id;
+      await Admin.GetCurrent()
+      .then(currentPeriod => {
+        periodId = currentPeriod[0]._id;
       });
     }
-    await Student.GetAllStudents(period)
+    await Student.GetAllStudents(periodId)
       .then(students => {
         ctx.body = JSON.stringify(students);
       })

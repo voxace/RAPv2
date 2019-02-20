@@ -1,3 +1,4 @@
+const Admin = require("./../models/admin");
 const Student = require("./../models/student");
 const Period = require("./../models/period");
 const Score = require("./../models/score");
@@ -7,13 +8,14 @@ const Subject = require("./../models/subject");
 module.exports = {
   // Get Scores / Teacher (grouped by subject code)
   async GetScoresByTeacher(ctx) {
-    let period = ctx.params.period;
+    let periodId = ctx.params.period;
     if (ctx.params.period == "active") {
-      await Period.FindActive().then(activePeriod => {
-        period = activePeriod._id;
+      await Admin.GetCurrent()
+      .then(currentPeriod => {
+        periodId = currentPeriod[0]._id;
       });
     }
-    await Score.GetScoresByTeacher(ctx.params.id, period)
+    await Score.GetScoresByTeacher(ctx.params.id, periodId)
       .then(scores => {
         ctx.body = JSON.stringify(scores);
       })
@@ -65,8 +67,9 @@ module.exports = {
     let studentGrade = ctx.request.body.studentGrade;
     let periodId = ctx.params.period;
     if (ctx.request.body.periodId == "active") {
-      await Period.FindActive().then(activePeriod => {
-        periodId = activePeriod._id;
+      await Admin.GetCurrent()
+      .then(currentPeriod => {
+        periodId = currentPeriod[0]._id;
       });
     }
     await Score.NewScore(
@@ -90,8 +93,9 @@ module.exports = {
   async AddStudent(ctx) {
     let periodId = ctx.params.period;
     if (ctx.request.body.periodId == "active") {
-      await Period.FindActive().then(activePeriod => {
-        periodId = activePeriod._id;
+      await Admin.GetCurrent()
+      .then(currentPeriod => {
+        periodId = currentPeriod[0]._id;
       });
     }
     let score = new Score({
@@ -118,8 +122,9 @@ module.exports = {
   async RemoveStudent(ctx) {
     let periodId = ctx.request.body.periodId;
     if (periodId == "active") {
-      await Period.FindActive().then(activePeriod => {
-        periodId = activePeriod._id;
+      await Admin.GetCurrent()
+      .then(currentPeriod => {
+        periodId = currentPeriod[0]._id;
       });
     }
     await Score.findOne({

@@ -22,6 +22,7 @@ ScoreSchema.index(
 
 // Get scores for specified period by Teacher
 ScoreSchema.statics.GetScoresByTeacher = function(teacher, period, cb) {
+  console.log(period);
   return this.aggregate([
     // Match only scores for specified teacher
     {

@@ -4,12 +4,13 @@
     align-content-start
   >
     <v-flex xs12>
+      <h1 class="mb-2">RAP Periods</h1>
       <v-card>
         <v-toolbar
           flat
           color="yellow darken-1"
         >
-          <v-toolbar-title>RAP Periods</v-toolbar-title>
+          <v-toolbar-title>Current Period: {{ GetCurrentPeriod }}</v-toolbar-title>
           <v-spacer />
           <v-dialog
             v-model="dialog"
@@ -111,7 +112,7 @@ export default {
     return {
       loading: false,
       Periods: [],
-      currentPeriod: { _id: 0 },
+      currentPeriod: { _id: '0', year: '0000', term: '0', week: '0' },
       years: [2020, 2019, 2018, 2017],
       terms: [1, 2, 3, 4],
       weeks: [5, 9],
@@ -158,6 +159,21 @@ export default {
   computed: {
     periods() {
       return this.Periods
+    },
+    GetCurrentPeriod() {
+      if (this.currentPeriod._id != '0') {
+        return (
+          'Week ' +
+          this.currentPeriod.week +
+          ', Term ' +
+          this.currentPeriod.term +
+          ', ' +
+          this.currentPeriod.year
+        )
+      } else {
+        return 'Not Set'
+      }
+      alert('hi')
     }
   },
   watch: {
@@ -175,7 +191,7 @@ export default {
       this.loading = true
       this.Periods = await this.$axios.$get('/period/all/')
       let p = this.Periods
-      this.currentPeriod = await this.$axios
+      let currentPeriod = await this.$axios
         .$get('/period/current/')
         .then(current => {
           p.forEach(period => {
@@ -185,6 +201,7 @@ export default {
               period.active = false
             }
           })
+          this.currentPeriod = Object.assign({}, current)
         })
       this.$forceUpdate()
       this.loading = false
@@ -211,6 +228,7 @@ export default {
     },
     activate(value) {
       let p = this.Periods
+      Object.assign(this.currentPeriod, value)
       this.$axios
         .$post('/period/current/', { id: value._id })
         .then(() => {

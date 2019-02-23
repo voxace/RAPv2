@@ -101,6 +101,10 @@ export default {
             {
               to: '/admin/teachers',
               text: 'Edit Teachers'
+            },
+            {
+              to: '/admin/data',
+              text: 'Import Data'
             }
           ]
         },

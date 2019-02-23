@@ -40,7 +40,7 @@ AdminSchema.statics.SetCurrent = function(id, callback) {
   );
 };
 
-// Set Current Period
+// Get Current Period
 AdminSchema.statics.GetCurrent = function(callback) {
   return this.aggregate([
     // Lookup period data

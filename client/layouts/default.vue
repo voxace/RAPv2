@@ -9,6 +9,7 @@
         <Loader v-show="loading" />
         <nuxt v-show="!loading"/>
       </v-container>
+      <SnackBar />
     </v-content>
   </v-app>
 </template>
@@ -17,12 +18,14 @@
 import MainToolBar from '@/components/layout/MainToolBar'
 import NavDrawer from '@/components/layout/NavDrawer'
 import Loader from '@/components/layout/Loader'
+import SnackBar from '@/components/layout/SnackBar'
 
 export default {
   components: {
     MainToolBar,
     NavDrawer,
-    Loader
+    Loader,
+    SnackBar
   },
   data() {
     return {

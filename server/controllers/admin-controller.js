@@ -14,7 +14,9 @@ module.exports = {
   async AdminSetup(ctx) {
     let admin = new Admin({ isRapActive: false });
     await admin.save(function (err) {
-      if(err) { console.log(err) }
+      if(err) { 
+        throw new Error(err);
+      }
       console.log("Setup Success");
       ctx.body = "Setup Success";
     });    
@@ -24,7 +26,12 @@ module.exports = {
   async ImportFromEdval(ctx) {
     let csvFilePath = ctx.request.files["Upload"].path;
     let jsonArrayObj = await csv().fromFile(csvFilePath);
-    Utilities.ProcessStudents(jsonArrayObj, ctx);
+    if(jsonArrayObj.length == 0) {
+      console.log("Invalid CSV File");
+      ctx.throw(500,'Invalid CSV File');
+    } else {
+      Utilities.ProcessStudents(jsonArrayObj, ctx);
+    }
     Utilities.DeleteFile(csvFilePath);
   },
 

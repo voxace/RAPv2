@@ -84,7 +84,8 @@ export default {
       filename: '',
       value: [],
       items: ['Edval', 'EMU', 'LMBR', 'Old RAP'],
-      selectedItem: null
+      selectedItem: null,
+      form: null
     }
   },
   computed: {
@@ -108,7 +109,7 @@ export default {
     getFormData(files) {
       const data = new FormData()
       ;[...files].forEach(file => {
-        data.append('data', file, file.name)
+        data.append('Upload', file, file.name)
       })
       return data
     },
@@ -117,7 +118,7 @@ export default {
     },
     onFileChange($event) {
       const files = $event.target.files || $event.dataTransfer.files
-      const form = this.getFormData(files)
+      this.form = this.getFormData(files)
       if (files) {
         if (files.length > 0) {
           this.filename = [...files].map(file => file.name).join(', ')
@@ -127,8 +128,6 @@ export default {
       } else {
         this.filename = $event.target.value.split('\\').pop()
       }
-      this.$emit('input', this.filename)
-      this.$emit('formData', form)
     },
     async uploadData() {
       if (this.selectedItem == 'Edval') {
@@ -142,7 +141,19 @@ export default {
       }
     },
     async uploadEdval() {
-      alert('edval')
+      const vm = this
+      await this.$axios
+        .post('/admin/import/edval', this.form, {
+          headers: {
+            'Content-Type': 'multipart/form-data'
+          }
+        })
+        .then(function() {
+          //vm.$store.dispatch('openSuccessBar', 'Upload Successful')
+        })
+        .catch(function() {
+          vm.$store.dispatch('openErrorBar', 'Error Uploading Data')
+        })
     },
     async uploadEMU() {
       alert('emu')

@@ -63,7 +63,9 @@ async function ProcessSingleRow(student, callback, periodDbId) {
     // Import ID Numbers, set invalid numbers to 0
     let idNum = student["Student code"];
     if (parseInt(idNum) != idNum) {
+      console.log(name + " has an invalid ID number: " + idNum);
       callback();
+      return;
     } else {
       idNum = parseInt(idNum);
     }
@@ -84,6 +86,7 @@ async function ProcessSingleRow(student, callback, periodDbId) {
 
     // Create Students
     let studentDbId;
+    //console.log("Student: " + name + ", ID: " + idNum + ", Period: " + periodDbId);
     Student.NewStudent(name, username, idNum)
       .then(stu => {
         studentDbId = stu._id;
@@ -156,9 +159,10 @@ async function ProcessSingleRow(student, callback, periodDbId) {
 
 // Processes the CSV file from Edval
 async function ProcessStudents(jsonArrayObj, ctx) {
-  await Period.findOne({ active: true }, async function(error, activePeriod) {
+  await Admin.GetCurrent() 
+  .then(async (activePeriod) => {
     console.log("Processing Students...");
-    let periodDbId = activePeriod._id;
+    let periodDbId = activePeriod[0]._id;
     await async.eachSeries(
       jsonArrayObj,
       function(student, callback) {
@@ -166,7 +170,7 @@ async function ProcessStudents(jsonArrayObj, ctx) {
       },
       function(err) {
         if (err) {
-          ctx.body = "Error";
+          throw new Error(err);
         } else {
           ctx.body = "Success";
         }

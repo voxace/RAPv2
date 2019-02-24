@@ -16,13 +16,11 @@
 </template>
 
 <script>
-import Score from '@/components/Score'
 import ScoreTable from '@/components/ScoreTable'
 import StudentTable from '@/components/check/student/StudentTable'
 
 export default {
   components: {
-    Score,
     ScoreTable,
     StudentTable
   },

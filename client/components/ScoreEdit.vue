@@ -12,7 +12,6 @@
           slot="activator"
           flat
           icon
-          type="button"
           @click="setScore(1)">
           1
         </v-btn>

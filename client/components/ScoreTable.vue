@@ -108,8 +108,14 @@
                 </td>
                 <td class="student">{{ props.item.name }}</td>
                 <td class="text-xs-right score">
-                  <score
-                    :scoredata="props.item" />
+                  <score-edit
+                    v-if="editing"
+                    :scoredata="props.item"
+                  />
+                  <score-view
+                    v-else
+                    :scoredata="props.item"
+                  />
                 </td>
               </tr>
             </template>
@@ -168,18 +174,17 @@
         </v-flex>
       </v-layout>
     </v-card>
-
-
-
   </v-flex>
 </template>
 
 <script>
-import Score from '@/components/Score'
+import ScoreView from '@/components/ScoreView'
+import ScoreEdit from '@/components/ScoreEdit'
 
 export default {
   components: {
-    Score
+    ScoreView,
+    ScoreEdit
   },
   middleware: 'auth',
   props: {
@@ -245,6 +250,15 @@ export default {
   computed: {
     scores() {
       return this.Scores
+    },
+    editing() {
+      if (this.$store.state.auth.access == 2) {
+        return true
+      } else if (this.user == this.$store.state.auth.user_id) {
+        return true
+      } else {
+        return false
+      }
     },
     subjectCodes() {
       return this.SubjectCodes

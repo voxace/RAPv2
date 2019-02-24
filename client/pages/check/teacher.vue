@@ -31,12 +31,10 @@
 </template>
 
 <script>
-import Score from '@/components/Score'
 import ScoreTable from '@/components/ScoreTable'
 
 export default {
   components: {
-    Score,
     ScoreTable
   },
   middleware: 'auth',

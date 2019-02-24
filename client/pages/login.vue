@@ -56,6 +56,11 @@
         </v-card-actions>
       </v-card>
     </v-flex>
+    <script>
+      if (window.navigator.userAgent.match(/(MSIE|Trident)/)) {
+      alert('Internet Explorer not supported. Please use Chrome, Firefox, Edge or Safari.');
+      }
+    </script>
   </v-layout>
 </template>
 

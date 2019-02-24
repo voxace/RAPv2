@@ -52,6 +52,10 @@ export default {
           type: 'menu',
           menu: [
             {
+              to: '/check/all',
+              text: 'All Students'
+            },
+            {
               to: '/check/student',
               text: 'Single Student'
             },
@@ -66,6 +70,22 @@ export default {
             {
               to: '/check/subject',
               text: 'By Subject'
+            },
+            {
+              to: '/check/faculty',
+              text: 'By Faculty'
+            },
+            {
+              to: '/check/year',
+              text: 'By Year Group'
+            },
+            {
+              to: '/check/score',
+              text: 'By Score'
+            },
+            {
+              to: '/check/change',
+              text: 'By Change'
             }
           ]
         },
@@ -106,8 +126,16 @@ export default {
               text: 'Edit Teachers'
             },
             {
+              to: '/admin/students',
+              text: 'Edit Students'
+            },
+            {
               to: '/admin/data',
               text: 'Import Data'
+            },
+            {
+              to: '/admin/backup',
+              text: 'Backup / Restore'
             }
           ]
         },

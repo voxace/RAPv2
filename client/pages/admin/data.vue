@@ -130,39 +130,29 @@ export default {
       }
     },
     async uploadData() {
+      let type
       if (this.selectedItem == 'Edval') {
-        await this.uploadEdval()
+        type = 'edval'
       } else if (this.selectedItem == 'EMU') {
-        await this.uploadEMU()
+        type = 'emu'
       } else if (this.selectedItem == 'LMBR') {
-        await this.uploadLMBR()
+        type = 'lmbr'
       } else if (this.selectedItem == 'Old RAP') {
-        await this.uploadRAP()
+        type = 'old'
       }
-    },
-    async uploadEdval() {
       const vm = this
       await this.$axios
-        .post('/admin/import/edval', this.form, {
+        .post('/admin/import/' + type, this.form, {
           headers: {
             'Content-Type': 'multipart/form-data'
           }
         })
         .then(function() {
-          //vm.$store.dispatch('openSuccessBar', 'Upload Successful')
+          vm.$store.dispatch('openSuccessBar', 'Data Upload Successful')
         })
         .catch(function() {
           vm.$store.dispatch('openErrorBar', 'Error Uploading Data')
         })
-    },
-    async uploadEMU() {
-      alert('emu')
-    },
-    async uploadLMBR() {
-      alert('lmbr')
-    },
-    async uploadRAP() {
-      alert('rap')
     }
   }
 }

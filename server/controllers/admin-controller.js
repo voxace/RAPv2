@@ -30,16 +30,42 @@ module.exports = {
       console.log("Invalid CSV File");
       ctx.throw(500,'Invalid CSV File');
     } else {
-      Utilities.ProcessStudents(jsonArrayObj, ctx);
+      await Utilities.ProcessEdval(jsonArrayObj, ctx);
     }
-    Utilities.DeleteFile(csvFilePath);
+    await Utilities.DeleteFile(csvFilePath);
+  },
+
+  // Imports student data from EMU in CSV format
+  async ImportFromEMU(ctx) {
+    let csvFilePath = ctx.request.files["Upload"].path;
+    let jsonArrayObj = await csv().fromFile(csvFilePath);
+    if(jsonArrayObj.length == 0) {
+      console.log("Invalid CSV File");
+      ctx.throw(500,'Invalid CSV File');
+    } else {
+      await Utilities.ProcessEMU(jsonArrayObj, ctx);
+    }
+    await Utilities.DeleteFile(csvFilePath);
+  },
+
+  // Imports student data from LMBR in CSV format
+  async ImportFromLMBR(ctx) {
+    let csvFilePath = ctx.request.files["Upload"].path;
+    let jsonArrayObj = await csv().fromFile(csvFilePath);
+    if(jsonArrayObj.length == 0) {
+      console.log("Invalid CSV File");
+      ctx.throw(500,'Invalid CSV File');
+    } else {
+      await Utilities.ProcessLMBR(jsonArrayObj, ctx);
+    }
+    await Utilities.DeleteFile(csvFilePath);
   },
 
   // Imports old RAP Data
   async ImportFromOldRap(ctx) {
     let jsonFilePath = ctx.request.files["Upload"].path;
     let jsonArrayObj = JSON.parse(fs.readFileSync(jsonFilePath, "utf8"));
-    Utilities.ProcessOldStudents(jsonArrayObj, ctx);
-    Utilities.DeleteFile(jsonFilePath);
+    await Utilities.ProcessOldStudentsLegacy(jsonArrayObj, ctx);
+    await Utilities.DeleteFile(jsonFilePath);
   }
 };

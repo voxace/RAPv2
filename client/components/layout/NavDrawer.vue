@@ -25,10 +25,13 @@
           <v-list-tile
             v-for="(item, index) in link.menu"
             :key="index"
-            @click="$router.push(item.to)">
+            @click="$router.push(item.to)" 
+          >
             <nuxt-link
               :to="item.to"
-              tag="v-list-tile-title">
+              tag="v-list-tile-title"
+              class="body-1 pl-1"
+            >              
               {{ item.text }}
             </nuxt-link>
           </v-list-tile>

@@ -77,8 +77,7 @@ ScoreSchema.statics.GetScoresByTeacher = function(teacher, period, cb) {
       $group: {
         _id: {
           code: "$subjectCode",
-          subjectId: "$subjectId",
-          studentGrade: "$studentGrade"
+          subjectId: "$subjectId"          
         },
         scores: {
           $push: "$$ROOT"

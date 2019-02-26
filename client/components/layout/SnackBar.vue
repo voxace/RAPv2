@@ -6,11 +6,7 @@
     :bottom="bottom"
   >
     {{ snackbarMessage }}
-    <v-btn
-      color="black"
-      flat
-      @click="snackbar = false"
-    >
+    <v-btn color="black" flat @click="snackbar = false">
       Close
     </v-btn>
   </v-snackbar>

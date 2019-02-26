@@ -1,4 +1,4 @@
-export default function({ store, $axios, redirect }) {
+export default function({ $axios, redirect }) {
   $axios.onRequest(config => {
     console.log('Making request to ' + config.url) // eslint-disable-line no-console
   })

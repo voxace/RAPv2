@@ -1,27 +1,15 @@
 <template>
-  <v-layout
-    wrap
-    align-content-start
-  >
+  <v-layout wrap align-content-start>
     <v-flex xs12>
       <h1 class="mb-2">RAP Periods</h1>
       <v-card>
-        <v-toolbar
-          flat
-          color="yellow darken-1"
-        >
-          <v-toolbar-title>Current Period: {{ GetCurrentPeriod }}</v-toolbar-title>
+        <v-toolbar flat color="yellow darken-1">
+          <v-toolbar-title>
+            Current Period: {{ GetCurrentPeriod }}
+          </v-toolbar-title>
           <v-spacer />
-          <v-dialog
-            v-model="dialog"
-            max-width="500px"
-          >
-            <v-btn
-              slot="activator"
-              color="primary"
-              dark
-              class="mb-2"
-            >
+          <v-dialog v-model="dialog" max-width="500px">
+            <v-btn slot="activator" color="primary" dark class="mb-2">
               New Period
             </v-btn>
             <v-card>
@@ -56,19 +44,11 @@
                 </v-container>
               </v-card-text>
               <v-card-actions>
-                <v-spacer/>
-                <v-btn
-                  color="blue darken-1"
-                  flat
-                  @click="close"
-                >
+                <v-spacer />
+                <v-btn color="blue darken-1" flat @click="close">
                   Cancel
                 </v-btn>
-                <v-btn
-                  color="blue darken-1"
-                  flat
-                  @click="save"
-                >
+                <v-btn color="blue darken-1" flat @click="save">
                   Save
                 </v-btn>
               </v-card-actions>
@@ -82,15 +62,13 @@
             :loading="loading"
             :pagination.sync="pagination"
           >
-            <template
-              slot="items"
-              slot-scope="props">
+            <template slot="items" slot-scope="props">
               <tr>
                 <td>{{ props.item.year }}</td>
                 <td>{{ props.item.term }}</td>
                 <td>{{ props.item.week }}</td>
                 <td>
-                  <v-checkbox 
+                  <v-checkbox
                     v-model="props.item.active"
                     class="ml-2"
                     @click.stop.prevent="activate(props.item)"
@@ -173,7 +151,6 @@ export default {
       } else {
         return 'Not Set'
       }
-      alert('hi')
     }
   },
   watch: {
@@ -202,6 +179,7 @@ export default {
             }
           })
           this.currentPeriod = Object.assign({}, current)
+          console.log(currentPeriod)
         })
       this.$forceUpdate()
       this.loading = false

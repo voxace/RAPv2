@@ -15,7 +15,8 @@
           :key="tab._id.code"
           :href="'#' + tab._id.code"
           class="tab-heading"
-          @click="SetSubject(tab._id.subjectId, index)">
+          @click="SetSubject(tab._id.subjectId, index)"
+        >
           {{ tab._id.code }}
         </v-tab>
         <v-tooltip left>
@@ -24,12 +25,9 @@
             slot="activator"
             v-model="dialog"
             persistent
-            max-width="600px">
-            <v-btn
-              slot="activator"
-              flat
-              icon
-            >
+            max-width="600px"
+          >
+            <v-btn slot="activator" flat icon>
               <v-icon>add</v-icon>
             </v-btn>
             <v-card>
@@ -54,18 +52,16 @@
                 </v-container>
               </v-card-text>
               <v-card-actions>
-                <v-spacer/>
-                <v-btn
-                  color="blue darken-1"
-                  flat
-                  @click="dialog = false">
+                <v-spacer />
+                <v-btn color="blue darken-1" flat @click="dialog = false">
                   Cancel
                 </v-btn>
                 <v-btn
                   :disabled="!addSubjectModel"
                   color="blue darken-1"
                   flat
-                  @click="AddClass">
+                  @click="AddClass"
+                >
                   Save
                 </v-btn>
               </v-card-actions>
@@ -74,21 +70,19 @@
           Add Class
         </v-tooltip>
       </v-tabs>
-      <v-tabs-items
-        v-model="tabModel" >
+      <v-tabs-items v-model="tabModel">
         <v-tab-item
           v-for="tab in scores"
           :key="tab._id.code"
-          :value="tab._id.code">
+          :value="tab._id.code"
+        >
           <v-data-table
             :headers="headers"
             :items="tab.scores"
             :loading="loading"
             hide-actions
           >
-            <template
-              slot="items"
-              slot-scope="props">
+            <template slot="items" slot-scope="props">
               <tr>
                 <td class="remove">
                   <v-btn
@@ -98,24 +92,15 @@
                     color="error"
                     @click="RemoveStudent(props.item)"
                   >
-                    <v-icon
-                      dark
-                      size="16px"
-                    >
+                    <v-icon dark size="16px">
                       remove
                     </v-icon>
                   </v-btn>
                 </td>
                 <td class="student">{{ props.item.name }}</td>
                 <td class="text-xs-right score">
-                  <score-edit
-                    v-if="editing"
-                    :scoredata="props.item"
-                  />
-                  <score-view
-                    v-else
-                    :scoredata="props.item"
-                  />
+                  <score-edit v-if="editing" :scoredata="props.item" />
+                  <score-view v-else :scoredata="props.item" />
                 </td>
               </tr>
             </template>
@@ -129,11 +114,7 @@
         wrap
         class="px-2"
       >
-        <v-flex
-          sm12
-          md8
-          class="px-2"
-        >
+        <v-flex sm12 md8 class="px-2">
           <v-autocomplete
             id="autocomplete-students"
             v-model="selectedStudent"
@@ -149,28 +130,20 @@
             @keyup.enter="GetScores"
           />
         </v-flex>
-        <v-flex
-          sm6
-          md2
-          class="px-2"
-        >
+        <v-flex sm6 md2 class="px-2">
           <v-btn
             :disabled="AddStudentButtonEnabled"
             block
             color="info"
             @click="AddStudent"
-          >Add Student</v-btn>
+          >
+            Add Student
+          </v-btn>
         </v-flex>
-        <v-flex
-          md2
-          sm6
-          class="px-2"
-        >
-          <v-btn
-            block
-            color="error"
-            @click="RemoveClass"
-          >Remove {{ currentClass }}</v-btn>
+        <v-flex md2 sm6 class="px-2">
+          <v-btn block color="error" @click="RemoveClass">
+            Remove {{ currentClass }}
+          </v-btn>
         </v-flex>
       </v-layout>
     </v-card>

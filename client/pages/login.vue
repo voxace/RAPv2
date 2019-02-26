@@ -1,28 +1,12 @@
 <template>
-  <v-layout
-    v-show="visible"
-    align-center
-    justify-center>
-    <v-flex
-      xs12
-      sm8
-      md4
-      mb-5
-      pb-5>
-      <v-card
-        class="elevation-12"
-        mb-5
-        pb-5>
-        <v-toolbar
-          dark
-          color="primary">
+  <v-layout v-show="visible" align-center justify-center>
+    <v-flex xs12 sm8 md4 mb-5 pb-5>
+      <v-card class="elevation-12" mb-5 pb-5>
+        <v-toolbar dark color="primary">
           <v-toolbar-title>Login</v-toolbar-title>
         </v-toolbar>
         <v-card-text>
-          <v-form
-            ref="form"
-            v-model="valid"
-            color="indigo">
+          <v-form ref="form" v-model="valid" color="indigo">
             <v-text-field
               :rules="usernameRules"
               v-model="username"
@@ -31,7 +15,8 @@
               name="username"
               label="DET Username"
               type="text"
-              @keyup.enter="Login" />
+              @keyup.enter="Login"
+            />
             <v-text-field
               id="password"
               v-model="password"
@@ -40,17 +25,19 @@
               name="password"
               label="Password"
               type="password"
-              @keyup.enter="Login" />
+              @keyup.enter="Login"
+            />
           </v-form>
         </v-card-text>
         <v-card-actions>
-          <v-spacer/>
+          <v-spacer />
           <v-btn
             :disabled="!valid"
             :loading="loading"
             class="white--text mr-2 mb-2"
             color="primary"
-            @click="Login" >
+            @click="Login"
+          >
             Login
           </v-btn>
         </v-card-actions>
@@ -58,7 +45,9 @@
     </v-flex>
     <script>
       if (window.navigator.userAgent.match(/(MSIE|Trident)/)) {
-      alert('Internet Explorer not supported. Please use Chrome, Firefox, Edge or Safari.');
+        alert(
+          'Internet Explorer not supported. Please use Chrome, Firefox, Edge or Safari.'
+        )
       }
     </script>
   </v-layout>
@@ -97,6 +86,7 @@ export default {
             this.loading = false
           })
           .catch(error => {
+            console.log(error)
             this.loading = false
           })
       }

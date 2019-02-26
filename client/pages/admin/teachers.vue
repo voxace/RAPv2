@@ -1,41 +1,23 @@
 <template>
-  <v-layout
-    wrap
-    align-content-start
-  >
+  <v-layout wrap align-content-start>
     <v-flex xs12>
       <v-card>
-        <v-toolbar
-          flat
-          color="yellow darken-1"
-        >
+        <v-toolbar flat color="yellow darken-1">
           <v-toolbar-title>Edit Teachers</v-toolbar-title>
-          <v-spacer/>
-          <v-dialog
-            v-model="dialog"
-            max-width="500px"
-          >
-            <v-btn
-              slot="activator"
-              color="primary"
-              dark
-              class="mb-2"
-            >
+          <v-spacer />
+          <v-dialog v-model="dialog" max-width="500px">
+            <v-btn slot="activator" color="primary" dark class="mb-2">
               New Teacher
             </v-btn>
             <v-card>
               <v-card-title>
                 <span class="headline">{{ formTitle }}</span>
               </v-card-title>
-
               <v-card-text>
                 <v-container grid-list-md>
                   <v-layout wrap>
                     <v-flex xs6>
-                      <v-text-field
-                        v-model="editedItem.name"
-                        label="Name"
-                      />
+                      <v-text-field v-model="editedItem.name" label="Name" />
                     </v-flex>
                     <v-flex xs6>
                       <v-text-field
@@ -63,19 +45,11 @@
                 </v-container>
               </v-card-text>
               <v-card-actions>
-                <v-spacer/>
-                <v-btn
-                  color="blue darken-1"
-                  flat
-                  @click="close"
-                >
+                <v-spacer />
+                <v-btn color="blue darken-1" flat @click="close">
                   Cancel
                 </v-btn>
-                <v-btn
-                  color="blue darken-1"
-                  flat
-                  @click="save"
-                >
+                <v-btn color="blue darken-1" flat @click="save">
                   Save
                 </v-btn>
               </v-card-actions>
@@ -89,20 +63,14 @@
             :loading="loading"
             :pagination.sync="pagination"
           >
-            <template
-              slot="items"
-              slot-scope="props">
+            <template slot="items" slot-scope="props">
               <tr>
                 <td>{{ props.item.name }}</td>
                 <td>{{ props.item.username }}</td>
                 <td>{{ props.item.faculty }}</td>
                 <td>{{ GetAccessLevel(props.item.access) }}</td>
                 <td class="justify-center layout ml-2">
-                  <v-icon
-                    small
-                    class="mr-2"
-                    @click="editItem(props.item)"
-                  >
+                  <v-icon small class="mr-2" @click="editItem(props.item)">
                     edit
                   </v-icon>
                 </td>
@@ -179,8 +147,6 @@ export default {
         }
       ],
       pagination: {
-        sortBy: 'score',
-        descending: true,
         rowsPerPage: 10,
         sortBy: 'name',
         descending: false

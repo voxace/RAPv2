@@ -1,8 +1,5 @@
 <template>
-  <v-layout
-    v-show="visible"
-    align-center
-    justify-center>
+  <v-layout v-show="visible" align-center justify-center>
     Logging out...
   </v-layout>
 </template>

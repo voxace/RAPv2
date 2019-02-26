@@ -1,11 +1,6 @@
 <template>
-  <v-layout
-    wrap
-    align-content-start
-  >
-    <v-flex
-      xs12
-      mb-3>
+  <v-layout wrap align-content-start>
+    <v-flex xs12 mb-3>
       <v-card class="elevation-6">
         <v-card-title class="title yellow darken-1">Teacher</v-card-title>
         <v-card-text>
@@ -23,10 +18,7 @@
         </v-card-text>
       </v-card>
     </v-flex>
-    <score-table
-      v-if="model"
-      :user="model"
-    />
+    <score-table v-if="model" :user="model" />
   </v-layout>
 </template>
 
@@ -63,5 +55,4 @@ export default {
 }
 </script>
 
-<style>
-</style>
+<style></style>

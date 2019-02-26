@@ -1,31 +1,17 @@
 <template>
   <v-flex xs12>
-    <v-expansion-panel
-      v-model="expansion"
-      class="elevation-6"
-      focusable
-    >
-      <v-expansion-panel-content
-        v-for="(score,i) in scores"
-        :key="i"
-      >
-        <v-layout
-          slot="header"
-          class="title"
-          align-content-space-between
-        >
-          <v-flex
-            class="text-xs-left tab-heading"
-            xs8
-          >
+    <v-expansion-panel v-model="expansion" class="elevation-6" focusable>
+      <v-expansion-panel-content v-for="(score, i) in scores" :key="i">
+        <v-layout slot="header" class="title" align-content-space-between>
+          <v-flex class="text-xs-left tab-heading" xs8>
             {{ ReturnPeriod(score) }}
           </v-flex>
-          <v-spacer/>
-          <v-flex
-            class="text-xs-right mr-4 tab-score"
-            xs4
-          >
-            <span class="hidden-sm-and-down">Average: </span>{{ ReturnScore(score.average) }}
+          <v-spacer />
+          <v-flex class="text-xs-right mr-4 tab-score" xs4>
+            <span class="hidden-sm-and-down">
+              Average:
+            </span>
+            {{ ReturnScore(score.average) }}
           </v-flex>
         </v-layout>
         <v-card>
@@ -37,9 +23,7 @@
               :pagination.sync="pagination"
               hide-actions
             >
-              <template
-                slot="items"
-                slot-scope="props">
+              <template slot="items" slot-scope="props">
                 <tr>
                   <td>{{ props.item.name }}</td>
                   <td class="hidden-sm-and-down">{{ props.item.teacher }}</td>
@@ -49,10 +33,7 @@
                   >
                     {{ props.item.score }}
                   </td>
-                  <td
-                    v-else
-                    class="text-xs-center"
-                  >
+                  <td v-else class="text-xs-center">
                     -
                   </td>
                 </tr>

@@ -3,11 +3,9 @@
     <MainToolBar :active-links="activeLinks" />
     <NavDrawer :active-links="activeLinks" />
     <v-content>
-      <v-container
-        fluid
-        fill-height>
+      <v-container fluid fill-height>
         <Loader v-show="loading" />
-        <nuxt v-show="!loading"/>
+        <nuxt v-show="!loading" />
       </v-container>
       <SnackBar />
     </v-content>

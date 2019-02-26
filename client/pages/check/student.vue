@@ -1,10 +1,6 @@
 <template>
-  <v-layout
-    wrap
-    align-content-start>
-    <v-flex
-      xs12
-      mb-3>
+  <v-layout wrap align-content-start>
+    <v-flex xs12 mb-3>
       <v-card class="elevation-6">
         <v-card-title class="title yellow darken-1">Student</v-card-title>
         <v-card-text>
@@ -22,9 +18,7 @@
         </v-card-text>
       </v-card>
     </v-flex>
-    <student-table
-      v-if="model"
-      :student="model" />
+    <student-table v-if="model" :student="model" />
   </v-layout>
 </template>
 

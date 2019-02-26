@@ -1,32 +1,20 @@
 <template>
-  <v-layout 
-    wrap 
-    align-content-start
-  >  
-    <v-flex xs12>  
+  <v-layout wrap align-content-start>
+    <v-flex xs12>
       <h1 class="mb-2">Import Data</h1>
       <v-card>
-        <v-toolbar
-          flat
-          color="yellow darken-1"
-        >
-          <v-toolbar-title>Choose file and data type to import:</v-toolbar-title>
+        <v-toolbar flat color="yellow darken-1">
+          <v-toolbar-title>
+            Choose file and data type to import:
+          </v-toolbar-title>
         </v-toolbar>
         <v-card-text>
-          <v-layout 
-            wrap
-            align-content-center
-            class="mt-4"
-          >
-            <v-flex 
-              xs12
-              sm5
-              px-2
-            >
+          <v-layout wrap align-content-center class="mt-4">
+            <v-flex xs12 sm5 px-2>
               <div class="mr-2">
                 <v-text-field
                   ref="fileTextField"
-                  v-model="filename"          
+                  v-model="filename"
                   label="Choose File"
                   required="true"
                   single-line
@@ -37,17 +25,13 @@
                 <input
                   ref="fileInput"
                   accept="*"
-                  multiple="false"          
+                  multiple="false"
                   type="file"
                   @change="onFileChange"
-                >
+                />
               </div>
             </v-flex>
-            <v-flex 
-              xs12
-              sm5
-              px-2
-            >
+            <v-flex xs12 sm5 px-2>
               <v-select
                 :items="items"
                 v-model="selectedItem"
@@ -55,11 +39,7 @@
                 solo
               />
             </v-flex>
-            <v-flex 
-              xs12
-              sm2
-              px-2
-            >
+            <v-flex xs12 sm2 px-2>
               <v-btn
                 :disabled="disabled"
                 large
@@ -73,7 +53,7 @@
           </v-layout>
         </v-card-text>
       </v-card>
-    </v-flex>  
+    </v-flex>
   </v-layout>
 </template>
 

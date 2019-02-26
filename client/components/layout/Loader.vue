@@ -1,12 +1,7 @@
 <template>
   <div class="full-height-container">
     <div class="full-height-center">
-      <v-progress-circular
-        :size="70"
-        :width="7"
-        color="indigo"
-        indeterminate
-      />
+      <v-progress-circular :size="70" :width="7" color="indigo" indeterminate />
     </div>
   </div>
 </template>

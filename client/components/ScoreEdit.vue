@@ -1,79 +1,40 @@
 <template>
   <v-flex xs12>
-    <v-btn-toggle
-      v-model="toggle_exclusive"
-      class="toggle-group">
-
-      <v-tooltip
-        top
-        open-delay="800"
-        close-delay="0">
-        <v-btn
-          slot="activator"
-          flat
-          icon
-          @click="setScore(1)">
+    <v-btn-toggle v-model="toggle_exclusive" class="toggle-group">
+      <v-tooltip top open-delay="800" close-delay="0">
+        <v-btn slot="activator" flat icon @click="setScore(1)">
           1
         </v-btn>
         Unsatisfactory Performance
       </v-tooltip>
 
-      <v-tooltip
-        top
-        open-delay="800"
-        close-delay="0">
-        <v-btn
-          slot="activator"
-          flat
-          icon
-          @click="setScore(2)">
+      <v-tooltip top open-delay="800" close-delay="0">
+        <v-btn slot="activator" flat icon @click="setScore(2)">
           2
         </v-btn>
         Of Concern
       </v-tooltip>
 
-      <v-tooltip
-        top
-        open-delay="800"
-        close-delay="0">
-        <v-btn
-          slot="activator"
-          flat
-          icon
-          @click="setScore(3)">
+      <v-tooltip top open-delay="800" close-delay="0">
+        <v-btn slot="activator" flat icon @click="setScore(3)">
           3
         </v-btn>
         Good
       </v-tooltip>
 
-      <v-tooltip
-        top
-        open-delay="800"
-        close-delay="0">
-        <v-btn
-          slot="activator"
-          flat
-          icon
-          @click="setScore(4)">
+      <v-tooltip top open-delay="800" close-delay="0">
+        <v-btn slot="activator" flat icon @click="setScore(4)">
           4
         </v-btn>
         Excellent
       </v-tooltip>
 
-      <v-tooltip
-        top
-        open-delay="800"
-        close-delay="0">
-        <v-btn
-          slot="activator"
-          flat
-          icon
-          @click="setScore(5)">
+      <v-tooltip top open-delay="800" close-delay="0">
+        <v-btn slot="activator" flat icon @click="setScore(5)">
           5
         </v-btn>
         Outstanding
       </v-tooltip>
-
     </v-btn-toggle>
   </v-flex>
 </template>

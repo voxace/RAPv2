@@ -106,7 +106,9 @@ export default {
   methods: {
     async GetScores() {
       this.loading = true
-      this.Scores = await this.$axios.$get('/scores/subject/' + this.subject)
+      this.Scores = await this.$axios.$get(
+        '/scores/subject/code/' + this.subject
+      )
       setTimeout(() => {
         this.expansion = 0
         this.loading = false

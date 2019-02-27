@@ -4,14 +4,7 @@
       <v-expansion-panel-content v-for="(score, i) in scores" :key="i">
         <v-layout slot="header" class="title" align-content-space-between>
           <v-flex class="text-xs-left tab-heading" xs8>
-            {{ ReturnPeriod(score) }}
-          </v-flex>
-          <v-spacer />
-          <v-flex class="text-xs-right mr-4 tab-score" xs4>
-            <span class="hidden-sm-and-down">
-              Average:
-            </span>
-            {{ ReturnScore(score.average) }}
+            {{ score._id }}
           </v-flex>
         </v-layout>
         <v-card>
@@ -25,8 +18,10 @@
             >
               <template slot="items" slot-scope="props">
                 <tr>
-                  <td>{{ props.item.name }}</td>
-                  <td class="hidden-sm-and-down">{{ props.item.teacher }}</td>
+                  <td>{{ props.item.studentName }}</td>
+                  <td class="hidden-sm-and-down">
+                    {{ props.item.teacherName }}
+                  </td>
                   <td
                     v-if="props.item.score != 0 && props.item.score != null"
                     class="text-xs-center"
@@ -106,7 +101,9 @@ export default {
   methods: {
     async GetScores() {
       this.loading = true
-      this.Scores = await this.$axios.$get('/scores/subject/' + this.subject)
+      this.Scores = await this.$axios.$get(
+        '/scores/subject/name/' + this.subject + '/active'
+      )
       setTimeout(() => {
         this.expansion = 0
         this.loading = false

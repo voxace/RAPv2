@@ -15,12 +15,11 @@
             autofocus
             clearable
             height="36px"
-            @keyup.enter="GetScores"
           />
         </v-card-text>
       </v-card>
     </v-flex>
-    <class-table v-if="model" :subject="model" />
+    <subject-table v-if="model" :subject="model" />
   </v-layout>
 </template>
 

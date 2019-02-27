@@ -17,7 +17,9 @@ router.post("/score/remove", controller.RemoveStudent);
 // Get Scores / Student (for student, grouped by period)
 router.get("/scores/student/:name", controller.GetScoresByStudentName);
 // Get Scores / Class (for a particular class code)
-router.get("/scores/subject/:code", controller.GetScoresBySubjectID);
+router.get("/scores/subject/code/:code", controller.GetScoresBySubjectID);
+// Get Scores / Class (for a particular class code)
+router.get("/scores/subject/name/:name/:period", controller.GetScoresBySubjectName);
 // Get Scores / Teacher / Period (for teacher, grouped by class)
 router.get("/scores/teacher/:id/:period", controller.GetScoresByTeacher);
 

@@ -24,9 +24,38 @@ module.exports = {
         throw new Error(err);
       });
   },
-  // Get Scores / Subject
+  // Get Scores / Subject Code
   async GetScoresBySubjectID(ctx) {
     await Score.GetScoresBySubjectID(ctx.params.code)
+      .then(scores => {
+        ctx.body = JSON.stringify(scores);
+      })
+      .catch(err => {
+        console.log(err);
+        throw new Error(err);
+      });
+  },
+  // Get Scores / Subject Name
+  async GetScoresBySubjectName(ctx) {
+
+    let periodId = ctx.params.period;
+    if (ctx.params.period == "active") {
+      await Admin.GetCurrent()
+      .then(currentPeriod => {
+        periodId = currentPeriod[0]._id;
+      });
+    }
+
+    let subjectIds = []    
+    await Subject.GetAllSubjectCodesFromName(ctx.params.name)
+    .then(subjects => {
+      subjects.forEach(subject => {
+        subjectIds.push(subject._id)
+      });
+    });
+    
+
+    await Score.GetScoresBySubjectName(subjectIds, periodId)
       .then(scores => {
         ctx.body = JSON.stringify(scores);
       })

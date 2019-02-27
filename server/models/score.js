@@ -103,7 +103,7 @@ ScoreSchema.statics.GetScoresByTeacher = function(teacher, period, cb) {
   ]).exec(cb);
 };
 
-// Get scores for specified Class
+// Get scores for specified Class Code
 ScoreSchema.statics.GetScoresBySubjectID = function(subjectId, cb) {
   return this.aggregate([
     // Match only specified subject
@@ -184,6 +184,75 @@ ScoreSchema.statics.GetScoresBySubjectID = function(subjectId, cb) {
         "_id.week": -1
       }
     }
+  ]).exec(cb);
+};
+
+// Get scores for specified Class Name
+ScoreSchema.statics.GetScoresBySubjectName = function(subjectIds, periodId, cb) {
+  console.log('subject: ' + subjectIds)
+  console.log('period: ' + periodId)
+  return this.aggregate([
+    // Match only specified period
+    {
+      $match: {
+        periodId: new mongoose.Types.ObjectId(periodId),
+        subjectId: { $in: subjectIds }
+      }
+    },
+    // Lookup student data
+    {
+      $lookup: {
+        from: "subjects",
+        localField: "subjectId",
+        foreignField: "_id",
+        as: "subject"
+      }
+    },    
+    // Join teacher table to students table
+    {
+      $lookup: {
+        from: "teachers",
+        localField: "teacherId",
+        foreignField:
+         "_id",
+        as: "teacher"
+      }
+    },
+    // Lookup student data
+    {
+      $lookup: {
+        from: "students",
+        localField: "studentId",
+        foreignField: "_id",
+        as: "student"
+      }
+    },
+    {
+      $project: {
+        subjectCode: { $arrayElemAt: ["$subject.code", 0] },
+        studentName: { $arrayElemAt: ["$student.name", 0] },
+        teacherName: { $arrayElemAt: ["$teacher.name", 0] },
+        studentGrade: "$studentGrade",
+        score: "$score"
+      }
+    },
+    // Sort by RAP Period
+    {
+      $sort: {
+        "studentGrade": 1,
+        "subjectCode": 1,
+        "score": -1
+      }
+    },
+    // Group by RAP Period
+    {
+      $group: {
+        _id: "$subjectCode",
+        scores: {
+          $push: "$$ROOT"
+        }
+      }
+    },
   ]).exec(cb);
 };
 

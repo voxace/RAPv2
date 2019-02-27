@@ -58,6 +58,27 @@ SubjectSchema.statics.GetAllSubjectCodes = function(cb) {
   ]).exec(cb);
 };
 
+// Get a list of all subjects by code
+SubjectSchema.statics.GetAllSubjectCodesFromName = function(subjectName, cb) {
+  return this.aggregate([
+    {
+      $match: {
+        name: subjectName
+      }
+    },
+    {
+      $project: {
+        code: "$code"
+      }
+    },
+    {
+      $sort: {
+        code: 1
+      }
+    }
+  ]).exec(cb);
+};
+
 const Subject = mongoose.model("Subject", SubjectSchema);
 
 module.exports = Subject;

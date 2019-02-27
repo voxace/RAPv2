@@ -100,6 +100,11 @@ export default {
       return this.Scores
     }
   },
+  watch: {
+    student() {
+      this.GetScores()
+    }
+  },
   created() {
     if (process.browser) {
       this.GetScores()

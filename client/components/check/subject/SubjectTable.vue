@@ -93,6 +93,11 @@ export default {
       return this.Scores
     }
   },
+  watch: {
+    subject() {
+      this.GetScores()
+    }
+  },
   created() {
     if (process.browser) {
       this.GetScores()

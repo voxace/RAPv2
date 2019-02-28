@@ -99,8 +99,7 @@
                 </td>
                 <td class="student">{{ props.item.name }}</td>
                 <td class="text-xs-right score">
-                  <score-edit v-if="editing" :scoredata="props.item" />
-                  <score-view v-else :scoredata="props.item" />
+                  <score-edit :scoredata="props.item" />
                 </td>
               </tr>
             </template>
@@ -151,12 +150,10 @@
 </template>
 
 <script>
-import ScoreView from '@/components/ScoreView'
 import ScoreEdit from '@/components/ScoreEdit'
 
 export default {
   components: {
-    ScoreView,
     ScoreEdit
   },
   middleware: 'auth',
@@ -223,15 +220,6 @@ export default {
   computed: {
     scores() {
       return this.Scores
-    },
-    editing() {
-      if (this.$store.state.auth.access == 2) {
-        return true
-      } else if (this.user == this.$store.state.auth.user_id) {
-        return true
-      } else {
-        return false
-      }
     },
     subjectCodes() {
       return this.SubjectCodes
@@ -377,7 +365,7 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
 .table-heading {
   font-size: 16px !important;
 }

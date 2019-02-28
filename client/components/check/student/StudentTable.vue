@@ -24,7 +24,7 @@
               hide-actions
             >
               <template slot="items" slot-scope="props">
-                <tr>
+                <tr :id="props.item._id">
                   <td>{{ props.item.name }}</td>
                   <td class="hidden-sm-and-down">{{ props.item.subject }}</td>
                   <td>{{ props.item.subjectCode }}</td>
@@ -139,13 +139,7 @@ export default {
 }
 </script>
 
-<style>
-.v-expansion-panel__header {
-  background-color: #fdd835 !important;
-}
-.v-expansion-panel__container {
-  border-top: 1px solid rgba(0, 0, 0, 0.35) !important;
-}
+<style scoped>
 @media only screen and (max-device-width: 875px) {
   .tab-heading {
     font-size: 16px !important;

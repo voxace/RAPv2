@@ -147,7 +147,7 @@ module.exports = {
         throw new Error(err);
       });
   },
-  // Remove Score
+  // Remove Score by lookig up details
   async RemoveStudent(ctx) {
     let periodId = ctx.request.body.periodId;
     if (periodId == "active") {
@@ -167,6 +167,22 @@ module.exports = {
       .then(score => {
         console.log(JSON.stringify(score));
         ctx.body = JSON.stringify(score);
+      })
+      .catch(err => {
+        console.log(err);
+        throw new Error(err);
+      });
+  },
+  // Remove Score by ID
+  async RemoveScore(ctx) {
+    await Score.findOne({
+      _id: ctx.params.scoreId
+    })
+      .remove()
+      .exec()
+      .then(score => {
+        console.log('Deleted Score');
+        ctx.body = 'Deleted Score';
       })
       .catch(err => {
         console.log(err);

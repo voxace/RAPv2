@@ -183,4 +183,10 @@ table.v-table tbody td,
 table.v-table tbody th {
   height: 42px !important;
 }
+.v-expansion-panel__header {
+  background-color: #fdd835 !important;
+}
+.v-expansion-panel__container {
+  border-bottom: 1px solid rgba(0, 0, 0, 0.35) !important;
+}
 </style>

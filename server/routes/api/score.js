@@ -12,6 +12,7 @@ router.patch("/score/id", controller.SetScore);
 // Delete Score / Student / Teacher / Class (when removing student from a class)
 router.post("/score/remove", controller.RemoveStudent);
 // Delete Score / ID (when removing student from a class)
+router.delete("/score/:scoreId", controller.RemoveScore);
 
 // GET SCORES
 // Get Scores / Student (for student, grouped by period)

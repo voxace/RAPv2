@@ -18,16 +18,19 @@
         </v-card-text>
       </v-card>
     </v-flex>
-    <score-table v-if="model" :user="model" />
+    <score-table v-if="model && editing" :user="model" />
+    <score-table-view v-if="model && !editing" :user="model" />
   </v-layout>
 </template>
 
 <script>
 import ScoreTable from '@/components/ScoreTable'
+import ScoreTableView from '@/components/ScoreTableView'
 
 export default {
   components: {
-    ScoreTable
+    ScoreTable,
+    ScoreTableView
   },
   middleware: 'auth',
   data() {
@@ -39,6 +42,15 @@ export default {
   computed: {
     teachers() {
       return this.Teachers
+    },
+    editing() {
+      if (this.$store.state.auth.access == 2) {
+        return true
+      } else if (this.model == this.$store.state.auth.user_id) {
+        return true
+      } else {
+        return false
+      }
     }
   },
   watch: {},
@@ -54,5 +66,3 @@ export default {
   }
 }
 </script>
-
-<style></style>

@@ -134,10 +134,7 @@ export default {
 }
 </script>
 
-<style>
-.v-expansion-panel__header {
-  background-color: #efefef !important;
-}
+<style scoped>
 @media only screen and (max-device-width: 875px) {
   .tab-heading {
     font-size: 16px !important;

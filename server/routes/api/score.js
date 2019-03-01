@@ -36,6 +36,7 @@ router.get("/scores/teacher/:id/:period", controller.GetScoresByTeacher);
 // Get Average / All (all students, current period)
 router.get("/scores/students/all", controller.GetAllStudentsAverageScore);
 // Get Average / Grade (all students, current period, grouped by student grade)
+router.get("/scores/students/grade", controller.GetAverageScoresByYearGroup);
 // Get Average / Subject / Grade (for a particular subject, current period, grouped by student grade)
 // Get Average / Biggest Positive Change (since last period)
 // Get Average / Biggest Negative Change (since last period)

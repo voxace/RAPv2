@@ -40,6 +40,22 @@ module.exports = {
         throw new Error(err);
       });
   },
+  // Get Average Scores By Year Groups
+  async GetAverageScoresByYearGroup(ctx) {    
+    let periodId = ctx.params.period;
+    await Admin.GetCurrent()
+    .then(currentPeriod => {
+      periodId = currentPeriod[0]._id;
+    });    
+    await Score.GetAverageScoresByYearGroup(periodId)
+      .then(scores => {
+        ctx.body = JSON.stringify(scores);
+      })
+      .catch(err => {
+        console.log(err);
+        throw new Error(err);
+      });
+  },
   // Get Scores / Subject Code
   async GetScoresBySubjectID(ctx) {
     await Score.GetScoresBySubjectID(ctx.params.code)

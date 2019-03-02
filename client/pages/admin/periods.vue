@@ -168,19 +168,17 @@ export default {
       this.loading = true
       this.Periods = await this.$axios.$get('/period/all/')
       let p = this.Periods
-      let currentPeriod = await this.$axios
-        .$get('/period/current/')
-        .then(current => {
-          p.forEach(period => {
-            if (period._id == current._id) {
-              period.active = true
-            } else {
-              period.active = false
-            }
-          })
-          this.currentPeriod = Object.assign({}, current)
-          console.log(currentPeriod)
+      await this.$axios.$get('/period/current/').then(current => {
+        p.forEach(period => {
+          if (period._id == current._id) {
+            period.active = true
+          } else {
+            period.active = false
+          }
         })
+        this.currentPeriod = Object.assign({}, current)
+        console.log(this.currentPeriod)
+      })
       this.$forceUpdate()
       this.loading = false
     },
@@ -197,30 +195,19 @@ export default {
       } else {
         this.Periods.push(this.editedItem)
       }
-      this.$axios.$post('/period', {
+      await this.$axios.$post('/period', {
         year: this.editedItem.year,
         term: this.editedItem.term,
         week: this.editedItem.week
       })
+      this.GetPeriods()
       this.close()
     },
     activate(value) {
-      let p = this.Periods
-      Object.assign(this.currentPeriod, value)
-      this.$axios
-        .$post('/period/current/', { id: value._id })
-        .then(() => {
-          p.forEach(period => {
-            if (period._id == value._id) {
-              period.active = true
-            } else {
-              period.active = false
-            }
-          })
-        })
-        .then(() => {
-          this.$forceUpdate()
-        })
+      let vm = this
+      this.$axios.$post('/period/current/', { id: value._id }).then(() => {
+        vm.GetPeriods()
+      })
     }
   }
 }

@@ -5,6 +5,7 @@ const Score = require("./../models/score");
 const Teacher = require("./../models/teacher");
 const Subject = require("./../models/subject");
 const Utilities = require("./admin-utilities");
+const PDF = require("./admin-pdf");
 const csv = require("csvtojson");
 const async = require("async");
 const fs = require("fs");
@@ -67,5 +68,22 @@ module.exports = {
     let jsonArrayObj = JSON.parse(fs.readFileSync(jsonFilePath, "utf8"));
     await Utilities.ProcessOldStudentsLegacy(jsonArrayObj, ctx);
     await Utilities.DeleteFile(jsonFilePath);
+  },
+
+  // Generate RAP Posters
+  async GeneratePosters(ctx) {
+    let periodId = ctx.params.period;
+    await Admin.GetCurrent()
+    .then(currentPeriod => {
+      periodId = currentPeriod[0]._id;
+    });    
+    await Score.GetPosterData(periodId)
+      .then(async scores => {
+        await PDF.GeneratePosters(scores, ctx);
+      })
+      .catch(err => {
+        console.log(err);
+        throw new Error(err);
+      });
   }
 };

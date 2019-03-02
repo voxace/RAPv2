@@ -1,7 +1,16 @@
 <template>
-  <v-layout align-center justify-center>
-    <v-flex xs12 sm8 md4 mb-5 pb-5 class="text-xs-center headline">
-      Coming Soon!
-    </v-flex>
-  </v-layout>
+  <object
+    data="http://192.168.1.232:3001/api/admin/posters.pdf"
+    type="application/pdf"
+    width="100%"
+    height="800px"
+  >
+    <p>
+      It appears you don't have a PDF plugin for this browser. No biggie... you
+      can
+      <a href="http://192.168.1.232:3001/api/admin/posters.pdf"
+        >click here to download the PDF file.</a
+      >
+    </p>
+  </object>
 </template>

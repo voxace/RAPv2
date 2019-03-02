@@ -514,6 +514,91 @@ ScoreSchema.statics.GetAverageScoresByYearGroup = function(period, cb) {
   ]).exec(cb);
 };
 
+// Get all scores for specified Student grouped by period
+ScoreSchema.statics.GetPosterData = function(period, cb) {
+  console.log(period);
+  return this.aggregate([
+    // Match only scores for specified period
+    // Also only match scores of 1 or above to leave out empty scores
+    {
+      $match: {
+        periodId: new mongoose.Types.ObjectId(period),
+        score: { $gte: 3 },
+        studentGrade: { $gte: 1 }
+      }
+    },
+    // Join score table to students table
+    {
+      $lookup: {
+        from: "students",
+        localField: "studentId",
+        foreignField: "_id",
+        as: "student"
+      }
+    },
+    // Project only relevant fields
+    {
+      $project: {
+        studentId: { $arrayElemAt: ["$student._id", 0] },        
+        name: { $arrayElemAt: ["$student.name", 0] },
+        periodId: "$periodId",
+        year: "$studentGrade",
+        score: "$score"
+      }
+    },
+    // Group by Student
+    {
+      $group: {
+        _id: "$studentId",
+        name: { $first: "$name" },
+        periodId: { $last: "$periodId" },
+        year: { $avg: "$year" },
+        average: { $avg: "$score" },
+      }
+    },
+    // Sort by Score
+    {
+      $sort: {
+        "average": -1
+      }
+    },
+    {
+      $group: {
+        _id: "$year",
+        periodId: { $last: "$periodId" },
+        scores: {
+          $push: "$$ROOT"
+        }
+      }
+    },
+    // Sort by Year Group
+    {
+      $sort: {
+        "_id": 1
+      }
+    },
+    // Join period table to results
+    {
+      $lookup: {
+        from: "periods",
+        localField: "periodId",
+        foreignField: "_id",
+        as: "period"
+      }
+    },
+    // Remove unused fields
+    {
+      $project: {
+        scores: {
+          periodId: 0,
+          studentGrade: 0,
+          _id: 0
+        }
+      }
+    }
+  ]).exec(cb);
+};
+
 // Find scores less than
 ScoreSchema.statics.findScoresLessThan = function(score, cb) {
   return this.find({ average: { $lt: score } }, cb);

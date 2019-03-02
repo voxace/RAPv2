@@ -21,4 +21,7 @@ router.post("/admin/import/old", controller.ImportFromOldRap);
 // Initial setup for Admin Table
 router.post("/admin/setup", controller.AdminSetup);
 
+// Initial setup for Admin Table
+router.get("/admin/posters.pdf", controller.GeneratePosters);
+
 module.exports = router.routes();

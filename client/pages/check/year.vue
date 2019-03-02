@@ -16,6 +16,7 @@
             :key="tab._id"
             :href="'#year' + tab._id"
             class="tab-heading"
+            @click="SetYearGroup(tab._id, index)"
           >
             {{ tab._id }}
           </v-tab>
@@ -34,7 +35,20 @@
             >
               <template slot="items" slot-scope="props">
                 <tr>
-                  <td class="student">{{ props.item._id }}</td>
+                  <td v-if="editing" class="remove">
+                    <v-btn
+                      fab
+                      dark
+                      class="small-button"
+                      color="error"
+                      @click="RemoveStudent(props.item)"
+                    >
+                      <v-icon dark size="16px">
+                        remove
+                      </v-icon>
+                    </v-btn>
+                  </td>
+                  <td class="student">{{ props.item.name }}</td>
                   <td class="text-xs-center">
                     {{ ReturnScore(props.item.average) }}
                   </td>
@@ -59,7 +73,17 @@ export default {
   data() {
     return {
       tabModel: '',
+      currentYearGroupId: null,
+      currentYearGroupIndex: 0,
       headers: [
+        {
+          text: '',
+          value: 'delete',
+          align: 'center',
+          width: '10px',
+          sortable: false,
+          class: 'table-heading'
+        },
         {
           text: 'Name',
           value: '_id',
@@ -88,6 +112,20 @@ export default {
   computed: {
     scores() {
       return this.Scores
+    },
+    editing() {
+      if (this.$store.state.auth.access == 2) {
+        return true
+      } else {
+        return false
+      }
+    },
+    computedHeaders() {
+      if (!this.editing) {
+        return this.headers.filter(header => header.text !== '')
+      } else {
+        return this.headers
+      }
     }
   },
   created() {
@@ -110,6 +148,22 @@ export default {
       } else {
         return score.toFixed(2)
       }
+    },
+    async RemoveStudent(student) {
+      await this.$axios
+        .$delete('/scores/' + student._id + '/active')
+        .then(() => {
+          let index = this.Scores[this.currentYearGroupIndex].scores
+            .map(function(e) {
+              return e.name
+            })
+            .indexOf(student.name)
+          this.Scores[this.currentYearGroupIndex].scores.splice(index, 1)
+        })
+    },
+    SetYearGroup(id, index) {
+      this.currentYearGroupId = id
+      this.currentYearGroupIndex = index
     }
   }
 }
@@ -119,28 +173,56 @@ export default {
 .table-heading {
   font-size: 16px !important;
 }
+
+.v-btn {
+  min-width: 0;
+}
+
+.remove {
+  padding: 0px 0px 0px 10px !important;
+}
+
+.score {
+  padding-right: 16px !important;
+}
+
+.small-button {
+  width: 22px;
+  height: 22px;
+}
+
 .v-tabs__div {
   background: rgba(0, 0, 0, 0);
   transition: 0.4s ease-in-out;
 }
+
 .v-tabs__div:hover {
   background: rgba(0, 0, 0, 0.05);
   transition: 0.2s ease-in-out;
 }
+
 .v-tabs__container {
   height: 48px;
 }
+
 @media only screen and (min-device-width: 875px) and (max-device-width: 959px) {
   .v-tabs__container {
     height: 32px;
   }
 }
+
 @media only screen and (max-device-width: 875px) {
   .v-tabs__container {
     height: 40px;
   }
+  .remove {
+    padding: 0px 0px 0px 8px !important;
+  }
   .student {
     padding: 4px !important;
+  }
+  .score {
+    padding-right: 6px !important;
   }
   .tab-heading {
     font-size: 13px !important;

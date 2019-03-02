@@ -9,14 +9,27 @@
         </v-toolbar>
         <v-card-text>
           <v-data-table
-            :headers="headers"
+            :headers="computedHeaders"
             :items="scores"
             :loading="loading"
             :pagination.sync="pagination"
           >
             <template slot="items" slot-scope="props">
               <tr>
-                <td>{{ props.item._id }}</td>
+                <td v-if="editing" class="remove">
+                  <v-btn
+                    fab
+                    dark
+                    class="small-button"
+                    color="error"
+                    @click="RemoveStudent(props.item)"
+                  >
+                    <v-icon dark size="16px">
+                      remove
+                    </v-icon>
+                  </v-btn>
+                </td>
+                <td>{{ props.item.name }}</td>
                 <td>{{ props.item.year }}</td>
                 <td class="text-xs-center">
                   {{ ReturnScore(props.item.average) }}
@@ -44,6 +57,14 @@ export default {
       loading: false,
       Scores: [],
       headers: [
+        {
+          text: '',
+          value: 'delete',
+          align: 'center',
+          width: '10px',
+          sortable: false,
+          class: 'table-heading'
+        },
         {
           text: 'Student',
           value: '_id',
@@ -78,6 +99,20 @@ export default {
   computed: {
     scores() {
       return this.Scores
+    },
+    editing() {
+      if (this.$store.state.auth.access == 2) {
+        return true
+      } else {
+        return false
+      }
+    },
+    computedHeaders() {
+      if (!this.editing) {
+        return this.headers.filter(header => header.text !== '')
+      } else {
+        return this.headers
+      }
     }
   },
   watch: {
@@ -105,18 +140,45 @@ export default {
       } else {
         return score.toFixed(2)
       }
+    },
+    async RemoveStudent(student) {
+      await this.$axios
+        .$delete('/scores/' + student._id + '/active')
+        .then(() => {
+          let index = this.Scores.map(function(e) {
+            return e.name
+          }).indexOf(student.name)
+          this.Scores.splice(index, 1)
+        })
     }
   }
 }
 </script>
 
 <style scoped>
+.table-heading {
+  font-size: 16px !important;
+}
+
+.v-btn {
+  min-width: 0;
+}
+
+.remove {
+  padding: 0px 0px 0px 10px !important;
+}
+
+.small-button {
+  width: 22px;
+  height: 22px;
+}
+
 @media only screen and (max-device-width: 875px) {
-  .tab-heading {
-    font-size: 16px !important;
+  .remove {
+    padding: 0px 0px 0px 8px !important;
   }
-  .tab-score {
-    font-size: 18px !important;
+  .student {
+    padding: 4px !important;
   }
 }
 </style>

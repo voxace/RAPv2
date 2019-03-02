@@ -10,9 +10,11 @@ router.post("/score", controller.AddStudent);
 router.patch("/score/id", controller.SetScore);
 // Update Score / Student / Teacher / Class (when giving the student a score)
 // Delete Score / Student / Teacher / Class (when removing student from a class)
-router.post("/score/remove", controller.RemoveStudent);
+router.post("/score/remove", controller.RemoveScoreByDetails);
 // Delete Score / ID (when removing student from a class)
-router.delete("/score/:scoreId", controller.RemoveScore);
+router.delete("/score/:scoreId", controller.RemoveScoreByID);
+// Delete Score / ID (when removing student from a class)
+router.delete("/scores/:studentId/:periodId", controller.RemoveStudentByPeriod);
 
 // GET SCORES
 // Get Scores / Student (for student, grouped by period)

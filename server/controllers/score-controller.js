@@ -179,8 +179,8 @@ module.exports = {
         throw new Error(err);
       });
   },
-  // Remove Score by lookig up details
-  async RemoveStudent(ctx) {
+  // Remove Score by looking up details
+  async RemoveScoreByDetails(ctx) {
     let periodId = ctx.request.body.periodId;
     if (periodId == "active") {
       await Admin.GetCurrent()
@@ -206,7 +206,7 @@ module.exports = {
       });
   },
   // Remove Score by ID
-  async RemoveScore(ctx) {
+  async RemoveScoreByID(ctx) {
     await Score.findOne({
       _id: ctx.params.scoreId
     })
@@ -215,6 +215,29 @@ module.exports = {
       .then(score => {
         console.log('Deleted Score');
         ctx.body = 'Deleted Score';
+      })
+      .catch(err => {
+        console.log(err);
+        throw new Error(err);
+      });
+  },
+  // Remove Student from Period
+  async RemoveStudentByPeriod(ctx) {
+    let periodId = ctx.params.periodId;
+    let studentId = ctx.params.studentId;    
+    if (periodId == "active") {
+      await Admin.GetCurrent()
+      .then(currentPeriod => {
+        periodId = currentPeriod[0]._id;
+      });
+    }
+    await Score.deleteMany({
+      studentId: studentId,
+      periodId: periodId
+    })
+      .then(scores => {
+        console.log('Deleted Scores from studentId: ' + studentId + ', periodId: ' + periodId);
+        ctx.body = 'Deleted Scores';
       })
       .catch(err => {
         console.log(err);

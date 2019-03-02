@@ -523,10 +523,10 @@ ScoreSchema.statics.GetPosterData = function(period, cb) {
     {
       $match: {
         periodId: new mongoose.Types.ObjectId(period),
-        score: { $gte: 3 },
-        studentGrade: { $gte: 1 }
+        score: { $gte: 1 },
+        studentGrade: { $gte: 7 }
       }
-    },
+    },    
     // Join score table to students table
     {
       $lookup: {
@@ -556,10 +556,15 @@ ScoreSchema.statics.GetPosterData = function(period, cb) {
         average: { $avg: "$score" },
       }
     },
+    {
+      $match: {
+        average: { $gte: 3 },
+      }
+    },
     // Sort by Score
     {
       $sort: {
-        "average": -1
+        "name": 1
       }
     },
     {

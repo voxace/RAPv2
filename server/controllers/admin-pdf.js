@@ -14,30 +14,60 @@ function timeout(ms) {
 
 function calcLineGap(count) {
   //console.log(count);
-  if (count > 126) {
-    return 0;
-  } else if (count > 118) {
-    return 2;
-  } else if (count > 110) {
-    return 3;
-  } else if (count > 96) {
-    return 4;
-  } else if (count > 92) {
-    return 7;
-  } else if (count > 89) {
-    return 8;
-  } else if (count > 85) {
-    return 10;
-  } else if (count > 80) {
-    return 11;
-  } else if (count > 75) {
-    return 12;
-  } else if (count > 70) {
+  if (count <= 60) {    
+    return 23;
+  } else if (count <=63) {
+    return 22;
+  } else if (count <=66) {
+    return 20;
+  } else if (count <=69) {
+    return 19;
+  } else if (count <=72) {
+    return 17;
+  } else if (count <=75) {
+    return 16;
+  } else if (count <=78) {
+    return 14;
+  } else if (count <=81) {
     return 13;
-  } else if (count > 60) {
-    return 18;
+  } else if (count <=84) {
+    return 12;
+  } else if (count <=87) {
+    return 11;
+  } else if (count <=90) {
+    return 10;
+  } else if (count <=93) {
+    return 9;
+  } else if (count <=96) {
+    return 8;
+  } else if (count <=99) {
+    return 7;
+  } else if (count <=102) {
+    return 6.5;
+  } else if (count <=105) {
+    return 6;
+  } else if (count <=108) {
+    return 5;
+  } else if (count <=111) {
+    return 4.5;
+  } else if (count <=114) {
+    return 4;
+  } else if (count <=117) {
+    return 3.5;
+  } else if (count <=120) {
+    return 3;
+  } else if (count <=123) {
+    return 2.5;
+  } else if (count <=126) {
+    return 2;
+  } else if (count <=129) {
+    return 1.5;
+  } else if (count <=132) {
+    return 1;
+  } else if (count <=135) {
+    return 0.5;
   } else {
-    return 24;
+    return 0;
   }
 }
 
@@ -46,7 +76,6 @@ module.exports = {
   // Processes the CSV file from EMU
   async GeneratePosters(scores, ctx) {
     
-    //ctx.body = JSON.stringify(scores);
     let year = scores[0].period[0].year;
     let term = scores[0].period[0].term;
     let week = scores[0].period[0].week;
@@ -57,8 +86,8 @@ module.exports = {
       margins: {
         top: 150,
         bottom: 50,
-        left: 20,
-        right: 20
+        left: 10,
+        right: 10
       }
     });
 
@@ -70,7 +99,7 @@ module.exports = {
       let count = yearGroup.scores.length;
       console.log("Year " + yearGroup._id + ": " + count);
       await Object.values(yearGroup.scores).forEach(function(student) {
-        text += student.name + '  (' + Number(student.average).toFixed(2) + ')\n';
+        text += student.name + ' (' + Number(student.average).toFixed(2) + ')\n';
       })      
 
       if(yearGroup._id != 7) { doc.addPage(); }
@@ -91,13 +120,13 @@ module.exports = {
         );
 
       doc
-        .fontSize(16)
+        .fontSize(15)
         .font("Helvetica")
         .text(text, {
           columns: 3,
           columnGap: 5,
           height: 820,
-          width: 802,
+          width: 822,
           align: "center",
           lineGap: calcLineGap(count)
         });

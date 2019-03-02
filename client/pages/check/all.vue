@@ -1,37 +1,33 @@
 <template>
-  <v-flex xs12>
-    <v-card>
-      <v-toolbar flat color="yellow darken-1">
-        <v-toolbar-title>
-          Average Scores: All Students
-        </v-toolbar-title>
-      </v-toolbar>
-      <v-card-text>
-        <v-data-table
-          :headers="headers"
-          :items="scores"
-          :loading="loading"
-          :pagination.sync="pagination"
-        >
-          <template slot="items" slot-scope="props">
-            <tr>
-              <td>{{ props.item._id }}</td>
-              <td>{{ props.item.year }}</td>
-              <td
-                v-if="props.item.average != 0 && props.item.average != null"
-                class="text-xs-center"
-              >
-                {{ props.item.average }}
-              </td>
-              <td v-else class="text-xs-center">
-                -
-              </td>
-            </tr>
-          </template>
-        </v-data-table>
-      </v-card-text>
-    </v-card>
-  </v-flex>
+  <v-layout wrap align-content-start>
+    <v-flex xs12>
+      <v-card>
+        <v-toolbar flat color="yellow darken-1">
+          <v-toolbar-title>
+            Average Scores: All Students
+          </v-toolbar-title>
+        </v-toolbar>
+        <v-card-text>
+          <v-data-table
+            :headers="headers"
+            :items="scores"
+            :loading="loading"
+            :pagination.sync="pagination"
+          >
+            <template slot="items" slot-scope="props">
+              <tr>
+                <td>{{ props.item._id }}</td>
+                <td>{{ props.item.year }}</td>
+                <td class="text-xs-center">
+                  {{ ReturnScore(props.item.average) }}
+                </td>
+              </tr>
+            </template>
+          </v-data-table>
+        </v-card-text>
+      </v-card>
+    </v-flex>
+  </v-layout>
 </template>
 
 <script>
@@ -105,7 +101,7 @@ export default {
     },
     ReturnScore(score) {
       if (score == 0 || score == null) {
-        return '0.00'
+        return ' - '
       } else {
         return score.toFixed(2)
       }

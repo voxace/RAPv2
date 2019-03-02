@@ -35,7 +35,9 @@
               <template slot="items" slot-scope="props">
                 <tr>
                   <td class="student">{{ props.item._id }}</td>
-                  <td class="text-xs-center">{{ props.item.average }}</td>
+                  <td class="text-xs-center">
+                    {{ ReturnScore(props.item.average) }}
+                  </td>
                 </tr>
               </template>
             </v-data-table>
@@ -101,6 +103,13 @@ export default {
         this.tabModel = 'year' + this.Scores[0]._id
       }
       this.loading = false
+    },
+    ReturnScore(score) {
+      if (score == 0 || score == null) {
+        return ' - '
+      } else {
+        return score.toFixed(2)
+      }
     }
   }
 }

@@ -12,8 +12,7 @@ function timeout(ms) {
   return new Promise(resolve => setTimeout(resolve, ms));
 }
 
-function calcLineGap(count) {
-  //console.log(count);
+function calcLineGap(count) {  
   if (count <= 60) {    
     return 23;
   } else if (count <=63) {

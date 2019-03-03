@@ -12,6 +12,7 @@ AdminSchema.statics.GetActiveStatus = function(callback) {
   return this.aggregate([
     {
       $project: {
+        _id: 0,
         isRapActive: "$isRapActive"
       }
     }
@@ -19,16 +20,27 @@ AdminSchema.statics.GetActiveStatus = function(callback) {
 };
 
 // Set RAP to Active
+AdminSchema.statics.SetActiveStatus = function(status) {
+  console.log('Rap Active Status: ' + status);
+  return this.findOneAndUpdate({ },
+    { $set: { isRapActive: status } }, 
+    { new: true }
+  );
+};
+
+// Set RAP to Active
 AdminSchema.statics.ActivateRAP = function() {
   return this.findOneAndUpdate({ },
-    { $set: { isRapActive: true } }
+    { $set: { isRapActive: true } }, 
+    { new: true }
   );
 };
 
 // Set RAP to Deactivated
 AdminSchema.statics.DeactivateRAP = function() {
   return this.findOneAndUpdate({ },
-    { $set: { isRapActive: false } }
+    { $set: { isRapActive: false } }, 
+    { new: true }
   );
 };
 

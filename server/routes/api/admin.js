@@ -24,4 +24,10 @@ router.post("/admin/setup", controller.AdminSetup);
 // Initial setup for Admin Table
 router.get("/admin/posters.pdf", controller.GeneratePosters);
 
+// Initial setup for Admin Table
+router.get("/admin/active-status", controller.GetActiveStatus);
+
+// Initial setup for Admin Table
+router.post("/admin/active-status", controller.SetActiveStatus);
+
 module.exports = router.routes();

@@ -85,5 +85,31 @@ module.exports = {
         console.log(err);
         throw new Error(err);
       });
-  }
+  },
+
+  // Get Rap Lock Status
+  async GetActiveStatus(ctx) {
+    await Admin.GetActiveStatus()
+      .then(status => {
+        console.log(status[0]);
+        ctx.body = JSON.stringify(status[0]);
+      })
+      .catch(err => {
+        console.log(err);
+        throw new Error(err);
+      });
+  },
+
+  // Sets Rap Lock Status
+  async SetActiveStatus(ctx) {
+    if(ctx.request.body.status) {}
+    await Admin.SetActiveStatus(ctx.request.body.status)
+      .then(status => {
+        ctx.body = JSON.stringify(status);
+      })
+      .catch(err => {
+        throw new Error(err);
+      });
+  },
+
 };

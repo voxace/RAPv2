@@ -9,7 +9,7 @@
           </v-toolbar-title>
           <v-spacer />
           <v-btn
-            v-if="!RapLockedStatus"
+            v-if="RapActiveStatus"
             color="success"
             dark
             class="mb-2"
@@ -102,7 +102,7 @@ export default {
   middleware: 'auth',
   data() {
     return {
-      RapLockedStatus: true,
+      RapActiveStatus: true,
       loading: false,
       Periods: [],
       currentPeriod: { _id: '0', year: '0000', term: '0', week: '0' },
@@ -176,6 +176,7 @@ export default {
   created() {
     if (process.browser) {
       this.GetPeriods()
+      this.GetActiveStatus()
     }
   },
   methods: {
@@ -224,11 +225,27 @@ export default {
         vm.GetPeriods()
       })
     },
-    LockRap() {
-      this.RapLockedStatus = true
+    async GetActiveStatus() {
+      let status = await this.$axios.$get('/admin/active-status')
+      this.RapActiveStatus = status.isRapActive
     },
-    UnlockRap() {
-      this.RapLockedStatus = false
+    async LockRap() {
+      await this.$axios
+        .$post('/admin/active-status', {
+          status: false
+        })
+        .then(() => {
+          this.RapActiveStatus = false
+        })
+    },
+    async UnlockRap() {
+      await this.$axios
+        .$post('/admin/active-status', {
+          status: true
+        })
+        .then(() => {
+          this.RapActiveStatus = true
+        })
     }
   }
 }

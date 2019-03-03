@@ -36,7 +36,8 @@ export default {
   data() {
     return {
       model: null,
-      Teachers: []
+      Teachers: [],
+      RapActiveStatus: false
     }
   },
   computed: {
@@ -46,7 +47,10 @@ export default {
     editing() {
       if (this.$store.state.auth.access == 2) {
         return true
-      } else if (this.model == this.$store.state.auth.user_id) {
+      } else if (
+        this.model == this.$store.state.auth.user_id &&
+        this.RapActiveStatus == true
+      ) {
         return true
       } else {
         return false
@@ -57,11 +61,16 @@ export default {
   created() {
     if (process.browser) {
       this.GetAllTeachers()
+      this.GetActiveStatus()
     }
   },
   methods: {
     async GetAllTeachers() {
       this.Teachers = await this.$axios.$get('/teachers/names')
+    },
+    async GetActiveStatus() {
+      let status = await this.$axios.$get('/admin/active-status')
+      this.RapActiveStatus = status.isRapActive
     }
   }
 }

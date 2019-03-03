@@ -10,7 +10,8 @@
           (e.g. left school, have not attended your class). Clicking the button
           a second time will also remove the score.
         </p>
-        <score-table :user="user.user_id" />
+        <score-table v-if="RapActiveStatus" :user="user.user_id" />
+        <score-table-view v-else :user="user.user_id" />
       </div>
       <div v-if="user.type == 'student'">
         <student-table :student="user.user_id" class="mt-3" />
@@ -21,17 +22,35 @@
 
 <script>
 import ScoreTable from '@/components/ScoreTable'
+import ScoreTableView from '@/components/ScoreTableView'
 import StudentTable from '@/components/check/student/StudentTable'
 
 export default {
   components: {
     ScoreTable,
-    StudentTable
+    StudentTable,
+    ScoreTableView
   },
   middleware: 'auth',
+  data() {
+    return {
+      RapActiveStatus: false
+    }
+  },
   computed: {
     user() {
       return this.$store.state.auth
+    }
+  },
+  created() {
+    if (process.browser) {
+      this.GetActiveStatus()
+    }
+  },
+  methods: {
+    async GetActiveStatus() {
+      let status = await this.$axios.$get('/admin/active-status')
+      this.RapActiveStatus = status.isRapActive
     }
   }
 }

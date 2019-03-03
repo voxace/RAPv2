@@ -29,7 +29,11 @@
                     </v-icon>
                   </v-btn>
                 </td>
-                <td>{{ props.item.name }}</td>
+                <td>
+                  <nuxt-link :to="{ path: '/check/student/' + props.item._id }">
+                    {{ props.item.name }}
+                  </nuxt-link>
+                </td>
                 <td>{{ props.item.year }}</td>
                 <td class="text-xs-center">
                   {{ ReturnScore(props.item.average) }}

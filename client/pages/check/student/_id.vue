@@ -7,6 +7,7 @@
           <v-autocomplete
             v-model="model"
             :items="students"
+            :search-input.sync="searchInput"
             item-text="name"
             item-value="_id"
             placeholder="Name"
@@ -33,7 +34,8 @@ export default {
   data() {
     return {
       model: null,
-      Students: []
+      Students: [],
+      searchInput: ''
     }
   },
   computed: {
@@ -41,14 +43,33 @@ export default {
       return this.Students
     }
   },
+  watch: {
+    model(val) {
+      history.pushState(
+        { urlPath: `/check/student/${val}` },
+        '',
+        `/check/student/${val}`
+      )
+    }
+  },
   created() {
+    if (this.$route.params.id) {
+      this.model = this.$route.params.id
+    }
     if (process.browser) {
       this.GetAllStudents()
     }
   },
   methods: {
     async GetAllStudents() {
+      let model = this.model
       this.Students = await this.$axios.$get('/students/active')
+      if (model) {
+        let found = this.Students.find(function(student) {
+          return student._id == model
+        })
+        this.searchInput = found.name
+      }
     }
   }
 }

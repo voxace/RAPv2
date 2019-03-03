@@ -7,6 +7,7 @@
           <v-autocomplete
             v-model="model"
             :items="teachers"
+            :search-input.sync="searchInput"
             item-text="name"
             item-value="_id"
             placeholder="Name"
@@ -37,7 +38,8 @@ export default {
     return {
       model: null,
       Teachers: [],
-      RapActiveStatus: false
+      RapActiveStatus: false,
+      searchInput: ''
     }
   },
   computed: {
@@ -57,8 +59,19 @@ export default {
       }
     }
   },
-  watch: {},
+  watch: {
+    model(val) {
+      history.pushState(
+        { urlPath: `/check/teacher/${val}` },
+        '',
+        `/check/teacher/${val}`
+      )
+    }
+  },
   created() {
+    if (this.$route.params.id) {
+      this.model = this.$route.params.id
+    }
     if (process.browser) {
       this.GetAllTeachers()
       this.GetActiveStatus()
@@ -66,7 +79,14 @@ export default {
   },
   methods: {
     async GetAllTeachers() {
+      let model = this.model
       this.Teachers = await this.$axios.$get('/teachers/names')
+      if (model) {
+        let found = this.Teachers.find(function(teacher) {
+          return teacher._id == model
+        })
+        this.searchInput = found.name
+      }
     },
     async GetActiveStatus() {
       let status = await this.$axios.$get('/admin/active-status')

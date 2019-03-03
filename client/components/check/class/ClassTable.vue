@@ -25,8 +25,20 @@
             >
               <template slot="items" slot-scope="props">
                 <tr>
-                  <td>{{ props.item.name }}</td>
-                  <td class="hidden-sm-and-down">{{ props.item.teacher }}</td>
+                  <td>
+                    <nuxt-link
+                      :to="{ path: '/check/student/' + props.item.studentId }"
+                    >
+                      {{ props.item.name }}
+                    </nuxt-link>
+                  </td>
+                  <td class="hidden-sm-and-down">
+                    <nuxt-link
+                      :to="{ path: '/check/teacher/' + props.item.teacherId }"
+                    >
+                      {{ props.item.teacher }}
+                    </nuxt-link>
+                  </td>
                   <td
                     v-if="props.item.score != 0 && props.item.score != null"
                     class="text-xs-center"

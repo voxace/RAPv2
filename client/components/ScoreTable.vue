@@ -97,7 +97,13 @@
                     </v-icon>
                   </v-btn>
                 </td>
-                <td class="student">{{ props.item.name }}</td>
+                <td>
+                  <nuxt-link
+                    :to="{ path: '/check/student/' + props.item.studentId }"
+                  >
+                    {{ props.item.name }}
+                  </nuxt-link>
+                </td>
                 <td class="text-xs-right score">
                   <score-edit :scoredata="props.item" />
                 </td>

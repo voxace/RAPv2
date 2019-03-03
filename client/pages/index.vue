@@ -14,7 +14,7 @@
         <score-table-view v-else :user="user.user_id" />
       </div>
       <div v-if="user.type == 'student'">
-        <student-table :student="user.user_id" class="mt-3" />
+        <student-table :student="user.user_id" access="student" class="mt-3" />
       </div>
     </v-flex>
   </v-layout>

@@ -19,7 +19,7 @@
         </v-card-text>
       </v-card>
     </v-flex>
-    <student-table v-if="model" :student="model" />
+    <student-table v-if="model" :student="model" access="teacher" />
   </v-layout>
 </template>
 

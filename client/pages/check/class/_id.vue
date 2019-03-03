@@ -7,6 +7,7 @@
           <v-autocomplete
             v-model="model"
             :items="subjectCodes"
+            :search-input.sync="searchInput"
             item-text="code"
             item-value="_id"
             placeholder="Name"
@@ -33,7 +34,8 @@ export default {
   data() {
     return {
       model: null,
-      SubjectCodes: []
+      SubjectCodes: [],
+      searchInput: ''
     }
   },
   computed: {
@@ -41,14 +43,33 @@ export default {
       return this.SubjectCodes
     }
   },
+  watch: {
+    model(val) {
+      history.pushState(
+        { urlPath: `/check/class/${val}` },
+        '',
+        `/check/class/${val}`
+      )
+    }
+  },
   created() {
+    if (this.$route.params.id) {
+      this.model = this.$route.params.id
+    }
     if (process.browser) {
       this.GetAllSubjectCodes()
     }
   },
   methods: {
     async GetAllSubjectCodes() {
+      let model = this.model
       this.SubjectCodes = await this.$axios.$get('/subject/code/all')
+      if (model) {
+        let found = this.SubjectCodes.find(function(subject) {
+          return subject._id == model
+        })
+        this.searchInput = found.code
+      }
     }
   }
 }

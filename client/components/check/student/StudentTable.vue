@@ -25,9 +25,25 @@
             >
               <template slot="items" slot-scope="props">
                 <tr :id="props.item._id">
-                  <td>{{ props.item.name }}</td>
+                  <td>
+                    <nuxt-link
+                      v-if="access == 'teacher'"
+                      :to="{ path: '/check/teacher/' + props.item.teacherId }"
+                    >
+                      {{ props.item.teacherName }}
+                    </nuxt-link>
+                    <span v-else>{{ props.item.teacherName }}</span>
+                  </td>
                   <td class="hidden-sm-and-down">{{ props.item.subject }}</td>
-                  <td>{{ props.item.subjectCode }}</td>
+                  <td>
+                    <nuxt-link
+                      v-if="access == 'teacher'"
+                      :to="{ path: '/check/class/' + props.item.subjectId }"
+                    >
+                      {{ props.item.subjectCode }}
+                    </nuxt-link>
+                    <span v-else>{{ props.item.subjectCode }}</span>
+                  </td>
                   <td
                     v-if="props.item.score != 0 && props.item.score != null"
                     class="text-xs-center"
@@ -53,6 +69,10 @@ export default {
     student: {
       type: String,
       default: null
+    },
+    access: {
+      type: String,
+      default: 'student'
     }
   },
   middleware: 'auth',

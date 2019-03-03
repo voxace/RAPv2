@@ -367,7 +367,8 @@ ScoreSchema.statics.GetScoresByStudentName = function(student, cb) {
     // Project only relevant fields
     {
       $project: {
-        name: { $arrayElemAt: ["$teacher.name", 0] },
+        teacherName: { $arrayElemAt: ["$teacher.name", 0] },
+        teacherId: { $arrayElemAt: ["$teacher._id", 0] },
         score: {
           $cond: {
             if: { $eq: ["$score", 0] },
@@ -375,6 +376,7 @@ ScoreSchema.statics.GetScoresByStudentName = function(student, cb) {
             else: "$score"
           }
         },
+        subjectId: { $arrayElemAt: ["$subject._id", 0] },
         subject: { $arrayElemAt: ["$subject.name", 0] },
         subjectCode: { $arrayElemAt: ["$subject.code", 0] },
         period: "$period"

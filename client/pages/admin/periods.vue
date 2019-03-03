@@ -8,6 +8,20 @@
             Current Period: {{ GetCurrentPeriod }}
           </v-toolbar-title>
           <v-spacer />
+          <v-btn
+            v-if="!RapLockedStatus"
+            color="success"
+            dark
+            class="mb-2"
+            @click="LockRap"
+          >
+            <v-icon left dark>lock_open</v-icon>
+            Unlocked
+          </v-btn>
+          <v-btn v-else color="error" dark class="mb-2" @click="UnlockRap">
+            <v-icon left dark>lock</v-icon>
+            Locked
+          </v-btn>
           <v-dialog v-model="dialog" max-width="500px">
             <v-btn slot="activator" color="primary" dark class="mb-2">
               New Period
@@ -88,6 +102,7 @@ export default {
   middleware: 'auth',
   data() {
     return {
+      RapLockedStatus: true,
       loading: false,
       Periods: [],
       currentPeriod: { _id: '0', year: '0000', term: '0', week: '0' },
@@ -208,6 +223,12 @@ export default {
       this.$axios.$post('/period/current/', { id: value._id }).then(() => {
         vm.GetPeriods()
       })
+    },
+    LockRap() {
+      this.RapLockedStatus = true
+    },
+    UnlockRap() {
+      this.RapLockedStatus = false
     }
   }
 }

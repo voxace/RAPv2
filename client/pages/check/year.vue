@@ -12,7 +12,7 @@
           slider-color="indigo"
         >
           <v-tab
-            v-for="tab in scores"
+            v-for="(tab, index) in scores"
             :key="tab._id"
             :href="'#year' + tab._id"
             class="tab-heading"

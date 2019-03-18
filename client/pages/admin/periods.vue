@@ -84,7 +84,7 @@
                 <td>
                   <v-checkbox
                     v-model="props.item.active"
-                    class="ml-2"
+                    class="ml-2 check-box"
                     @click.stop.prevent="activate(props.item)"
                   />
                 </td>
@@ -105,7 +105,22 @@ export default {
       RapActiveStatus: true,
       loading: false,
       Periods: [],
-      currentPeriod: { _id: '0', year: '0000', term: '0', week: '0' },
+      currentPeriod: {
+        _id: '0',
+        year: '0000',
+        term: '0',
+        week: '0',
+        active: false,
+        activeStudent: false
+      },
+      currentPeriodStudent: {
+        _id: '0',
+        year: '0000',
+        term: '0',
+        week: '0',
+        active: false,
+        activeStudent: false
+      },
       years: [2020, 2019, 2018, 2017],
       terms: [1, 2, 3, 4],
       weeks: [5, 9],
@@ -183,17 +198,16 @@ export default {
     async GetPeriods() {
       this.loading = true
       this.Periods = await this.$axios.$get('/period/all/')
-      let p = this.Periods
-      await this.$axios.$get('/period/current/').then(current => {
-        p.forEach(period => {
-          if (period._id == current._id) {
-            period.active = true
-          } else {
-            period.active = false
-          }
-        })
-        this.currentPeriod = Object.assign({}, current)
-        console.log(this.currentPeriod)
+      this.currentPeriod = Object.assign(
+        {},
+        await this.$axios.$get('/period/current/')
+      )
+      this.Periods.forEach(period => {
+        if (period._id == this.currentPeriod._id) {
+          period.active = true
+        } else {
+          period.active = false
+        }
       })
       this.$forceUpdate()
       this.loading = false
@@ -250,3 +264,10 @@ export default {
   }
 }
 </script>
+
+<style>
+.v-input__slot {
+  margin-top: 8px !important;
+  margin-bottom: 0px !important;
+}
+</style>

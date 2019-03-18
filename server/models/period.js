@@ -5,6 +5,7 @@ const PeriodSchema = new Schema({
   year: { type: Number, required: true },
   term: { type: Number, required: true },
   week: { type: Number, required: true },
+  order: { type: Number },
   averages: {
     all: Number,
     year7: Number,

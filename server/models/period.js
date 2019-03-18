@@ -38,11 +38,18 @@ PeriodSchema.statics.GetAllPeriods = function(cb) {
   ]).exec(cb);
 };
 
+// Get the details of the latest period (by order)
+PeriodSchema.statics.LatestPeriod = function(callback) {
+  return this.findOne({ order: { $gte: 0 }})
+    .sort('-order')
+    .exec(callback);
+};
+
 // New Period
-PeriodSchema.statics.NewPeriod = function(year, term, week, callback) {
+PeriodSchema.statics.NewPeriod = function(year, term, week, order, callback) {
   return this.findOneAndUpdate(
     { year: year, term: term, week: week },
-    { $set: { year: year, term: term, week: week } },
+    { $set: { year: year, term: term, week: week, order: order } },
     { upsert: true },
     callback
   );

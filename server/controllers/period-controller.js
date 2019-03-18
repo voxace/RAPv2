@@ -41,10 +41,48 @@ module.exports = {
 
   // Creates a new RAP Period
   async NewRapPeriod(ctx) {
+    
+    // Query highest order
+    let latestPeriod = await Period.LatestPeriod();
+
+    // Increment order
+    let newIndex = Number(latestPeriod.order) + 1;
+
+    // Get old values for year, term, week
+    let oldYear = latestPeriod.year;
+    let oldTerm = latestPeriod.term;
+    let oldWeek = latestPeriod.week;
+    let newYear, newTerm, newWeek;
+
+    // Increment term, week
+    if(oldWeek == 9) {
+      newWeek = 5;
+      newTerm = oldTerm + 1;
+    } else {
+      newWeek = 9;
+      newTerm = oldTerm;
+    }
+
+    // Increment year, term
+    if(oldTerm == 4 && oldWeek == 9) {
+      newTerm = 1;
+      newYear = oldYear + 1;
+    } else {      
+      newYear = oldYear;
+    }
+
+    // Log new values
+    console.log('New index: ' + newIndex);
+    console.log('New Year: ' + newYear);
+    console.log('New Term: ' + newTerm);
+    console.log('New Week: ' + newWeek);
+    
+    // Pass in details to create New Period
     await Period.NewPeriod(
-      ctx.request.body.year,
-      ctx.request.body.term,
-      ctx.request.body.week
+      newYear,
+      newTerm,
+      newWeek,
+      newIndex
     )
       .then(activePeriod => {
         ctx.body = JSON.stringify(activePeriod);
@@ -52,5 +90,6 @@ module.exports = {
       .catch(err => {
         throw new Error(err);
       });
+    
   }
 };

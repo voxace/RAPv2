@@ -22,52 +22,9 @@
             <v-icon left dark>lock</v-icon>
             Locked
           </v-btn>
-          <v-dialog v-model="dialog" max-width="500px">
-            <v-btn slot="activator" color="primary" dark class="mb-2">
-              New Period
-            </v-btn>
-            <v-card>
-              <v-card-title>
-                <span class="headline">New Period</span>
-              </v-card-title>
-              <v-card-text>
-                <v-container grid-list-md>
-                  <v-layout wrap>
-                    <v-flex xs4>
-                      <v-select
-                        :items="years"
-                        v-model="editedItem.year"
-                        label="Year"
-                      />
-                    </v-flex>
-                    <v-flex xs4>
-                      <v-select
-                        :items="terms"
-                        v-model="editedItem.term"
-                        label="Term"
-                      />
-                    </v-flex>
-                    <v-flex xs4>
-                      <v-select
-                        :items="weeks"
-                        v-model="editedItem.week"
-                        label="Week"
-                      />
-                    </v-flex>
-                  </v-layout>
-                </v-container>
-              </v-card-text>
-              <v-card-actions>
-                <v-spacer />
-                <v-btn color="blue darken-1" flat @click="close">
-                  Cancel
-                </v-btn>
-                <v-btn color="blue darken-1" flat @click="save">
-                  Save
-                </v-btn>
-              </v-card-actions>
-            </v-card>
-          </v-dialog>
+          <v-btn color="primary" dark class="mb-2" @click="save">
+            New Period
+          </v-btn>
         </v-toolbar>
         <v-card-text>
           <v-data-table
@@ -110,16 +67,7 @@ export default {
         year: '0000',
         term: '0',
         week: '0',
-        active: false,
-        activeStudent: false
-      },
-      currentPeriodStudent: {
-        _id: '0',
-        year: '0000',
-        term: '0',
-        week: '0',
-        active: false,
-        activeStudent: false
+        active: false
       },
       years: [2020, 2019, 2018, 2017],
       terms: [1, 2, 3, 4],
@@ -158,7 +106,6 @@ export default {
       pagination: {
         rowsPerPage: 10
       },
-      dialog: false,
       editedIndex: -1,
       editedItem: {},
       defaultItem: {}
@@ -220,16 +167,7 @@ export default {
       }, 300)
     },
     async save() {
-      if (this.editedIndex > -1) {
-        Object.assign(this.Periods[this.editedIndex], this.editedItem)
-      } else {
-        this.Periods.push(this.editedItem)
-      }
-      await this.$axios.$post('/period', {
-        year: this.editedItem.year,
-        term: this.editedItem.term,
-        week: this.editedItem.week
-      })
+      await this.$axios.$post('/period', {})
       this.GetPeriods()
       this.close()
     },

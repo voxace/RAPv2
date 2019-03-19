@@ -41,13 +41,29 @@ module.exports = {
       });
   },
   // Get Average Scores By Year Groups
-  async GetAverageScoresByYearGroup(ctx) {    
+  async GetAverageScoresByYearGroup(ctx) { 
     let periodId = ctx.params.period;
     await Admin.GetCurrent()
     .then(currentPeriod => {
       periodId = currentPeriod[0]._id;
     });    
     await Score.GetAverageScoresByYearGroup(periodId)
+      .then(scores => {
+        ctx.body = JSON.stringify(scores);
+      })
+      .catch(err => {
+        console.log(err);
+        throw new Error(err);
+      });
+  },
+  // Get Average Scores Grouped By Score
+  async GetAverageScoresGroupedByScore(ctx) { 
+    let periodId = ctx.params.period;
+    await Admin.GetCurrent()
+    .then(currentPeriod => {
+      periodId = currentPeriod[0]._id;
+    });    
+    await Score.GetAverageScoresGroupedByScore(periodId)
       .then(scores => {
         ctx.body = JSON.stringify(scores);
       })

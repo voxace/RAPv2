@@ -521,6 +521,69 @@ ScoreSchema.statics.GetAverageScoresByYearGroup = function(period, cb) {
 };
 
 // Get all scores for specified Student grouped by period
+ScoreSchema.statics.GetAverageScoresGroupedByScore = function(period, cb) {
+  console.log(period);
+  return this.aggregate([
+    // Match only scores for specified period
+    // Also only match scores of 1 or above to leave out empty scores
+    {
+      $match: {
+        periodId: new mongoose.Types.ObjectId(period),
+        score: { $gte: 1 },
+        studentGrade: { $gte: 1 }
+      }
+    },
+    // Join score table to students table
+    {
+      $lookup: {
+        from: "students",
+        localField: "studentId",
+        foreignField: "_id",
+        as: "student"
+      }
+    },
+    // Project only relevant fields
+    {
+      $project: {
+        studentId: { $arrayElemAt: ["$student._id", 0] },
+        name: { $arrayElemAt: ["$student.name", 0] },
+        year: "$studentGrade",
+        score: "$score"
+      }
+    },
+    // Group by Student
+    {
+      $group: {
+        _id: "$studentId",
+        name: { $first: "$name" },
+        year: { $avg: "$year" },
+        average: { $avg: "$score" },
+      }
+    },
+    // Sort by Score
+    {
+      $sort: {
+        "average": -1
+      }
+    },
+    {
+      $group: {
+        _id: { $trunc: "$average" },
+        scores: {
+          $push: "$$ROOT"
+        }
+      }
+    },
+    // Sort by Score again
+    {
+      $sort: {
+        "_id": 1
+      }
+    },
+  ]).exec(cb);
+};
+
+// Get all scores for specified Student grouped by period
 ScoreSchema.statics.GetPosterData = function(period, cb) {
   console.log(period);
   return this.aggregate([

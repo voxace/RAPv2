@@ -1,6 +1,7 @@
 const Admin = require("./../models/admin");
 const Student = require("./../models/student");
 const Teacher = require("./../models/teacher");
+const Period = require("./../models/period");
 const async = require("async");
 const FormData = require("form-data");
 
@@ -41,8 +42,11 @@ module.exports = {
               access: teacher.access || 1 // Returns default access of 1 if not set
             };
             console.log("Teacher login: " + teacher.name + ", " + new Date());
+            // Register teacher login for this period
+            let currentPeriod = await Admin.GetCurrent();
+            await Period.TeacherLogin(currentPeriod[0]._id, teacher._id);
           } else {
-            await Student.findOne({ username: username }).then(student => {
+            await Student.findOne({ username: username }).then(async student => {
               if (student) {
                 ctx.body = {
                   user_id: student._id,
@@ -53,6 +57,9 @@ module.exports = {
                 console.log(
                   "Student login: " + student.name + ", " + new Date()
                 );
+                // Register student login for this period
+                let currentPeriod = await Admin.GetCurrent();
+                await Period.StudentLogin(currentPeriod[0]._id, student._id);
               } else {
                 throw new Error("Error Logging In: " + username);
               }

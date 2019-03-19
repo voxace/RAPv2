@@ -6,6 +6,8 @@ const PeriodSchema = new Schema({
   term: { type: Number, required: true },
   week: { type: Number, required: true },
   order: { type: Number },
+  teacherLogins: [Schema.Types.ObjectId],
+  studentLogins: [Schema.Types.ObjectId],
   averages: {
     all: Number,
     year7: Number,
@@ -51,6 +53,26 @@ PeriodSchema.statics.NewPeriod = function(year, term, week, order, callback) {
     { year: year, term: term, week: week },
     { $set: { year: year, term: term, week: week, order: order } },
     { upsert: true },
+    callback
+  );
+};
+
+// Student Login
+PeriodSchema.statics.StudentLogin = function(period, student, callback) {
+  console.log('Registering student login: ' + student);
+  return this.update(
+    { _id: period },
+    { $addToSet: { studentLogins: student } },
+    callback
+  );
+};
+
+// Teacher Login
+PeriodSchema.statics.TeacherLogin = function(period, teacher, callback) {
+  console.log('Registering student login: ' + teacher);
+  return this.update(
+    { _id: period },
+    { $addToSet: { teacherLogins: teacher } },
     callback
   );
 };

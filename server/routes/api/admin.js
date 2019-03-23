@@ -14,6 +14,9 @@ router.post("/admin/import/emu", controller.ImportFromEMU);
 // This is responsible for adding student gender to their record
 router.post("/admin/import/lmbr", controller.ImportFromLMBR);
 
+// Import CSV Student Data From Spreadsheet
+router.post("/admin/import/spreadsheet", controller.ImportFromOldSpreadsheet);
+
 // Import JSON Data from old RAP system
 // This should be a one off process to convert from the old system to this one
 router.post("/admin/import/old", controller.ImportFromOldRap);

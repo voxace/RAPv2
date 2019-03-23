@@ -1,4 +1,5 @@
 const Admin = require("./../models/admin");
+const Average = require("./../models/average");
 const Student = require("./../models/student");
 const Period = require("./../models/period");
 const Score = require("./../models/score");

@@ -3,6 +3,7 @@ const router = new Router();
 const api = new Router();
 
 const admin = require("./api/admin");
+const average = require("./api/average");
 const auth = require("./api/auth");
 const insights = require("./api/insights");
 const period = require("./api/period");
@@ -12,6 +13,7 @@ const subject = require("./api/subject");
 const teacher = require("./api/teacher");
 
 api.use(admin);
+api.use(average);
 api.use(auth);
 api.use(insights);
 api.use(period);

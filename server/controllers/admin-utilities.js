@@ -1,9 +1,11 @@
 const Admin = require("./../models/admin");
+const Average = require("./../models/average");
 const Student = require("./../models/student");
 const Period = require("./../models/period");
 const Score = require("./../models/score");
 const Teacher = require("./../models/teacher");
 const Subject = require("./../models/subject");
+const mongoose = require("mongoose");
 const csv = require("csvtojson");
 const async = require("async");
 const fs = require("fs");
@@ -98,6 +100,44 @@ module.exports = {
           throw new Error(err);
         } else {
           ctx.body = "Success";
+        }
+      }); 
+  },
+
+  /* -------------------- OLD SPREADSHEET -------------------- */
+
+  // Processes the CSV file from the old spreadsheet to get student averages
+  async ProcessOldSpreadsheet(jsonArrayObj, period, ctx) {
+    await async.eachSeries(
+      jsonArrayObj,
+      function(student, callback) {
+        if (student['Name'] == null || student['Year'] == null || student['Score'] == null) {
+          console.log("Error in Spreadsheet");
+          callback();
+        } else {
+          let name = student['Name'];
+          let periodId = new mongoose.Types.ObjectId(period);
+          let average = student['Score'];
+          Student.findOne({ name: name })
+          .then(stu => {
+            if(stu && average > 0) {
+              let studentId = stu._id;
+              Average.NewAverage({ "studentId": studentId,  "periodId": periodId }, average)
+              .then(result => {
+                console.log(name + ': ' + average);
+                callback();
+              });
+            } else {
+              callback();
+            }
+          });
+        }
+      },
+      function(err) {
+        if (err) {
+          throw new Error(err);
+        } else {
+          console.log("Success");
         }
       }); 
   },

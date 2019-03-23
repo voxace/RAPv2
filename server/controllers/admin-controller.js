@@ -62,6 +62,21 @@ module.exports = {
     await Utilities.DeleteFile(csvFilePath);
   },
 
+  // Imports student data from old spreadsheet
+  async ImportFromOldSpreadsheet(ctx) {
+    let period = ctx.request.files["Upload"].name.substring(0, 24);
+    let csvFilePath = ctx.request.files["Upload"].path;
+    let jsonArrayObj = await csv().fromFile(csvFilePath);
+    if(jsonArrayObj.length == 0) {
+      console.log("Invalid CSV File");
+      ctx.throw(500,'Invalid CSV File');
+    } else {
+      ctx.body = "Upload Success";
+      await Utilities.ProcessOldSpreadsheet(jsonArrayObj, period, ctx);
+    }
+    await Utilities.DeleteFile(csvFilePath);    
+  },
+
   // Imports old RAP Data
   async ImportFromOldRap(ctx) {
     let jsonFilePath = ctx.request.files["Upload"].path;

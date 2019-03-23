@@ -13,7 +13,11 @@ const StudentSchema = new Schema({
     type: Number,
     index: { unique: true }
   },
-  average: {
+  longTermAverage: {
+    type: Number,
+    default: 0
+  },
+  cohort: {
     type: Number,
     default: 0
   }
@@ -21,12 +25,12 @@ const StudentSchema = new Schema({
 
 // Find averages lower than
 StudentSchema.statics.findAveragesLowerThan = function(score, cb) {
-  return this.find({ average: { $lte: score } }, cb);
+  return this.find({ longTermAverage: { $lte: score } }, cb);
 };
 
 // Find averages greater than
 StudentSchema.statics.findAveragesGreaterThan = function(score, cb) {
-  return this.find({ average: { $gte: score } }, cb);
+  return this.find({ longTermAverage: { $gte: score } }, cb);
 };
 
 // Get a list of all students

@@ -125,7 +125,7 @@ module.exports = {
               let studentId = stu._id;
               Average.NewAverage({ "studentId": studentId,  "periodId": periodId }, average, studentGrade)
               .then(result => {
-                console.log(name + ': ' + average);
+                console.log(name + ': ' + average + ' - Year ' + studentGrade);
                 callback();
               });
             } else {

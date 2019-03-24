@@ -77,7 +77,8 @@ module.exports = {
   async CalculateYearGroupAverages(ctx) {
  
     let periods = await Period.find({}).sort({order: 1}).cursor();
-      
+    let results = [];  
+
     await periods
       .eachAsync(async period => {
         let data = await Average.aggregate([
@@ -99,29 +100,46 @@ module.exports = {
               _id: 1
             }
           }       
-        ]).exec();        
+        ]).exec();
+
+        let periodString = 
+          "W" + period.week +
+          ",T" + period.term +
+          "," + String(period.year).substring(2, 4);
+
+        results.push({ period: periodString, data: data });
 
         if(data.length > 0) {
-          // save into database
-          let count = 4.0;
+          
+          let count = 3.0;
+          let average = 0.0;
+
           period.averages.year7 = data[0].average;
           period.averages.year8 = data[1].average;
           period.averages.year9 = data[2].average;
-          period.averages.year10 = data[3].average;
-          let average = data[0].average + data[1].average + data[2].average + data[3].average;
+          average = data[0].average + data[1].average + data[2].average;
+
+          if(data[3]) {
+            period.averages.year10 = data[3].average;
+            average += data[3].average;
+            count = 4.0;
+          }          
+          
           if(data[4]) {
             period.averages.year11 = data[4].average;
             average += data[4].average;
             count = 5.0;
           }
+
           average = (average/count);
           period.averages.all = average;
           await period.save();
+
         }
       })
       .then(() => {
-        console.log('Finished processing!');
-        ctx.body = 'Finished processing!';
+        console.log('Finished processing!'); 
+        ctx.body = results;
       });
   },
 

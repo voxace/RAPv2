@@ -70,7 +70,7 @@ PeriodSchema.statics.StudentLogin = function(period, student, callback) {
 
 // Teacher Login
 PeriodSchema.statics.TeacherLogin = function(period, teacher, callback) {
-  console.log('Registering student login: ' + teacher);
+  console.log('Registering teacher login: ' + teacher);
   return this.update(
     { _id: period },
     { $addToSet: { teacherLogins: teacher } },

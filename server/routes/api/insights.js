@@ -3,6 +3,6 @@ const controller = require("./../../controllers").insights;
 const router = new Router();
 
 // Test
-router.get("/insights", controller.Test);
+router.get("/insights/grade", controller.GetAveragesByGrade);
 
 module.exports = router.routes();

@@ -95,11 +95,15 @@ export default {
           type: 'menu',
           menu: [
             {
-              to: '/insights/cohort-averages',
+              to: '/insights/grade',
+              text: 'Grade Averages'
+            },
+            {
+              to: '/insights/cohort',
               text: 'Cohort Averages'
             },
             {
-              to: '/insights/whole-school',
+              to: '/insights/whole',
               text: 'Whole School'
             }
           ]

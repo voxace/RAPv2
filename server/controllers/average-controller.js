@@ -11,8 +11,8 @@ const async = require("async");
 module.exports = {
 
   // Calculates each student average for each period
-  // Results are stored in the 'averages' table
-  async CalculatePeriodAverages(ctx) {       
+  // WARNING: Results are stored in and OVERWRITE the 'averages' table
+  async CalculateAllPeriodAverages(ctx) {
     let data = await Score.aggregate([
       {
         $match: {
@@ -23,7 +23,8 @@ module.exports = {
       {
         $group: {
           _id: { studentId: "$studentId", periodId: "$periodId" },
-          average: { $avg: "$score" }
+          average: { $avg: "$score" },
+          studentGrade: { $first: "$studentGrade" }
         }
       },
       {
@@ -31,6 +32,97 @@ module.exports = {
       } 
     ]).exec();
     ctx.body = "Averages Processed";
+  },
+
+  // Calculate current averages
+  async CalculateCurrentPeriodAverages(ctx) {
+    let period = await Admin.GetCurrent();
+    let data = await Score.aggregate([
+      {
+        $match: {
+          score: { $gte: 1 },
+          studentGrade: { $gte: 7 },
+          periodId: new mongoose.Types.ObjectId(period[0]._id)
+        }
+      },
+      {
+        $group: {
+          _id: { studentId: "$studentId", periodId: "$periodId" },
+          average: { $avg: "$score" },
+          studentGrade: { $first: "$studentGrade" }
+        }
+      }
+    ]).exec();
+
+    async.eachSeries(data, function(currentItem, callback) {
+      Average.NewAverage(
+        { "studentId": currentItem._id.studentId, "periodId": currentItem._id.periodId }, 
+        currentItem.average, currentItem.studentGrade)
+        .then(result => {
+          console.log(result._id.studentId + ': ' + result.average);
+          callback();
+        });
+    },
+    function(err) {
+      if (err) {
+        throw new Error(err);
+      } else {
+        console.log("All Averages Calculated Successfully");
+      }
+    });
+
+    ctx.body = data;
+  },
+
+  async CalculateYearGroupAverages(ctx) {
+ 
+    let periods = await Period.find({}).sort({order: 1}).cursor();
+      
+    await periods
+      .eachAsync(async period => {
+        let data = await Average.aggregate([
+          {
+            $match: {
+              average: { $gte: 1 },
+              studentGrade: { $gte: 7 },
+              "_id.periodId": new mongoose.Types.ObjectId(period._id)
+            }
+          },
+          {
+            $group: {
+              _id: "$studentGrade",
+              average: { $avg: "$average" }
+            }
+          },
+          {
+            $sort: {
+              _id: 1
+            }
+          }       
+        ]).exec();        
+
+        if(data.length > 0) {
+          // save into database
+          let count = 4.0;
+          period.averages.year7 = data[0].average;
+          period.averages.year8 = data[1].average;
+          period.averages.year9 = data[2].average;
+          period.averages.year10 = data[3].average;
+          let average = data[0].average + data[1].average + data[2].average + data[3].average;
+          if(data[4]) {
+            period.averages.year11 = data[4].average;
+            average += data[4].average;
+            count = 5.0;
+          }
+          average = (average/count);
+          period.averages.all = average;
+          await period.save();
+        }
+      })
+      .then(() => {
+        console.log('Finished processing!');
+        ctx.body = 'Finished processing!';
+      });
   },
 
   // Gets all student averages for each period
@@ -59,6 +151,7 @@ module.exports = {
       {
         $project: {
           longTermAverage: "$average",
+          studenGrade: "$studentGrade",
           year: { $arrayElemAt: ["$period.year", 0] },
           term: { $arrayElemAt: ["$period.term", 0] },
           week: { $arrayElemAt: ["$period.week", 0] },
@@ -67,24 +160,6 @@ module.exports = {
       }
     ]).exec();
     ctx.body = data;
-  },
-
-  // Find by name/period and save average
-  async FindByNameAndSaveAverage(ctx) {
-    
-    let name = ctx.request.body.name;
-    let periodId = new mongoose.Types.ObjectId(ctx.request.body.period);
-    let average = ctx.request.body.average;
-
-    let student = await Student.findOne({ name: name });
-    let studentId = student._id;
-
-    await Average.NewAverage({ "studentId": studentId,  "periodId": periodId }, average)
-      .then(result => {
-        console.log(result);
-        ctx.body = result;
-      });
-    
   }
 
 };

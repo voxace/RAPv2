@@ -7,7 +7,8 @@ const AverageSchema = new Schema(
       studentId: { type: mongoose.Schema.Types.ObjectId, required: true },
       periodId: { type: mongoose.Schema.Types.ObjectId, required: true }
     },
-    average: { type: Number, default: 0 }
+    average: { type: Number, default: 0 },
+    studentGrade: Number
   }
 );
 
@@ -20,6 +21,7 @@ AverageSchema.index(
 AverageSchema.statics.NewAverage = function(
   _id,
   average,
+  studentGrade,
   callback
 ) {
   return this.findOneAndUpdate(
@@ -28,7 +30,8 @@ AverageSchema.statics.NewAverage = function(
     },
     {
       $set: {
-        average: average
+        average: average,
+        studentGrade: studentGrade
       }
     },
     { 

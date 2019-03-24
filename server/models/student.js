@@ -1,6 +1,9 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
+// work out cohort from year and current period
+// add property 'lastSeen' and save periodId to it, to only get active students
+
 const StudentSchema = new Schema({
   name: String,
   username: {
@@ -20,7 +23,8 @@ const StudentSchema = new Schema({
   cohort: {
     type: Number,
     default: 0
-  }
+  },
+  lastSeen: Schema.Types.ObjectId
 });
 
 // Find averages lower than

@@ -118,11 +118,12 @@ module.exports = {
           let name = student['Name'];
           let periodId = new mongoose.Types.ObjectId(period);
           let average = student['Score'];
+          let studentGrade = student['Year'];
           Student.findOne({ name: name })
           .then(stu => {
             if(stu && average > 0) {
               let studentId = stu._id;
-              Average.NewAverage({ "studentId": studentId,  "periodId": periodId }, average)
+              Average.NewAverage({ "studentId": studentId,  "periodId": periodId }, average, studentGrade)
               .then(result => {
                 console.log(name + ': ' + average);
                 callback();

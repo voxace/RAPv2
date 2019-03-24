@@ -14,70 +14,41 @@ module.exports = {
   // Todo: calc current period ave (run once an hour)
   // Todo: query for averages to draw graph
 
-  async Test(ctx) {
-    let result = [];
+  async GetAveragesByGrade(ctx) {
+
+    let period = [];
+    let year7 = [];
+    let year8 = [];
+    let year9 = [];
+    let year10 = [];
+    let year11 = [];
+    let data = { period: period, year7: year7, year8: year8, year9: year9, year10: year10, year11: year11 };
+ 
     let periods = await Period.find({}).sort({order: 1}).cursor();
       
     await periods
-      .eachAsync(async period => {
-        let data = await Score.aggregate([
-          {
-            $match: {
-              score: { $gte: 1 },
-              studentGrade: { $gte: 7 },
-              periodId: new mongoose.Types.ObjectId(period._id)
-            }
-          },
-          {
-            $group: {
-              _id: "$studentGrade",
-              average: { $avg: "$score" }
-            }
-          },
-          {
-            $sort: {
-              _id: 1
-            }
-          }          
-        ]).exec();
+      .eachAsync(async currentPeriod => {
+        
+        console.log(currentPeriod);
 
-        if(data.length > 0) {
+        let periodString = 
+          "W" + currentPeriod.week +
+          ",T" + currentPeriod.term +
+          "," + String(currentPeriod.year).substring(2, 4);
 
-          // save into database
-          let count = 4.0;
-          period.averages.year7 = data[0].average;
-          period.averages.year8 = data[1].average;
-          period.averages.year9 = data[2].average;
-          period.averages.year10 = data[3].average;
-          let average = data[0].average + data[1].average + data[2].average + data[3].average;
-          if(data[4]) {
-            period.averages.year11 = data[4].average;
-            average += data[4].average;
-            count = 5.0;
-          }
-          average = (average/count);
-          period.averages.all = average;
-          data.push({ "_id": "all", "average": average });
-          await period.save();
-
-          // push onto array
-          await result.push(
-            { 
-              "period": period._id, 
-              "year": period.year,
-              "term": period.term,
-              "week": period.week,
-              "data": data
-            }
-          );
-
-        }
+        // push data into arrays
+        await period.push(periodString);
+        await year7.push(Number(currentPeriod.averages.year7).toFixed(2));
+        await year8.push(Number(currentPeriod.averages.year8).toFixed(2));
+        await year9.push(Number(currentPeriod.averages.year9).toFixed(2));
+        await year10.push(Number(currentPeriod.averages.year10).toFixed(2));
+        await year11.push(Number(currentPeriod.averages.year11).toFixed(2));
 
       })
       .then(() => {
         console.log('Finished processing!');
-        ctx.body = result;
+        ctx.body = data;
       });
-  }
+  } 
 
 };

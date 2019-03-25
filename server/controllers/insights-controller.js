@@ -28,8 +28,6 @@ module.exports = {
       
     await periods
       .eachAsync(async currentPeriod => {
-        
-        console.log(currentPeriod);
 
         let periodString = 
           "W" + currentPeriod.week +
@@ -43,6 +41,62 @@ module.exports = {
         await year9.push(Number(currentPeriod.averages.year9).toFixed(2));
         await year10.push(Number(currentPeriod.averages.year10).toFixed(2));
         await year11.push(Number(currentPeriod.averages.year11).toFixed(2));
+
+      })
+      .then(() => {
+        console.log('Finished processing!');
+        ctx.body = data;
+      });
+  },
+
+  async GetAveragesByCohort(ctx) {
+
+    let period = [];
+    let year7 = [];
+    let year8 = [];
+    let year9 = [];
+    let year10 = [];
+    let year11 = [];
+    let data = { period: period, year7: year7, year8: year8, year9: year9, year10: year10, year11: year11 };
+ 
+    let current = await Admin.GetCurrent();
+    let currentYear = current[0].year;
+    console.log(currentYear);
+    let periods = await Period.find({}).sort({order: 1}).cursor();
+      
+    await periods
+      .eachAsync(async currentPeriod => {
+
+        let periodString = 
+          "W" + currentPeriod.week +
+          ",T" + currentPeriod.term +
+          "," + String(currentPeriod.year).substring(2, 4);
+
+        let difference = currentYear - currentPeriod.year;
+
+        // push data into arrays
+        await period.push(periodString);
+
+        if(difference == 0) {
+          await year7.push(Number(currentPeriod.averages.year7).toFixed(2));
+          await year8.push(Number(currentPeriod.averages.year8).toFixed(2));
+          await year9.push(Number(currentPeriod.averages.year9).toFixed(2));
+          await year10.push(Number(currentPeriod.averages.year10).toFixed(2));
+          await year11.push(Number(currentPeriod.averages.year11).toFixed(2));
+        } else if (difference == 1) {
+          await year7.push(undefined);
+          await year8.push(Number(currentPeriod.averages.year7).toFixed(2));
+          await year9.push(Number(currentPeriod.averages.year8).toFixed(2));
+          await year10.push(Number(currentPeriod.averages.year9).toFixed(2));
+          await year11.push(Number(currentPeriod.averages.year10).toFixed(2));
+        } else if (difference == 2) {
+          await year7.push(undefined);
+          await year8.push(undefined);
+          await year9.push(Number(currentPeriod.averages.year7).toFixed(2));
+          await year10.push(Number(currentPeriod.averages.year8).toFixed(2));
+          await year11.push(Number(currentPeriod.averages.year9).toFixed(2));
+        }
+       
 
       })
       .then(() => {

@@ -80,6 +80,17 @@ export default {
               pointHoverRadius: 8,
               pointHitRadius: 12,
               fill: false
+            },
+            {
+              label: 'Year 11',
+              data: this.Scores.year11,
+              backgroundColor: 'rgba(127, 59, 194, 1)',
+              borderColor: 'rgba(127, 59, 194, 1)',
+              borderWidth: 3,
+              pointRadius: 6,
+              pointHoverRadius: 8,
+              pointHitRadius: 12,
+              fill: false
             }
           ]
         },

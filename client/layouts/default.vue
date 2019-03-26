@@ -105,6 +105,10 @@ export default {
             {
               to: '/insights/whole',
               text: 'Whole School'
+            },
+            {
+              to: '/insights/logins',
+              text: 'Student Logins'
             }
           ]
         },

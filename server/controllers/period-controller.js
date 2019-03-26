@@ -39,6 +39,25 @@ module.exports = {
       });
   },
 
+  // Gets student logins for specified period
+  async GetStudentLoginsByPeriod(ctx) {
+    let periodId = ctx.params.period;
+    if (ctx.params.period == "active") {
+      await Admin.GetCurrent()
+      .then(currentPeriod => {
+        periodId = currentPeriod[0]._id;
+      });
+    }
+    await Period.GetStudentLoginsByPeriod(periodId)
+      .then(students => {
+        ctx.body = JSON.stringify(students);
+      })
+      .catch(err => {
+        console.log(err);
+        throw new Error(err);
+      });
+  },
+
   // Creates a new RAP Period
   async NewRapPeriod(ctx) {
     

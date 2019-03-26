@@ -282,7 +282,7 @@ export default {
   },
   methods: {
     async GetAllStudents() {
-      this.Students = await this.$axios.$get('/students/active')
+      this.Students = await this.$axios.$get('/students/all')
     },
     async GetScoresByTeacher() {
       if (this.user) {

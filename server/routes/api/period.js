@@ -14,4 +14,7 @@ router.get("/period/current", controller.GetCurrentRapPeriod);
 // Gets all RAP Periods
 router.get("/period/all", controller.GetAllRapPeriods);
 
+// Gets student logins for specified period
+router.get("/period/logins/student/:period", controller.GetStudentLoginsByPeriod);
+
 module.exports = router.routes();

@@ -673,6 +673,48 @@ ScoreSchema.statics.GetPosterData = function(period, cb) {
   ]).exec(cb);
 };
 
+// Get a list of all students
+ScoreSchema.statics.GetAllStudentsByPeriod = function(period, cb) {
+  return this.aggregate([
+    // Match only scores for specified period
+    {
+      $match: {
+        periodId: new mongoose.Types.ObjectId(period)
+      }
+    },
+    // Join score table to students table
+    {
+      $lookup: {
+        from: "students",
+        localField: "studentId",
+        foreignField: "_id",
+        as: "student"
+      }
+    },
+    // Project only relevant fields
+    {
+      $project: {
+        studentId: { $arrayElemAt: ["$student._id", 0] },
+        name: { $arrayElemAt: ["$student.name", 0] },
+        year: "$studentGrade"
+      }
+    },
+    // Group by Student
+    {
+      $group: {
+        _id: "$studentId",
+        name: { $first: "$name" }
+      }
+    },
+    // Sort by Score
+    {
+      $sort: {
+        "name": 1
+      }
+    }
+  ]).exec(cb);
+};
+
 // Find scores less than
 ScoreSchema.statics.findScoresLessThan = function(score, cb) {
   return this.find({ average: { $lt: score } }, cb);

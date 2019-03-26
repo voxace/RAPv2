@@ -15,8 +15,20 @@ module.exports = {
   // Get student / by name
   // Get student / by username
 
-  // Get students / all
+  // Get students / all (all periods, quick)
   async GetAllStudents(ctx) {
+    await Student.GetAllStudents()
+      .then(students => {
+        ctx.body = JSON.stringify(students);
+      })
+      .catch(err => {
+        console.log(err);
+        throw new Error(err);
+      });
+  },
+
+  // Get students / current (slower function)
+  async GetAllStudentsByPeriod(ctx) {
     let periodId = ctx.params.period;
     if (ctx.params.period == "active") {
       await Admin.GetCurrent()
@@ -24,7 +36,7 @@ module.exports = {
         periodId = currentPeriod[0]._id;
       });
     }
-    await Student.GetAllStudents(periodId)
+    await Score.GetAllStudentsByPeriod(periodId)
       .then(students => {
         ctx.body = JSON.stringify(students);
       })

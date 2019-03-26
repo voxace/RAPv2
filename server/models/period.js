@@ -41,6 +41,94 @@ PeriodSchema.statics.GetAllPeriods = function(cb) {
   ]).exec(cb);
 };
 
+// Get student logins for specified period
+PeriodSchema.statics.GetStudentLoginsByPeriod = function(period, cb) {
+  return this.aggregate([
+    {
+      $match: {
+        _id: new mongoose.Types.ObjectId(period)
+      }
+    },
+    {
+      $unwind : "$studentLogins"
+    },
+    {
+      $project: {
+        _id: 0,
+        studentId: "$studentLogins"
+      }
+    },
+    {
+      $lookup: {
+        from: "students",
+        localField: "studentId",
+        foreignField: "_id",
+        as: "student"
+      }
+    },
+    {
+      $project: {
+        studentId: { $arrayElemAt: ["$student._id", 0] },
+        name: { $arrayElemAt: ["$student.name", 0] },
+      }
+    },
+    {
+      $sort: {
+        "name": 1
+      }
+    }
+  ]).exec(cb);
+};
+
+// Get student logins for all periods
+PeriodSchema.statics.GetAllStudentLogins = function(period, cb) {
+  return this.aggregate([
+    {
+      $unwind : "$studentLogins"
+    },
+    {
+      $lookup: {
+        from: "students",
+        localField: "studentLogins",
+        foreignField: "_id",
+        as: "student"
+      }
+    },
+    {
+      $project: {
+        year: "$year",
+        term: "$term",
+        week: "$week",
+        studentId: { $arrayElemAt: ["$student._id", 0] },
+        name: { $arrayElemAt: ["$student.name", 0] },
+      }
+    },
+    {
+      $sort: {
+        "name": 1
+      }
+    },
+    {
+      $group: {
+        _id: { year: "$year", term: "$term", week: "$week"},
+        students: {
+          $push: {
+            studentId: "$studentId",
+            name: "$name"
+          }
+        }
+      }
+    },
+    {
+      $sort: {
+        "_id.year": -1,
+        "_id.term": -1,
+        "_id.week": -1
+      }
+    }
+  ]).exec(cb);
+};
+
 // Get the details of the latest period (by order)
 PeriodSchema.statics.LatestPeriod = function(callback) {
   return this.findOne({ order: { $gte: 0 }})

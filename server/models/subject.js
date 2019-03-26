@@ -3,7 +3,7 @@ const Schema = mongoose.Schema;
 
 const SubjectSchema = new Schema({
   name: { type: String, required: true },
-  code: { type: String, required: true }
+  code: { type: String, required: true, unique: true }
 });
 
 SubjectSchema.index(
@@ -14,7 +14,7 @@ SubjectSchema.index(
 // Create New Teacher
 SubjectSchema.statics.NewSubject = function(name, code, callback) {
   return this.findOneAndUpdate(
-    { name: name, code: code },
+    { code: code },
     { $set: { name: name, code: code } },
     { upsert: true, new: true },
     callback

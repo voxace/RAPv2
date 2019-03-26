@@ -63,7 +63,7 @@ export default {
   methods: {
     async GetAllStudents() {
       let model = this.model
-      this.Students = await this.$axios.$get('/students/active')
+      this.Students = await this.$axios.$get('/students/all')
       if (model) {
         let found = this.Students.find(function(student) {
           return student._id == model

@@ -20,7 +20,8 @@ module.exports = {
 
   // Get subject / code / all
   async GetAllSubjectCodes(ctx) {
-    await Subject.GetAllSubjectCodes()
+    let currentPeriod = await Admin.GetCurrent();
+    await Subject.GetAllSubjectCodes(currentPeriod)
       .then(subjects => {
         ctx.body = JSON.stringify(subjects);
       })

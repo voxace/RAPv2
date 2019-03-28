@@ -48,7 +48,7 @@ export default {
       pagination: {
         sortBy: 'name',
         descending: false,
-        rowsPerPage: 25
+        rowsPerPage: 100
       }
     }
   },

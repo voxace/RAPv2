@@ -35,7 +35,8 @@ module.exports = {
   },
 
   // Calculate current averages
-  async CalculateCurrentPeriodAverages(ctx) {
+  async CalculateCurrentPeriodAverages() {
+    console.log("Calculating Current Period Averages...");
     let period = await Admin.GetCurrent();
     let data = await Score.aggregate([
       {
@@ -54,12 +55,12 @@ module.exports = {
       }
     ]).exec();
 
-    async.eachSeries(data, function(currentItem, callback) {
+    await async.eachSeries(data, function(currentItem, callback) {
       Average.NewAverage(
         { "studentId": currentItem._id.studentId, "periodId": currentItem._id.periodId }, 
         currentItem.average, currentItem.studentGrade)
         .then(result => {
-          console.log(result._id.studentId + ': ' + result.average);
+          //console.log(result._id.studentId + ': ' + result.average);
           callback();
         });
     },
@@ -68,14 +69,76 @@ module.exports = {
         throw new Error(err);
       } else {
         console.log("All Averages Calculated Successfully");
+        module.exports.CalculateYearGroupAverages();
       }
     });
-
-    ctx.body = data;
+    
   },
 
-  async CalculateYearGroupAverages(ctx) {
+  // For current period only
+  async CalculateYearGroupAverages() {
  
+    console.log("Calculating Year Group Averages...");
+    let currentPeriod = await Admin.GetCurrent();    
+    let periodId = currentPeriod[0]._id;
+    let period = await Period.findOne({_id: periodId});
+
+    let data = await Average.aggregate([
+      {
+        $match: {
+          average: { $gte: 1 },
+          studentGrade: { $gte: 7 },
+          "_id.periodId": new mongoose.Types.ObjectId(periodId)
+        }
+      },
+      {
+        $group: {
+          _id: "$studentGrade",
+          average: { $avg: "$average" }
+        }
+      },
+      {
+        $sort: {
+          _id: 1
+        }
+      }       
+    ]).exec();
+
+    if(data.length > 0) {
+      
+      let count = 3.0;
+      let average = 0.0;
+
+      period.averages.year7 = data[0].average;
+      period.averages.year8 = data[1].average;
+      period.averages.year9 = data[2].average;
+      average = data[0].average + data[1].average + data[2].average;
+
+      if(data[3]) {
+        period.averages.year10 = data[3].average;
+        average += data[3].average;
+        count = 4.0;
+      }          
+      
+      if(data[4]) {
+        period.averages.year11 = data[4].average;
+        average += data[4].average;
+        count = 5.0;
+      }
+
+      average = (average/count);
+      period.averages.all = average;
+      await period.save();
+    }
+
+    console.log('Year Group Averages Calculated Successfully'); 
+
+  },
+
+  // For all periods
+  async CalculateAllYearGroupAverages() {
+ 
+    console.log("Calculating Year Group Averages...");
     let periods = await Period.find({}).sort({order: 1}).cursor();
     let results = [];  
 
@@ -138,8 +201,8 @@ module.exports = {
         }
       })
       .then(() => {
-        console.log('Finished processing!'); 
-        ctx.body = results;
+        console.log('Year Group Averages Calculated Successfully'); 
+        //ctx.body = results;
       });
   },
 

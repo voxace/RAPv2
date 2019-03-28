@@ -3,8 +3,9 @@ const Koa = require("koa");
 const cors = require("@koa/cors");
 const routes = require("./routes");
 const logger = require("koa-logger");
-var bodyParser = require("koa-body");
+const bodyParser = require("koa-body");
 const mongoose = require("mongoose");
+const averageController = require("./controllers/average-controller");
 
 const app = new Koa();
 app.use(cors());
@@ -53,3 +54,8 @@ app.use(routes.allowedMethods());
 app.listen(3001, () => {
   console.log(`API server listening on ${config.port}, in ${config.env} mode`);
 });
+
+// Calculate averages
+setInterval(async () => {
+  await averageController.CalculateCurrentPeriodAverages();
+}, 1000*60*10)

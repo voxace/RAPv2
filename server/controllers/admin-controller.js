@@ -127,4 +127,32 @@ module.exports = {
       });
   },
 
+  // Gets teachers by completion status
+  async GetTeacherCompletion(ctx) {
+
+    let complete = [];
+    let incomplete = [];
+    let period = await Admin.GetCurrent();
+    let periodId = period[0]._id;
+    let averages = await Score.GetTeacherPeriodAverage(periodId);
+
+    await async.eachSeries(averages, function(teacher, callback) {
+      if(teacher.average == 0) {
+        incomplete.push({teacherId: teacher._id, name: teacher.name});
+        callback();
+      } else {
+        complete.push({teacherId: teacher._id, name: teacher.name});
+        callback();
+      }
+    }, function(err) {
+      if (err) {
+        throw new Error(err);
+      } else {
+        let percentage = Number(complete.length / averages.length * 100.0).toFixed(2);
+        ctx.body = { complete: complete, incomplete: incomplete, percentage };
+        console.log('Finished processing!');
+      }
+    });
+  }
+
 };

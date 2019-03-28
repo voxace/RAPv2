@@ -737,7 +737,7 @@ ScoreSchema.statics.findScoresGreaterThanOrEqualTo = function(score, cb) {
 
 // Get student's long-term average
 ScoreSchema.statics.GetStudentLongTermAverage = function(student, cb) {
-  return ScoreSchema.aggregate([
+  return this.aggregate([
     {
       $match: { studentId: student },
       $group: {
@@ -749,13 +749,44 @@ ScoreSchema.statics.GetStudentLongTermAverage = function(student, cb) {
 };
 
 // Get student's average for the specified period
-ScoreSchema.statics.GetStudentPeriodAverage = function(student, period, cb) {
-  return ScoreSchema.aggregate([
+ScoreSchema.statics.GetStudentPeriodAverage = function(studentId, periodId, cb) {
+  return this.aggregate([
     {
-      $match: { studentId: student, periodId: period },
+      $match: { studentId: studentId, periodId: periodId },
       $group: {
-        _id: student,
+        _id: "$studentId",
         average: { $avg: "$score" }
+      }
+    }
+  ]).exec(cb);
+};
+
+// Get average of all scores for teacher / period
+ScoreSchema.statics.GetTeacherPeriodAverage = function(period, cb) {
+  return this.aggregate([
+    {
+      $match: { 
+        periodId: period 
+      }
+    },
+    {
+      $group: {
+        _id: "$teacherId",
+        average: { $avg: "$score" }
+      }
+    },
+    {
+      $lookup: {
+        from: "teachers",
+        localField: "_id",
+        foreignField: "_id",
+        as: "teacher"
+      }
+    },
+    {
+      $project: {
+        name: { $arrayElemAt: ["$teacher.name", 0] },
+        average: "$average"
       }
     }
   ]).exec(cb);

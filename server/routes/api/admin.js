@@ -33,4 +33,7 @@ router.get("/admin/active-status", controller.GetActiveStatus);
 // Initial setup for Admin Table
 router.post("/admin/active-status", controller.SetActiveStatus);
 
+// Gets teachers by completion status
+router.get("/admin/check", controller.GetTeacherCompletion);
+
 module.exports = router.routes();

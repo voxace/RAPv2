@@ -44,7 +44,6 @@ export default {
         },
         {
           text: 'Check Scores',
-          to: '/check',
           auth: 1,
           loggedIn: true,
           type: 'menu',
@@ -89,7 +88,6 @@ export default {
         },
         {
           text: 'Insights',
-          to: '/insights',
           auth: 1,
           loggedIn: true,
           type: 'menu',
@@ -114,7 +112,6 @@ export default {
         },
         {
           text: 'Admin',
-          to: '/admin',
           auth: 2,
           loggedIn: true,
           type: 'menu',
@@ -142,6 +139,10 @@ export default {
             {
               to: '/admin/backup',
               text: 'Backup / Restore'
+            },
+            {
+              to: '/admin/check',
+              text: 'Check Completion'
             }
           ]
         },

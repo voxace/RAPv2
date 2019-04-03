@@ -1,3 +1,4 @@
+const mongoose = require("mongoose");
 const Admin = require("./../models/admin");
 const Average = require("./../models/average");
 const Student = require("./../models/student");
@@ -40,6 +41,70 @@ module.exports = {
         console.log(err);
         throw new Error(err);
       });
+  },
+  // Get Scores Above 4 for the Specified Term/Year
+  async GetScoresAboveFour(ctx) {    
+    
+    let term = ctx.params.term;
+    let year = ctx.params.year;
+    let period1 = await Period.find({year: year, term: term, week: 5});
+    let period2 = await Period.find({year: year, term: term, week: 9});
+
+    if(period1[0] != undefined && period2[0] != undefined)
+    {
+      let data = await Score.aggregate([
+        {
+          $match: {
+            score: { $gte: 1 },
+            studentGrade: { $gte: 7 },
+            $or: [ 
+              { periodId: new mongoose.Types.ObjectId(period1[0]._id) }, 
+              { periodId: new mongoose.Types.ObjectId(period2[0]._id) }
+            ]
+          }
+        },
+        {
+          $group: {
+            _id: "$studentId",
+            average: { $avg: "$score" },
+            studentGrade: { $first: "$studentGrade" }
+          }
+        },
+        {
+          $match: {
+            average: { $gte: 4 }
+          }
+        },
+        {
+          $lookup: {
+            from: "students",
+            localField: "_id",
+            foreignField: "_id",
+            as: "student"
+          }
+        },
+        {
+          $project: {
+            name: { $arrayElemAt: ["$student.name", 0] },
+            average: "$average",
+            year: "$studentGrade"
+          }
+        },
+        {
+          $sort: {
+            average: -1
+          }
+        }
+      ]).exec();
+      ctx.body = data;
+    } else {
+      ctx.body = [{
+        "_id": "#",
+        "name": "No students found that meet the criteria",
+        "average": null,
+        "year": null
+      }];
+    }
   },
   // Get Average Scores By Year Groups
   async GetAverageScoresByYearGroup(ctx) { 

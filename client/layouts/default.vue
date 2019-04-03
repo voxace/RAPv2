@@ -83,6 +83,10 @@ export default {
             {
               to: '/check/change',
               text: 'By Change'
+            },
+            {
+              to: '/check/fours',
+              text: 'Above Four'
             }
           ]
         },

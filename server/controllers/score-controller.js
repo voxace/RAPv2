@@ -6,6 +6,7 @@ const Period = require("./../models/period");
 const Score = require("./../models/score");
 const Teacher = require("./../models/teacher");
 const Subject = require("./../models/subject");
+const json2csv = require("csvjson-json2csv");
 
 module.exports = {
   // Get Scores / Teacher (grouped by subject code)
@@ -45,6 +46,8 @@ module.exports = {
   // Get Scores Above 4 for the Specified Term/Year
   async GetScoresAboveFour(ctx) {    
     
+    let isCsv = ctx.params.csv;
+    console.log(isCsv);
     let term = ctx.params.term;
     let year = ctx.params.year;
     let period1 = await Period.find({year: year, term: term, week: 5});
@@ -96,7 +99,18 @@ module.exports = {
           }
         }
       ]).exec();
-      ctx.body = data;
+
+      if(isCsv == 'false') {
+        ctx.body = data;
+      } else {
+        await data.forEach(function(v){ 
+          delete v._id;
+          v.average = Number(v.average).toFixed(2);
+        });
+        var csv = await json2csv(data);
+        ctx.body = csv;
+      }
+      
     } else {
       ctx.body = [{
         "_id": "#",

@@ -38,7 +38,7 @@ router.get("/scores/teacher/:id/:period", controller.GetScoresByTeacher);
 // Get Average / All (all students, current period)
 router.get("/scores/students/all", controller.GetAllStudentsAverageScore);
 // Get Above Four (average of term)
-router.get("/scores/students/fours/:year/:term", controller.GetScoresAboveFour);
+router.get("/scores/students/fours/:year/:term/:csv", controller.GetScoresAboveFour);
 // Get Average / Grade (all students, current period, grouped by student grade)
 router.get("/scores/students/grade", controller.GetAverageScoresByYearGroup);
 // Get Average / Grade (all students, current period, grouped by student grade)

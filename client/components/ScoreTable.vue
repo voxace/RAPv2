@@ -268,7 +268,7 @@ export default {
   },
   watch: {
     user: function(val) {
-      if (val) {
+      if (val && process.browser) {
         this.GetScoresByTeacher()
       }
     }

@@ -411,7 +411,6 @@ ScoreSchema.statics.GetScoresByStudentName = function(student, cb) {
 
 // Get all scores for specified Student grouped by period
 ScoreSchema.statics.GetAllStudentsAverageScore = function(period, cb) {
-  console.log(period);
   return this.aggregate([
     // Match only scores for specified period
     // Also only match scores of 1 or above to leave out empty scores

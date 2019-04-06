@@ -10,8 +10,11 @@
           (e.g. left school, have not attended your class). Clicking the button
           a second time will also remove the score.
         </p>
-        <score-table v-if="RapActiveStatus" :user="user.user_id" />
-        <score-table-view v-else :user="user.user_id" />
+        <score-table v-if="RapActiveStatus == true" :user="user.user_id" />
+        <score-table-view
+          v-if="RapActiveStatus == false"
+          :user="user.user_id"
+        />
       </div>
       <div v-if="user.type == 'student'">
         <student-table :student="user.user_id" access="student" class="mt-3" />
@@ -34,7 +37,7 @@ export default {
   middleware: 'auth',
   data() {
     return {
-      RapActiveStatus: false
+      RapActiveStatus: null
     }
   },
   computed: {

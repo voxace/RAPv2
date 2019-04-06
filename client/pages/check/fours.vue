@@ -31,7 +31,13 @@
               ></v-select>
             </v-flex>
             <v-flex xs1 class="ml-3 mt-1">
-              <v-btn fab dark small color="primary" @click="DownloadCSV">
+              <v-btn
+                :disabled="downloadDisabled"
+                fab
+                small
+                color="primary"
+                @click="DownloadCSV"
+              >
                 <v-icon dark>cloud_download</v-icon>
               </v-btn>
             </v-flex>
@@ -39,7 +45,7 @@
         </v-toolbar>
         <v-card-text>
           <v-data-table
-            :headers="computedHeaders"
+            :headers="headers"
             :items="scores"
             :loading="loading"
             :pagination.sync="pagination"
@@ -69,6 +75,7 @@ export default {
   middleware: 'auth',
   data() {
     return {
+      downloadDisabled: true,
       terms: [1, 2, 3, 4],
       years: [2018, 2019, 2020],
       selectedTerm: null,
@@ -110,20 +117,6 @@ export default {
   computed: {
     scores() {
       return this.Scores
-    },
-    editing() {
-      if (this.$store.state.auth.access == 2) {
-        return true
-      } else {
-        return false
-      }
-    },
-    computedHeaders() {
-      if (!this.editing) {
-        return this.headers.filter(header => header.text !== '')
-      } else {
-        return this.headers
-      }
     }
   },
   methods: {
@@ -137,6 +130,7 @@ export default {
         )
         setTimeout(() => {
           this.loading = false
+          this.downloadDisabled = false
         }, 100)
       }
     },

@@ -26,6 +26,9 @@ jspm_packages/
 # Config
 config/
 
+# Students folder
+public/students/*.jpg
+
 # Optional npm cache directory
 .npm
 

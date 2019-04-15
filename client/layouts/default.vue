@@ -141,6 +141,10 @@ export default {
               text: 'Import Data'
             },
             {
+              to: '/admin/photos',
+              text: 'Upload Photos'
+            },
+            {
               to: '/admin/backup',
               text: 'Backup / Restore'
             },

@@ -5,6 +5,7 @@ const routes = require("./routes");
 const logger = require("koa-logger");
 const bodyParser = require("koa-body");
 const mongoose = require("mongoose");
+const serve = require("koa-static");
 const averageController = require("./controllers/average-controller");
 
 const app = new Koa();
@@ -18,6 +19,9 @@ app.use(
     urlencoded: true
   })
 );
+
+// Serve static files from public directory
+app.use(serve('public'));
 
 // Connect to mongodb
 mongoose.Promise = global.Promise;

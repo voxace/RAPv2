@@ -3,10 +3,10 @@ const Schema = mongoose.Schema;
 
 const ScoreSchema = new Schema(
   {
-    studentId: { type: Schema.Types.ObjectId, required: true },
-    teacherId: { type: Schema.Types.ObjectId, required: true },
-    periodId: { type: Schema.Types.ObjectId, required: true },
-    subjectId: { type: Schema.Types.ObjectId, required: true },
+    studentId: { type: Schema.Types.ObjectId, required: true, ref: 'Student' },
+    teacherId: { type: Schema.Types.ObjectId, required: true, ref: 'Teacher' },
+    periodId: { type: Schema.Types.ObjectId, required: true, ref: 'Period' },
+    subjectId: { type: Schema.Types.ObjectId, required: true, ref: 'Subject' },
     studentGrade: Number,
     score: { type: Number, default: 0 }
   },
@@ -54,6 +54,7 @@ ScoreSchema.statics.GetScoresByTeacher = function(teacher, period, cb) {
       $project: {
         name: { $arrayElemAt: ["$student.name", 0] },
         studentId: { $arrayElemAt: ["$student._id", 0] },
+        studentNum: { $arrayElemAt: ["$student.student_id", 0] },
         studentGrade: "$studentGrade",
         score: "$score",
         subjectCode: { $arrayElemAt: ["$subject.code", 0] },

@@ -98,11 +98,11 @@
                   </v-btn>
                 </td>
                 <td>
-                  <nuxt-link
-                    :to="{ path: '/check/student/' + props.item.studentId }"
-                  >
-                    {{ props.item.name }}
-                  </nuxt-link>
+                  <student-preview
+                    :name="props.item.name"
+                    :id="props.item.studentId"
+                    :num="props.item.studentNum"
+                  />
                 </td>
                 <td class="text-xs-right score">
                   <score-edit :scoredata="props.item" />
@@ -157,10 +157,12 @@
 
 <script>
 import ScoreEdit from '@/components/ScoreEdit'
+import StudentPreview from '@/components/StudentPreview'
 
 export default {
   components: {
-    ScoreEdit
+    ScoreEdit,
+    StudentPreview
   },
   middleware: 'auth',
   props: {

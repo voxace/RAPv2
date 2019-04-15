@@ -36,7 +36,7 @@ module.exports = {
 
   // Calculate current averages
   async CalculateCurrentPeriodAverages() {
-    console.log("Calculating Current Period Averages...");
+    console.log("Calculating Student Averages...");
     let period = await Admin.GetCurrent();
     let data = await Score.aggregate([
       {
@@ -68,7 +68,7 @@ module.exports = {
       if (err) {
         throw new Error(err);
       } else {
-        console.log("All Averages Calculated Successfully");
+        console.log("Student Averages Calculated Successfully");
         module.exports.CalculateYearGroupAverages();
       }
     });

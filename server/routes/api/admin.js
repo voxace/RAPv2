@@ -17,6 +17,9 @@ router.post("/admin/import/lmbr", controller.ImportFromLMBR);
 // Import CSV Student Data From Spreadsheet
 router.post("/admin/import/spreadsheet", controller.ImportFromOldSpreadsheet);
 
+// Import CSV Student Data From Spreadsheet
+router.post("/admin/import/photos", controller.ImportStudentPhotos);
+
 // Import JSON Data from old RAP system
 // This should be a one off process to convert from the old system to this one
 router.post("/admin/import/old", controller.ImportFromOldRap);

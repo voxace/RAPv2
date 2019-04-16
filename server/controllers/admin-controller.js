@@ -9,6 +9,13 @@ const PDF = require("./admin-pdf");
 const csv = require("csvtojson");
 const async = require("async");
 const fs = require("fs");
+const os = require('os');
+const path = require('path');
+
+// Async timeout utility
+function timeout(ms) {
+  return new Promise(resolve => setTimeout(resolve, ms));
+}
 
 module.exports = {
   // Run once on initial setup to generate admin table
@@ -75,6 +82,32 @@ module.exports = {
       await Utilities.ProcessOldSpreadsheet(jsonArrayObj, period, ctx);
     }
     await Utilities.DeleteFile(csvFilePath);    
+  },
+
+  // Imports student photos
+  async ImportStudentPhotos(ctx) {
+    
+    // Function to move files
+    async function moveFile(file) {
+      let oldPath = file.path;
+      let newPath = './public/students/' + file.name;
+      await fs.rename(oldPath, newPath, function(err) { if(err) { console.log('Error: ' + err) } });
+    }
+
+    // List of files uploaded
+    const files = ctx.request.files;
+
+    // Move files to students folder
+    if(files.Upload.length > 1) {
+      files.Upload.forEach(async (file) => {
+        await moveFile(file);
+      })
+    } else {
+      await moveFile(files.Upload);
+    }
+
+    ctx.body = "Success";
+
   },
 
   // Imports old RAP Data

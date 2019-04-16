@@ -49,11 +49,11 @@
                     </v-btn>
                   </td>
                   <td>
-                    <nuxt-link
-                      :to="{ path: '/check/student/' + props.item._id }"
-                    >
-                      {{ props.item.name }}
-                    </nuxt-link>
+                    <student-preview
+                      :name="props.item.name"
+                      :id="props.item._id"
+                      :num="props.item.studentNum"
+                    />
                   </td>
                   <td class="text-xs-center">
                     {{ ReturnScore(props.item.average) }}
@@ -70,10 +70,12 @@
 
 <script>
 import ScoreView from '@/components/ScoreView'
+import StudentPreview from '@/components/StudentPreview'
 
 export default {
   components: {
-    ScoreView
+    ScoreView,
+    StudentPreview
   },
   middleware: 'auth',
   data() {

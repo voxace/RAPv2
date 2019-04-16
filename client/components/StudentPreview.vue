@@ -1,5 +1,5 @@
 <template>
-  <v-tooltip open-delay="500" right nudge-right="10" lazy>
+  <v-tooltip open-delay="200" right nudge-right="10">
     <nuxt-link slot="activator" :to="{ path: '/check/student/' + id }">
       {{ name }}
     </nuxt-link>

@@ -34,11 +34,11 @@
             <template slot="items" slot-scope="props">
               <tr>
                 <td>
-                  <nuxt-link
-                    :to="{ path: '/check/student/' + props.item.studentId }"
-                  >
-                    {{ props.item.name }}
-                  </nuxt-link>
+                  <student-preview
+                    :name="props.item.name"
+                    :id="props.item.studentId"
+                    :num="props.item.studentNum"
+                  />
                 </td>
                 <td class="text-xs-right score">
                   <score-view :scoredata="props.item" />
@@ -54,10 +54,12 @@
 
 <script>
 import ScoreView from '@/components/ScoreView'
+import StudentPreview from '@/components/StudentPreview'
 
 export default {
   components: {
-    ScoreView
+    ScoreView,
+    StudentPreview
   },
   middleware: 'auth',
   props: {

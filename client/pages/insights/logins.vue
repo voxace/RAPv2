@@ -18,11 +18,11 @@
             <template slot="items" slot-scope="props">
               <tr>
                 <td>
-                  <nuxt-link
-                    :to="{ path: '/check/student/' + props.item.studentId }"
-                  >
-                    {{ props.item.name }}
-                  </nuxt-link>
+                  <student-preview
+                    :name="props.item.name"
+                    :id="props.item.studentId"
+                    :num="props.item.studentNum"
+                  />
                 </td>
               </tr>
             </template>
@@ -35,8 +35,12 @@
 
 <script>
 import Chart from 'chart.js'
+import StudentPreview from '@/components/StudentPreview'
 
 export default {
+  components: {
+    StudentPreview
+  },
   middleware: 'auth',
   data() {
     return {

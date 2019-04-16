@@ -69,6 +69,7 @@ PeriodSchema.statics.GetStudentLoginsByPeriod = function(period, cb) {
     {
       $project: {
         studentId: { $arrayElemAt: ["$student._id", 0] },
+        studentNum: { $arrayElemAt: ["$student.student_id", 0] },
         name: { $arrayElemAt: ["$student.name", 0] },
       }
     },

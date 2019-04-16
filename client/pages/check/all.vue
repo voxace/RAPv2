@@ -30,9 +30,11 @@
                   </v-btn>
                 </td>
                 <td>
-                  <nuxt-link :to="{ path: '/check/student/' + props.item._id }">
-                    {{ props.item.name }}
-                  </nuxt-link>
+                  <student-preview
+                    :name="props.item.name"
+                    :id="props.item._id"
+                    :num="props.item.studentNum"
+                  />
                 </td>
                 <td>{{ props.item.year }}</td>
                 <td class="text-xs-center">
@@ -48,7 +50,12 @@
 </template>
 
 <script>
+import StudentPreview from '@/components/StudentPreview'
+
 export default {
+  components: {
+    StudentPreview
+  },
   props: {
     subject: {
       type: String,

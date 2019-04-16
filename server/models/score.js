@@ -145,6 +145,7 @@ ScoreSchema.statics.GetScoresBySubjectID = function(subjectId, cb) {
       $project: {
         name: { $arrayElemAt: ["$student.name", 0] },
         studentId: { $arrayElemAt: ["$student._id", 0] },
+        studentNum: { $arrayElemAt: ["$student.student_id", 0] },
         teacher: { $arrayElemAt: ["$teacher.name", 0] },
         teacherId: { $arrayElemAt: ["$teacher._id", 0] },
         score: {
@@ -235,6 +236,7 @@ ScoreSchema.statics.GetScoresBySubjectName = function(subjectIds, periodId, cb) 
         subjectCode: { $arrayElemAt: ["$subject.code", 0] },
         studentName: { $arrayElemAt: ["$student.name", 0] },
         studentId: { $arrayElemAt: ["$student._id", 0] },
+        studentNum: { $arrayElemAt: ["$student.student_id", 0] },
         teacherName: { $arrayElemAt: ["$teacher.name", 0] },
         teacherId: { $arrayElemAt: ["$teacher._id", 0] },
         studentGrade: "$studentGrade",
@@ -306,6 +308,7 @@ ScoreSchema.statics.GetScoresBySubjectIDandPeriodId = function(
     {
       $project: {
         name: { $arrayElemAt: ["$student.name", 0] },
+        studentNum: { $arrayElemAt: ["$student.student_id", 0] },
         teacher: { $arrayElemAt: ["$teacher.name", 0] },
         score: {
           $cond: {
@@ -434,6 +437,7 @@ ScoreSchema.statics.GetAllStudentsAverageScore = function(period, cb) {
     {
       $project: {
         studentId: { $arrayElemAt: ["$student._id", 0] },
+        studentNum: { $arrayElemAt: ["$student.student_id", 0] },
         name: { $arrayElemAt: ["$student.name", 0] },
         year: "$studentGrade",
         score: "$score"
@@ -444,6 +448,7 @@ ScoreSchema.statics.GetAllStudentsAverageScore = function(period, cb) {
       $group: {
         _id: "$studentId",
         name: { $first: "$name" },
+        studentNum: { $first: "$studentNum" },
         year: { $avg: "$year" },
         average: { $avg: "$score" },
       }
@@ -483,6 +488,7 @@ ScoreSchema.statics.GetAverageScoresByYearGroup = function(period, cb) {
     {
       $project: {
         studentId: { $arrayElemAt: ["$student._id", 0] },
+        studentNum: { $arrayElemAt: ["$student.student_id", 0] },
         name: { $arrayElemAt: ["$student.name", 0] },
         year: "$studentGrade",
         score: "$score"
@@ -493,6 +499,7 @@ ScoreSchema.statics.GetAverageScoresByYearGroup = function(period, cb) {
       $group: {
         _id: "$studentId",
         name: { $first: "$name" },
+        studentNum: { $first: "$studentNum" },
         year: { $avg: "$year" },
         average: { $avg: "$score" },
       }
@@ -546,6 +553,7 @@ ScoreSchema.statics.GetAverageScoresGroupedByScore = function(period, cb) {
     {
       $project: {
         studentId: { $arrayElemAt: ["$student._id", 0] },
+        studentNum: { $arrayElemAt: ["$student.student_id", 0] },
         name: { $arrayElemAt: ["$student.name", 0] },
         year: "$studentGrade",
         score: "$score"
@@ -556,6 +564,7 @@ ScoreSchema.statics.GetAverageScoresGroupedByScore = function(period, cb) {
       $group: {
         _id: "$studentId",
         name: { $first: "$name" },
+        studentNum: { $first: "$studentNum" },
         year: { $avg: "$year" },
         average: { $avg: "$score" },
       }
@@ -695,6 +704,7 @@ ScoreSchema.statics.GetAllStudentsByPeriod = function(period, cb) {
     {
       $project: {
         studentId: { $arrayElemAt: ["$student._id", 0] },
+        studentNum: { $arrayElemAt: ["$student.student_id", 0] },
         name: { $arrayElemAt: ["$student.name", 0] },
         year: "$studentGrade"
       }

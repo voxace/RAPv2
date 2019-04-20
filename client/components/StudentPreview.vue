@@ -4,11 +4,7 @@
       {{ name }}
     </nuxt-link>
     <div class="img-box">
-      <v-img
-        :src="url"
-        lazy-src="http://192.168.1.232:3001/default.jpg"
-        aspect-ratio="1"
-      />
+      <v-img :src="url" :lazy-src="defaultImage" aspect-ratio="1" />
     </div>
   </v-tooltip>
 </template>
@@ -41,6 +37,9 @@ export default {
   computed: {
     url() {
       return process.env.baseUrl + '/students/' + this.num + '.jpg'
+    },
+    defaultImage() {
+      return process.env.baseUrl + 'default.jpg'
     }
   }
 }

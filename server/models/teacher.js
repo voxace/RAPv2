@@ -12,7 +12,12 @@ const TeacherSchema = new Schema({
     lowercase: true
   },
   access: Number,
-  faculty: String
+  faculty: String,
+  password: String,
+  lastLogin: {
+    type: Date, 
+    default: Date.now
+  }
 });
 
 // Create New Teacher

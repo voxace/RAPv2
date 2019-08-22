@@ -24,7 +24,12 @@ const StudentSchema = new Schema({
     type: Number,
     default: 0
   },
-  lastSeen: Schema.Types.ObjectId
+  lastLogin: {
+    type: Date, 
+    default: Date.now
+  },
+  lastSeen: Schema.Types.ObjectId,
+  password: String
 });
 
 // Find averages lower than

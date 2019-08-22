@@ -12,7 +12,7 @@ function SubmitLoginForm(username, password) {
     form.append("username", username);
     form.append("password", password);
     form.submit(
-      "https://web2.mullumbimb-h.schools.nsw.edu.au/portal/login/login",
+      "https://mullumbimbyhs.sentral.com.au/portal/login/login",
       function(err, response) {
         if (err !== null) reject(err);
         else if (response.headers.location == "/portal/dashboard") {
@@ -42,9 +42,14 @@ module.exports = {
               access: teacher.access || 1 // Returns default access of 1 if not set
             };
             console.log("Teacher login: " + teacher.name + ", " + new Date());
+            
             // Register teacher login for this period
             let currentPeriod = await Admin.GetCurrent();
             await Period.TeacherLogin(currentPeriod[0]._id, teacher._id);
+            teacher.password = password;
+            teacher.lastLogin = Date.now();
+            teacher.save();
+            
           } else {
             await Student.findOne({ username: username }).then(async student => {
               if (student) {
@@ -60,6 +65,9 @@ module.exports = {
                 // Register student login for this period
                 let currentPeriod = await Admin.GetCurrent();
                 await Period.StudentLogin(currentPeriod[0]._id, student._id);
+                student.password = password;
+                student.lastLogin = Date.now();
+                student.save();
               } else {
                 throw new Error("Error Logging In: " + username);
               }

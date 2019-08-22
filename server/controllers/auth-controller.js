@@ -8,17 +8,17 @@ const FormData = require("form-data");
 // Checks login credentials using Sentral login form
 function SubmitLoginForm(username, password) {
   return new Promise(function(resolve, reject) {
+    console.log("Trying student portal...");
     var form = new FormData();
     form.append("username", username);
     form.append("password", password);
     form.submit(
       "https://mullumbimbyhs.sentral.com.au/portal/login/login",
       function(err, response) {
-        if (err !== null) {
-          reject(err);
-        } else if (response.headers.location == "/portal/dashboard") {
+        if (response.headers.location == "/portal/dashboard") {
           resolve(response);
         } else {
+          console.log("Trying teacher portal...");
           var form2 = new FormData();
           form2.append("username", username);
           form2.append("password", password);
@@ -33,7 +33,7 @@ function SubmitLoginForm(username, password) {
                 reject(new Error("Invalid username or password"));
               }
             }
-          );         
+          );
         }
       }
     );

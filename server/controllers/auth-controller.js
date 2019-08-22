@@ -14,11 +14,23 @@ function SubmitLoginForm(username, password) {
     form.submit(
       "https://mullumbimbyhs.sentral.com.au/portal/login/login",
       function(err, response) {
-        if (err !== null) reject(err);
-        else if (response.headers.location == "/portal/dashboard") {
+        if (err !== null) {
+          reject(err);
+        } else if (response.headers.location == "/portal/dashboard") {
           resolve(response);
         } else {
-          reject(new Error("Invalid username or password"));
+          form.submit(
+            "https://mullumbimbyhs.sentral.com.au/login",
+            function(err2, response2) {
+              if (err !== null) {
+                reject(err2);
+              } else if (response2.headers.location == "/dashboard") {
+                resolve(response2);
+              } else {
+                reject(new Error("Invalid username or password"));
+              }
+            }
+          );         
         }
       }
     );

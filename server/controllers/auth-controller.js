@@ -15,8 +15,8 @@ function SubmitLoginForm(username, password) {
     form.submit(
       "https://mullumbimbyhs.sentral.com.au/portal/login/login",
       function(err, response) {
-        console.log(err);
-        console.log(response);
+        //console.log(err);
+        //console.log(response);
         if (response && response.headers.location == "/portal/dashboard") {
           resolve(response);
         } else {
@@ -27,8 +27,8 @@ function SubmitLoginForm(username, password) {
           form2.submit(
             "https://mullumbimbyhs.sentral.com.au/check_login",
             function(err2, response2) {
-              console.log(err2);
-              console.log(response2);
+              //console.log(err2);
+              console.log(response2.headers);
               if (response2 && response2.headers.location == "/dashboard") {
                 resolve(response2);
               } else {

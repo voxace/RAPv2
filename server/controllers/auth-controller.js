@@ -29,7 +29,7 @@ function SubmitLoginForm(username, password) {
             function(err2, response2) {
               //console.log(err2);
               console.log(response2.headers);
-              if (response2 && response2.headers.location == "/dashboard") {
+              if (response2 && response2.headers.location == "https://mullumbimbyhs.sentral.com.au/dashboard/?loggedin") {
                 resolve(response2);
               } else {
                 reject(new Error("Invalid username or password"));

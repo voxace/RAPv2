@@ -20,10 +20,10 @@ function SubmitLoginForm(username, password) {
         } else {
           console.log("Trying teacher portal...");
           var form2 = new FormData();
-          form2.append("username", username);
-          form2.append("password", password);
+          form2.append("sentral-username", username);
+          form2.append("sentral-password", password);
           form2.submit(
-            "https://mullumbimbyhs.sentral.com.au/login",
+            "https://mullumbimbyhs.sentral.com.au/check_login",
             function(err2, response2) {
               if (err !== null) {
                 reject(err2);

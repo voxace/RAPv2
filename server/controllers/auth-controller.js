@@ -25,6 +25,7 @@ function SubmitLoginForm(username, password) {
           form2.submit(
             "https://mullumbimbyhs.sentral.com.au/check_login",
             function(response2) {
+              console.log(response2);
               if (response2.headers.location == "/dashboard") {
                 resolve(response2);
               } else {

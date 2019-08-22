@@ -15,7 +15,8 @@ function SubmitLoginForm(username, password) {
     form.submit(
       "https://mullumbimbyhs.sentral.com.au/portal/login/login",
       function(response) {
-        if (response.headers.location == "/portal/dashboard") {
+        console.log(response);
+        if (response && response.headers.location == "/portal/dashboard") {
           resolve(response);
         } else {
           console.log("Trying teacher portal...");
@@ -26,7 +27,7 @@ function SubmitLoginForm(username, password) {
             "https://mullumbimbyhs.sentral.com.au/check_login",
             function(response2) {
               console.log(response2);
-              if (response2.headers.location == "/dashboard") {
+              if (response2 && response2.headers.location == "/dashboard") {
                 resolve(response2);
               } else {
                 reject(new Error("Invalid username or password"));

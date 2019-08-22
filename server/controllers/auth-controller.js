@@ -19,7 +19,10 @@ function SubmitLoginForm(username, password) {
         } else if (response.headers.location == "/portal/dashboard") {
           resolve(response);
         } else {
-          form.submit(
+          var form2 = new FormData();
+          form2.append("username", username);
+          form2.append("password", password);
+          form2.submit(
             "https://mullumbimbyhs.sentral.com.au/login",
             function(err2, response2) {
               if (err !== null) {

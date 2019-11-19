@@ -86,7 +86,11 @@ export default {
             },
             {
               to: '/check/fours',
-              text: 'Above Four'
+              text: 'Term Above 4.0'
+            },
+            {
+              to: '/check/fourpointfives',
+              text: 'Year Above 4.5'
             }
           ]
         },

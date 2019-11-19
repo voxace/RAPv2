@@ -10,13 +10,13 @@ const json2csv = require("csvjson-json2csv");
 
 module.exports = {
   // Get Scores / Teacher (grouped by subject code)
-  async GetScoresByTeacher(ctx) {
+  async GetScoresByTeacher (ctx) {
     let periodId = ctx.params.period;
     if (ctx.params.period == "active") {
       await Admin.GetCurrent()
-      .then(currentPeriod => {
-        periodId = currentPeriod[0]._id;
-      });
+        .then(currentPeriod => {
+          periodId = currentPeriod[0]._id;
+        });
     }
     await Score.GetScoresByTeacher(ctx.params.id, periodId)
       .then(scores => {
@@ -28,12 +28,12 @@ module.exports = {
       });
   },
   // Get Average Scores For All Students
-  async GetAllStudentsAverageScore(ctx) {    
+  async GetAllStudentsAverageScore (ctx) {
     let periodId = ctx.params.period;
     await Admin.GetCurrent()
-    .then(currentPeriod => {
-      periodId = currentPeriod[0]._id;
-    });    
+      .then(currentPeriod => {
+        periodId = currentPeriod[0]._id;
+      });
     await Score.GetAllStudentsAverageScore(periodId)
       .then(scores => {
         ctx.body = JSON.stringify(scores);
@@ -44,24 +44,23 @@ module.exports = {
       });
   },
   // Get Scores Above 4 for the Specified Term/Year
-  async GetScoresAboveFour(ctx) {    
-    
+  async GetScoresAboveFour (ctx) {
+
     let isCsv = ctx.params.csv;
     console.log(isCsv);
     let term = ctx.params.term;
     let year = ctx.params.year;
-    let period1 = await Period.find({year: year, term: term, week: 5});
-    let period2 = await Period.find({year: year, term: term, week: 9});
+    let period1 = await Period.find({ year: year, term: term, week: 5 });
+    let period2 = await Period.find({ year: year, term: term, week: 9 });
 
-    if(period1[0] != undefined && period2[0] != undefined)
-    {
+    if (period1[0] != undefined && period2[0] != undefined) {
       let data = await Score.aggregate([
         {
           $match: {
             score: { $gte: 1 },
             studentGrade: { $gte: 7 },
-            $or: [ 
-              { periodId: new mongoose.Types.ObjectId(period1[0]._id) }, 
+            $or: [
+              { periodId: new mongoose.Types.ObjectId(period1[0]._id) },
               { periodId: new mongoose.Types.ObjectId(period2[0]._id) }
             ]
           }
@@ -100,17 +99,17 @@ module.exports = {
         }
       ]).exec();
 
-      if(isCsv == 'false') {
+      if (isCsv == 'false') {
         ctx.body = data;
       } else {
-        await data.forEach(function(v){ 
+        await data.forEach(function (v) {
           delete v._id;
           v.average = Number(v.average).toFixed(2);
         });
         var csv = await json2csv(data);
         ctx.body = csv;
       }
-      
+
     } else {
       ctx.body = [{
         "_id": "#",
@@ -120,13 +119,79 @@ module.exports = {
       }];
     }
   },
+  // Get Scores Above 4 for the Specified Term/Year
+  async GetScoresAboveFourPointFive (ctx) {
+
+    let isCsv = ctx.params.csv;
+    console.log(isCsv);
+    let year = ctx.params.year;
+    let periodsRaw = await Period.find({ year: year });
+    let periods = [];
+    periodsRaw.forEach(period => {
+      periods.push(new mongoose.Types.ObjectId(period._id));
+    })
+    console.log(periods);
+
+    let data = await Score.aggregate([
+      {
+        $match: {
+          score: { $gte: 1 },
+          studentGrade: { $gte: 7 },
+          periodId: { $in: periods }
+        }
+      },
+      {
+        $group: {
+          _id: "$studentId",
+          average: { $avg: "$score" },
+          studentGrade: { $first: "$studentGrade" }
+        }
+      },
+      {
+        $match: {
+          average: { $gte: 4.5 }
+        }
+      },
+      {
+        $lookup: {
+          from: "students",
+          localField: "_id",
+          foreignField: "_id",
+          as: "student"
+        }
+      },
+      {
+        $project: {
+          name: { $arrayElemAt: ["$student.name", 0] },
+          average: "$average",
+          year: "$studentGrade"
+        }
+      },
+      {
+        $sort: {
+          average: -1
+        }
+      }
+    ]).exec();
+
+    if (isCsv == 'false') {
+      ctx.body = data;
+    } else {
+      await data.forEach(function (v) {
+        delete v._id;
+        v.average = Number(v.average).toFixed(2);
+      });
+      var csv = await json2csv(data);
+      ctx.body = csv;
+    }
+  },
   // Get Average Scores By Year Groups
-  async GetAverageScoresByYearGroup(ctx) { 
+  async GetAverageScoresByYearGroup (ctx) {
     let periodId = ctx.params.period;
     await Admin.GetCurrent()
-    .then(currentPeriod => {
-      periodId = currentPeriod[0]._id;
-    });    
+      .then(currentPeriod => {
+        periodId = currentPeriod[0]._id;
+      });
     await Score.GetAverageScoresByYearGroup(periodId)
       .then(scores => {
         ctx.body = JSON.stringify(scores);
@@ -137,12 +202,12 @@ module.exports = {
       });
   },
   // Get Average Scores Grouped By Score
-  async GetAverageScoresGroupedByScore(ctx) { 
+  async GetAverageScoresGroupedByScore (ctx) {
     let periodId = ctx.params.period;
     await Admin.GetCurrent()
-    .then(currentPeriod => {
-      periodId = currentPeriod[0]._id;
-    });    
+      .then(currentPeriod => {
+        periodId = currentPeriod[0]._id;
+      });
     await Score.GetAverageScoresGroupedByScore(periodId)
       .then(scores => {
         ctx.body = JSON.stringify(scores);
@@ -153,7 +218,7 @@ module.exports = {
       });
   },
   // Get Scores / Subject Code
-  async GetScoresBySubjectID(ctx) {
+  async GetScoresBySubjectID (ctx) {
     await Score.GetScoresBySubjectID(ctx.params.code)
       .then(scores => {
         ctx.body = JSON.stringify(scores);
@@ -164,24 +229,24 @@ module.exports = {
       });
   },
   // Get Scores / Subject Name
-  async GetScoresBySubjectName(ctx) {
+  async GetScoresBySubjectName (ctx) {
 
     let periodId = ctx.params.period;
     if (ctx.params.period == "active") {
       await Admin.GetCurrent()
-      .then(currentPeriod => {
-        periodId = currentPeriod[0]._id;
-      });
+        .then(currentPeriod => {
+          periodId = currentPeriod[0]._id;
+        });
     }
 
-    let subjectIds = []    
+    let subjectIds = []
     await Subject.GetAllSubjectCodesFromName(ctx.params.name)
-    .then(subjects => {
-      subjects.forEach(subject => {
-        subjectIds.push(subject._id)
+      .then(subjects => {
+        subjects.forEach(subject => {
+          subjectIds.push(subject._id)
+        });
       });
-    });
-    
+
 
     await Score.GetScoresBySubjectName(subjectIds, periodId)
       .then(scores => {
@@ -193,7 +258,7 @@ module.exports = {
       });
   },
   // Get Scores / Student (for student, grouped by period)
-  async GetScoresByStudentName(ctx) {
+  async GetScoresByStudentName (ctx) {
     await Score.GetScoresByStudentName(ctx.params.name)
       .then(scores => {
         ctx.body = JSON.stringify(scores);
@@ -204,7 +269,7 @@ module.exports = {
       });
   },
   // Update Score / ID (when giving the student a score)
-  async SetScore(ctx) {
+  async SetScore (ctx) {
     let id = ctx.request.body.id;
     let score = ctx.request.body.score;
     await Score.SetScore(id, score)
@@ -217,7 +282,7 @@ module.exports = {
       });
   },
   // New Score from all details
-  async NewScore(ctx) {
+  async NewScore (ctx) {
     let studentId = ctx.request.body.studentId;
     let teacherId = ctx.request.body.teacherId;
     let subjectId = ctx.request.body.subjectId;
@@ -225,9 +290,9 @@ module.exports = {
     let periodId = ctx.params.period;
     if (ctx.request.body.periodId == "active") {
       await Admin.GetCurrent()
-      .then(currentPeriod => {
-        periodId = currentPeriod[0]._id;
-      });
+        .then(currentPeriod => {
+          periodId = currentPeriod[0]._id;
+        });
     }
     await Score.NewScore(
       studentId,
@@ -247,13 +312,13 @@ module.exports = {
       });
   },
   // New Score from all details
-  async AddStudent(ctx) {
+  async AddStudent (ctx) {
     let periodId = ctx.params.period;
     if (ctx.request.body.periodId == "active") {
       await Admin.GetCurrent()
-      .then(currentPeriod => {
-        periodId = currentPeriod[0]._id;
-      });
+        .then(currentPeriod => {
+          periodId = currentPeriod[0]._id;
+        });
     }
     let score = new Score({
       studentId: ctx.request.body.studentId,
@@ -276,13 +341,13 @@ module.exports = {
       });
   },
   // Remove Score by looking up details
-  async RemoveScoreByDetails(ctx) {
+  async RemoveScoreByDetails (ctx) {
     let periodId = ctx.request.body.periodId;
     if (periodId == "active") {
       await Admin.GetCurrent()
-      .then(currentPeriod => {
-        periodId = currentPeriod[0]._id;
-      });
+        .then(currentPeriod => {
+          periodId = currentPeriod[0]._id;
+        });
     }
     await Score.findOne({
       studentId: ctx.request.body.studentId,
@@ -302,7 +367,7 @@ module.exports = {
       });
   },
   // Remove Score by ID
-  async RemoveScoreByID(ctx) {
+  async RemoveScoreByID (ctx) {
     await Score.findOne({
       _id: ctx.params.scoreId
     })
@@ -318,14 +383,14 @@ module.exports = {
       });
   },
   // Remove Student from Period
-  async RemoveStudentByPeriod(ctx) {
+  async RemoveStudentByPeriod (ctx) {
     let periodId = ctx.params.periodId;
-    let studentId = ctx.params.studentId;    
+    let studentId = ctx.params.studentId;
     if (periodId == "active") {
       await Admin.GetCurrent()
-      .then(currentPeriod => {
-        periodId = currentPeriod[0]._id;
-      });
+        .then(currentPeriod => {
+          periodId = currentPeriod[0]._id;
+        });
     }
     await Score.deleteMany({
       studentId: studentId,

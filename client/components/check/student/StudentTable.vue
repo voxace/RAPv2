@@ -1,5 +1,6 @@
 <template>
   <v-flex xs12>
+    <student-graph v-if="scores.length > 0" :scores="scores" />
     <v-expansion-panel v-model="expansion" class="elevation-6" focusable>
       <v-expansion-panel-content v-for="(score, i) in scores" :key="i">
         <v-layout slot="header" class="title" align-content-space-between>
@@ -64,7 +65,12 @@
 </template>
 
 <script>
+import StudentGraph from '@/components/check/student/StudentGraph'
+
 export default {
+  components: {
+    StudentGraph
+  },
   props: {
     student: {
       type: String,

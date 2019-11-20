@@ -45,12 +45,7 @@ export default {
   },
   computed: {
     url() {
-      let url = process.env.baseUrl + '/students/' + this.num + '.jpg'
-      if (this.UrlExists(url)) {
-        return url
-      } else {
-        return process.env.baseUrl + '/default.jpg'
-      }
+      return process.env.baseUrl + '/students/' + this.num + '.jpg'
     },
     defaultImage() {
       return process.env.baseUrl + '/default.jpg'
@@ -59,12 +54,6 @@ export default {
   methods: {
     showDefaultOnError() {
       this.error = true
-    },
-    UrlExists(url) {
-      var http = new XMLHttpRequest()
-      http.open('HEAD', url, false)
-      http.send()
-      return http.status != 404
     }
   }
 }

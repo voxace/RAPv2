@@ -62,9 +62,8 @@ async function RegisterStudentLogin (ctx, student, password) {
     type: "student",
     access: 0
   };
-  console.log(
-    "Student login: " + student.name + ", " + new Date()
-  );
+  console.log("Student login: " + student.name + ", " + new Date());
+
   // Register student login for this period
   let currentPeriod = await Admin.GetCurrent();
   await Period.StudentLogin(currentPeriod[0]._id, student._id);
@@ -76,7 +75,6 @@ async function RegisterStudentLogin (ctx, student, password) {
 async function RegularLogin (ctx, username, password) {
   console.log("Trying regular login...");
   await Teacher.findOne({ username: username, password: password }).then(async teacher => {
-    console.log(teacher);
     if (teacher) {
       console.log("Teacher found");
       await RegisterTeacherLogin(ctx, teacher, password);

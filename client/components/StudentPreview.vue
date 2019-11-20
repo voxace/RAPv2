@@ -4,7 +4,14 @@
       {{ name }}
     </nuxt-link>
     <div class="img-box">
-      <v-img :src="url" :lazy-src="defaultImage" aspect-ratio="1" />
+      <v-img
+        v-if="error == false"
+        :src="url"
+        :lazy-src="defaultImage"
+        aspect-ratio="1"
+        @error="showDefaultOnError"
+      />
+      <v-img v-else :src="defaultImage" aspect-ratio="1" />
     </div>
   </v-tooltip>
 </template>
@@ -25,21 +32,39 @@ export default {
       }
     },
     num: {
-      type: String,
+      type: Number,
       default: function() {
-        return ''
+        return 0
       }
     }
   },
   data() {
-    return {}
+    return {
+      error: false
+    }
   },
   computed: {
     url() {
-      return process.env.baseUrl + '/students/' + this.num + '.jpg'
+      let url = process.env.baseUrl + '/students/' + this.num + '.jpg'
+      if (this.UrlExists(url)) {
+        return url
+      } else {
+        return process.env.baseUrl + '/default.jpg'
+      }
     },
     defaultImage() {
-      return process.env.baseUrl + 'default.jpg'
+      return process.env.baseUrl + '/default.jpg'
+    }
+  },
+  methods: {
+    showDefaultOnError() {
+      this.error = true
+    },
+    UrlExists(url) {
+      var http = new XMLHttpRequest()
+      http.open('HEAD', url, false)
+      http.send()
+      return http.status != 404
     }
   }
 }

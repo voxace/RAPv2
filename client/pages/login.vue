@@ -41,6 +41,9 @@
             Login
           </v-btn>
         </v-card-actions>
+        <v-snackbar v-model="snackbar" :timeout="timeout" color="error" bottom>
+          Invalid username or password
+        </v-snackbar>
       </v-card>
     </v-flex>
   </v-layout>
@@ -58,7 +61,9 @@ export default {
       visible: true,
       usernameRules: [v => !!v || 'Username is required'],
       password: '',
-      passwordRules: [v => !!v || 'Password is required']
+      passwordRules: [v => !!v || 'Password is required'],
+      timeout: 6000,
+      snackbar: false
     }
   },
   middleware: 'login',
@@ -80,6 +85,7 @@ export default {
           })
           .catch(error => {
             console.log(error)
+            this.snackbar = true
             this.loading = false
           })
       }

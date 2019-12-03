@@ -6,9 +6,8 @@ const async = require("async");
 const FormData = require("form-data");
 
 // Checks login credentials using Sentral login form
-function SubmitLoginForm (username, password) {
+function SubmitStudentForm (username, password) {
   return new Promise(function (resolve, reject) {
-    console.log("Trying student portal...");
     var form = new FormData();
     form.append("username", username);
     form.append("password", password);
@@ -18,20 +17,26 @@ function SubmitLoginForm (username, password) {
         if (response && response.headers.location == "http://mullumbimbyhs.sentral.com.au/portal/dashboard") {
           resolve(response);
         } else {
-          console.log("Trying teacher portal...");
-          var form2 = new FormData();
-          form2.append("sentral-username", username);
-          form2.append("sentral-password", password);
-          form2.submit(
-            "https://mullumbimbyhs.sentral.com.au/check_login",
-            function (err2, response2) {
-              if (response2 && response2.headers.location == "http://mullumbimbyhs.sentral.com.au/dashboard/?loggedin") {
-                resolve(response2);
-              } else {
-                reject(new Error("Invalid username or password"));
-              }
-            }
-          );
+          reject(new Error("Invalid username or password"));
+        }
+      }
+    );
+  });
+}
+
+function SubmitTeacherForm (username, password) {
+  return new Promise(function (resolve, reject) {
+    var form = new FormData();
+    form.append("sentral-username", username);
+    form.append("sentral-password", password);
+    form.submit(
+      "https://mullumbimbyhs.sentral.com.au/check_login",
+      function (err, response) {
+        if (response && response.headers.location == "http://mullumbimbyhs.sentral.com.au/dashboard/?loggedin"
+          || response.headers.location == "https://mullumbimbyhs.sentral.com.au/dashboard/?loggedin") {
+          resolve(true);
+        } else {
+          reject("Invalid username and password");
         }
       }
     );
@@ -72,27 +77,6 @@ async function RegisterStudentLogin (ctx, student, password) {
   student.save();
 }
 
-async function RegularLogin (ctx, username, password) {
-  console.log("Trying regular login...");
-  await Teacher.findOne({ username: username, password: password }).then(async teacher => {
-    if (teacher) {
-      console.log("Teacher found");
-      await RegisterTeacherLogin(ctx, teacher, password);
-      return true;
-    } else {
-      await Student.findOne({ username: username, password: password }).then(async student => {
-        if (student) {
-          console.log("Student found");
-          await RegisterStudentLogin(ctx, student, password);
-          return true;
-        } else {
-          return false;
-        }
-      });
-    }
-  });
-}
-
 module.exports = {
   // Attempts login and returns auth token
   // Auth token: { user_id, name, type, access  }
@@ -100,28 +84,29 @@ module.exports = {
     let username = ctx.request.body.username.toLowerCase();
     let password = ctx.request.body.password;
 
-    let valid = await RegularLogin(ctx, username, password)
-
-    if (valid == false) {
-      await SubmitLoginForm(username, password)
-        .then(async response => {
-          await Teacher.findOne({ username: username }).then(async teacher => {
-            if (teacher) {
-              await RegisterTeacherLogin(ctx, teacher, password);
-            } else {
-              await Student.findOne({ username: username }).then(async student => {
-                if (student) {
-                  await RegisterStudentLogin(ctx, student, password);
-                } else {
-                  throw new Error("Error Logging In: " + username);
-                }
-              });
-            }
-          });
-        })
-        .catch(error => {
-          throw new Error("Error Logging In: " + username);
-        });
+    // Teacher login
+    let teacher = await Teacher.findOne({ username: username });
+    if (teacher) {
+      let loggedIn = await SubmitTeacherForm(username, password)
+      if (loggedIn || teacher.password == password) {
+        await RegisterTeacherLogin(ctx, teacher, password);
+      } else {
+        throw new Error("Invalid username and password");
+      }
+    } else {
+      // Student login
+      let student = await Student.findOne({ username: username });
+      if (student) {
+        let loggedIn = await SubmitStudentForm(username, password)
+        if (loggedIn || student.password == password) {
+          await RegisterStudentLogin(ctx, student, password);
+        } else {
+          throw new Error("Invalid username and password");
+        }
+      } else {
+        throw new Error("User not found!")
+      }
     }
   }
+
 };

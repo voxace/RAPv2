@@ -25,7 +25,7 @@ const StudentSchema = new Schema({
     default: 0
   },
   lastLogin: {
-    type: Date, 
+    type: Date,
     default: Date.now
   },
   lastSeen: Schema.Types.ObjectId,
@@ -33,17 +33,17 @@ const StudentSchema = new Schema({
 });
 
 // Find averages lower than
-StudentSchema.statics.findAveragesLowerThan = function(score, cb) {
+StudentSchema.statics.findAveragesLowerThan = function (score, cb) {
   return this.find({ longTermAverage: { $lte: score } }, cb);
 };
 
 // Find averages greater than
-StudentSchema.statics.findAveragesGreaterThan = function(score, cb) {
+StudentSchema.statics.findAveragesGreaterThan = function (score, cb) {
   return this.find({ longTermAverage: { $gte: score } }, cb);
 };
 
 // Get a list of all students
-StudentSchema.statics.GetAllStudents = function(cb) {
+StudentSchema.statics.GetAllStudents = function (cb) {
   return this.aggregate([
     {
       $project: {
@@ -59,7 +59,7 @@ StudentSchema.statics.GetAllStudents = function(cb) {
 };
 
 // Create New Student
-StudentSchema.statics.NewStudent = function(name, username, idNum) {
+StudentSchema.statics.NewStudent = function (name, username, idNum) {
   if (username == "") {
     return this.findOneAndUpdate(
       { name: name },
@@ -73,6 +73,15 @@ StudentSchema.statics.NewStudent = function(name, username, idNum) {
       { upsert: true, new: true }
     );
   }
+};
+
+// Create New Student
+StudentSchema.statics.NewStudentSentral = function (name, grade, gender, idNum) {
+  return this.findOneAndUpdate(
+    { student_id: idNum },
+    { $set: { name: name, student_id: idNum, cohort: grade, gender: gender } },
+    { upsert: true, new: true }
+  );
 };
 
 const Student = mongoose.model("Student", StudentSchema);

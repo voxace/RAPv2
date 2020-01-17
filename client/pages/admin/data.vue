@@ -63,7 +63,7 @@ export default {
     return {
       filename: '',
       value: [],
-      items: ['Edval', 'EMU', 'LMBR', 'Old RAP', 'Spreadsheet'],
+      items: ['Sentral', 'EMU'],
       selectedItem: null,
       form: null
     }
@@ -121,6 +121,8 @@ export default {
         type = 'old'
       } else if (this.selectedItem == 'Spreadsheet') {
         type = 'spreadsheet'
+      } else if (this.selectedItem == 'Sentral') {
+        type = 'sentral'
       }
       const vm = this
       await this.$axios

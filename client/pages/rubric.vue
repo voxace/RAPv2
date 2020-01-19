@@ -8,14 +8,14 @@
         print.
       </p>
       <v-card class="elevation-6 card-table">
-        <table>
+        <table class="rap-table">
           <thead>
             <tr>
-              <th scope="col">Score</th>
-              <th scope="col" />
-              <th scope="col">Respect</th>
-              <th scope="col">Responsibility</th>
-              <th scope="col">Learning</th>
+              <th scope="col" width="5%">Score</th>
+              <th scope="col" width="11%"></th>
+              <th scope="col" width="28%">Respect</th>
+              <th scope="col" width="28%">Responsibility</th>
+              <th scope="col" width="28%">Learning</th>
             </tr>
           </thead>
           <tbody>
@@ -24,9 +24,9 @@
                 <h1>5</h1>
               </td>
               <td class="rap-descriptor">
-                <h4>Outstanding</h4>
+                <h4>Always</h4>
               </td>
-              <td class="align-top">
+              <td rowspan="5" class="rap-criteria">
                 <strong>Is a respectful student who always:</strong>
                 <ul>
                   <li>
@@ -40,20 +40,19 @@
                   <li>Puts their hand up to speak</li>
                 </ul>
               </td>
-              <td class="align-top">
+              <td rowspan="5" class="rap-criteria">
                 <strong>Is a responsible student who always:</strong>
                 <ul>
                   <li>Is in the right place at the right time</li>
                   <li>Has digital devices on silent and in their bag</li>
                   <li>Has a pass to be out of class when necessary</li>
                   <li>
-                    Tells the truth and is honest regarding the property of the
-                    school and others.
+                    Is honest regarding the property of the school and others.
                   </li>
                   <li>Uses equipment for its purpose</li>
                 </ul>
               </td>
-              <td class="align-top">
+              <td rowspan="5" class="rap-criteria">
                 <strong>Demonstrates learning by always:</strong>
                 <ul>
                   <li>Having necessary equipment ready to learn</li>
@@ -69,44 +68,7 @@
                 <h1>4</h1>
               </td>
               <td class="rap-descriptor">
-                <h4>Excellent</h4>
-              </td>
-              <td class="align-top">
-                <strong>Is a respectful student who consistently:</strong>
-                <ul>
-                  <li>
-                    Wears school uniform to promote a positive image of the
-                    school
-                  </li>
-                  <li>Follows staff instructions</li>
-                  <li>Speaks politely and uses manners</li>
-                  <li>Maintains a clean and safe environment</li>
-                  <li>Listens to the speaker without interrupting</li>
-                  <li>Puts their hand up to speak</li>
-                </ul>
-              </td>
-              <td class="align-top">
-                <strong>Is a responsible student who consistently:</strong>
-                <ul>
-                  <li>Is in the right place at the right time</li>
-                  <li>Has digital devices on silent and in their bag</li>
-                  <li>Has a pass to be out of class when necessary</li>
-                  <li>
-                    Tells the truth and is honest regarding the property of the
-                    school and others.
-                  </li>
-                  <li>Uses equipment for its purpose</li>
-                </ul>
-              </td>
-              <td class="align-top">
-                <strong>Demonstrates learning by consistently:</strong>
-                <ul>
-                  <li>Having necessary equipment ready to learn</li>
-                  <li>Asking questions if unsure of task</li>
-                  <li>Completing all tasks to the standard requested</li>
-                  <li>Letting others work</li>
-                  <li>Submitting work on time</li>
-                </ul>
+                <h4>Frequently</h4>
               </td>
             </tr>
             <tr>
@@ -114,44 +76,7 @@
                 <h1>3</h1>
               </td>
               <td class="rap-descriptor">
-                <h4>Good</h4>
-              </td>
-              <td class="align-top">
-                <strong>Is a respectful student who satisfactorily:</strong>
-                <ul>
-                  <li>
-                    Wears school uniform to promote a positive image of the
-                    school
-                  </li>
-                  <li>Follows staff instructions</li>
-                  <li>Speaks politely and uses manners</li>
-                  <li>Maintains a clean and safe environment</li>
-                  <li>Listens to the speaker without interrupting</li>
-                  <li>Puts their hand up to speak</li>
-                </ul>
-              </td>
-              <td class="align-top">
-                <strong>Is a responsible student who satisfactorily:</strong>
-                <ul>
-                  <li>Is in the right place at the right time</li>
-                  <li>Has digital devices on silent and in their bag</li>
-                  <li>Has a pass to be out of class when necessary</li>
-                  <li>
-                    Tells the truth and is honest regarding the property of the
-                    school and others.
-                  </li>
-                  <li>Uses equipment for its purpose</li>
-                </ul>
-              </td>
-              <td class="align-top">
-                <strong>Demonstrates learning by satisfactorily:</strong>
-                <ul>
-                  <li>Having necessary equipment ready to learn</li>
-                  <li>Asking questions if unsure of task</li>
-                  <li>Completing all tasks to the standard requested</li>
-                  <li>Letting others work</li>
-                  <li>Submitting work on time</li>
-                </ul>
+                <h4>Sometimes</h4>
               </td>
             </tr>
             <tr class="alternate">
@@ -159,49 +84,7 @@
                 <h1>2</h1>
               </td>
               <td class="rap-descriptor">
-                <h4>Of Concern</h4>
-              </td>
-              <td class="align-top">
-                <strong>Is a student who is at times:</strong>
-                <ul>
-                  <li>
-                    Demonstrating disruptive behaviours such as talking, not
-                    listening, calling out and interfering with the rights of
-                    other students to learn
-                  </li>
-                  <li>Interrupts the teacher</li>
-                  <li>Needs rule reminders</li>
-                  <li>
-                    Wears school uniform incorrectly or disregards the dress
-                    code
-                  </li>
-                  <li>Fails to maintain a clean and safe environment</li>
-                </ul>
-              </td>
-              <td class="align-top">
-                <strong>Is a student who is at times:</strong>
-                <ul>
-                  <li>Late for class or truants class</li>
-                  <li>Is reminded to put their phone away.</li>
-                  <li>Leaves the classroom without permission and no pass</li>
-                  <li>
-                    Dishonest regarding the property of the school and others
-                  </li>
-                  <li>Uses equipment inappropriately</li>
-                </ul>
-              </td>
-              <td class="align-top">
-                <strong>Is a student who is at times:</strong>
-                <ul>
-                  <li>Arriving with no equipment ready for the lesson.</li>
-                  <li>
-                    Does not ask questions if unsure of tasks or asks
-                    inappropriate questions
-                  </li>
-                  <li>Does not complete tasks to the standard requested</li>
-                  <li>Does not submit assessment tasks on time</li>
-                  <li>Interrupts the learning of others</li>
-                </ul>
+                <h4>Developing</h4>
               </td>
             </tr>
             <tr>
@@ -209,51 +92,7 @@
                 <h1>1</h1>
               </td>
               <td class="rap-descriptor">
-                <h4>Unsatisfactory Performance</h4>
-              </td>
-              <td class="align-top">
-                <strong>Is a student who is often:</strong>
-                <ul>
-                  <li>
-                    Demonstrates disruptive behaviours such as talking, not
-                    listening, calling out and interfering with the rights of
-                    other students to learn
-                  </li>
-                  <li>Interrupts the teacher</li>
-                  <li>Needs rule reminders</li>
-                  <li>
-                    Wears school uniform incorrectly/disregards the dress code
-                  </li>
-                  <li>Fails to maintain a clean and safe environment</li>
-                  <li>Is referred to the Head Teacher</li>
-                </ul>
-              </td>
-              <td class="align-top">
-                <strong>Is a student who is often:</strong>
-                <ul>
-                  <li>Late for class or truants class</li>
-                  <li>Reminded to put their phone away</li>
-                  <li>Leaves the classroom without permission and no pass</li>
-                  <li>
-                    Dishonest regarding the property of the school and others
-                  </li>
-                  <li>Uses equipment inappropriately</li>
-                </ul>
-              </td>
-              <td class="align-top">
-                <strong>Is a student who is often:</strong>
-                <ul>
-                  <li>
-                    Arrives to class with no equipment ready for the lesson
-                  </li>
-                  <li>
-                    Does not ask questions if unsure of tasks or asks
-                    inappropriate questions
-                  </li>
-                  <li>Does not complete tasks to the standard requested</li>
-                  <li>Does not submit assessment tasks on time</li>
-                  <li>Interrupts the learning of others</li>
-                </ul>
+                <h4>Not Yet</h4>
               </td>
             </tr>
           </tbody>
@@ -280,9 +119,8 @@ thead {
 .alternate {
   background-color: rgb(251, 251, 255);
 }
-.align-top {
-  vertical-align: top;
-  width: 28%;
+.rap-table {
+  min-width: 100%;
 }
 .rap-score {
   text-align: center;
@@ -291,6 +129,9 @@ thead {
 .rap-descriptor {
   text-align: center;
   font-size: 1.2rem;
+}
+.rap-criteria {
+  line-height: 3;
 }
 .v-content {
   padding-top: 64px !important;
@@ -301,23 +142,17 @@ thead {
   td {
     font-size: 0.5rem;
   }
-  td:nth-of-type(1) {
-    width: 10px;
-  }
-  th:nth-of-type(1) {
-    width: 10px;
-  }
-  td:nth-of-type(2) {
-    display: none;
-  }
-  th:nth-of-type(2) {
-    display: none;
-  }
   .card-table {
     overflow: scroll;
   }
   .rap-score {
-    font-size: 0.8rem;
+    font-size: 0.5rem;
+  }
+  .rap-descriptor {
+    font-size: 0.6rem;
+  }
+  .rap-criteria {
+    line-height: 1.25;
   }
 }
 </style>

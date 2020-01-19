@@ -91,7 +91,7 @@ export default {
           value: 'score',
           align: 'center',
           sortable: false,
-          width: '100px',
+          width: '150px',
           class: 'table-heading mr-0'
         }
       ],

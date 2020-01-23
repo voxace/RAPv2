@@ -124,9 +124,7 @@ export default {
       if (this.selectedTerm != null && this.selectedYear != null) {
         this.loading = true
         this.Scores = await this.$axios.$get(
-          `/scores/students/fours/${this.selectedYear}/${
-            this.selectedTerm
-          }/false`
+          `/scores/students/fours/${this.selectedYear}/${this.selectedTerm}/false`
         )
         setTimeout(() => {
           this.loading = false
@@ -138,9 +136,7 @@ export default {
       if (this.selectedTerm != null && this.selectedYear != null) {
         await this.$axios
           .$get(
-            `/scores/students/fours/${this.selectedYear}/${
-              this.selectedTerm
-            }/true`
+            `/scores/students/fours/${this.selectedYear}/${this.selectedTerm}/true`
           )
           .then(response => {
             const url = window.URL.createObjectURL(new Blob([response]))

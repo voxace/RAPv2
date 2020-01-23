@@ -50,6 +50,29 @@
                 UPLOAD
               </v-btn>
             </v-flex>
+            <v-flex xs5 px-2>
+              <h3>Sentral Instructions</h3>
+              <ul>
+                <li>
+                  Ensure a new period has been set up at
+                  <a href="http://mhsrap.com/admin/periods">RAP Periods</a>
+                </li>
+                <li>
+                  Visit
+                  <a href="https://mullumbimbyhs.sentral.com.au/reports/"
+                    >Sentral Reports</a
+                  >
+                </li>
+                <li>Choose the appropriate RAP reporting period</li>
+                <li>Go to Export Data --> Student Grade Distribution</li>
+                <li>Modify the setting as shown in the picture</li>
+                <li>Export the CSV file</li>
+                <li>Import above</li>
+              </ul>
+            </v-flex>
+            <v-flex xs7 pa-3>
+              <v-img :src="url" class="elevation-2" />
+            </v-flex>
           </v-layout>
         </v-card-text>
       </v-card>
@@ -75,6 +98,9 @@ export default {
       } else {
         return false
       }
+    },
+    url() {
+      return process.env.baseUrl + '/sentral.jpg'
     }
   },
   watch: {
